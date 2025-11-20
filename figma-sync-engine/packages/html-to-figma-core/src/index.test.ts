@@ -107,8 +107,8 @@ describe('html-to-figma-core - MVP-3', () => {
             
             const metadata = getConversionMetadata(result);
 
-            // root + group + 3 children + frame + text = 7
-            expect(metadata.nodeCount).toBe(7);
+            // root + group + 3 children (including frame with text) = 6
+            expect(metadata.nodeCount).toBe(6);
             expect(metadata.hasChildren).toBe(true);
         });
     });

@@ -7,7 +7,7 @@
 info => Cleaning outputDir: \storybook-static
 info => Loading presets
 info => Building manager..
-info => Manager built (433 ms)
+info => Manager built (496 ms)
 info => Building preview..
 [33mThe CJS build of Vite's Node API is deprecated. See https://vite.dev/guide/troubleshooting.html#vite-cjs-node-api-deprecated for more details.[39m
 [36mvite v5.4.21 [32mbuilding for production...[36m[39m
@@ -45,6 +45,6 @@ computing gzip size...
 - Using dynamic import() to code-split the application
 - Use build.rollupOptions.output.manualChunks to improve chunking: https://rollupjs.org/configuration-options/#output-manualchunks
 - Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.[39m
-[32m✓ built in 12.29s[39m
-info => Preview built (15 s)
+[32m✓ built in 11.74s[39m
+info => Preview built (14 s)
 info => Output directory: C:\Users\Educacross\Documents\code-to-figma\figma-sync-engine\examples\react-button\storybook-static

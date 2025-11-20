@@ -3,7 +3,7 @@
  * MVP-3: Wrapper e extensões sobre @builder.io/html-to-figma
  */
 
-import { htmlToFigma, getImageFromURI } from '@builder.io/html-to-figma';
+import { htmlToFigma } from '@builder.io/html-to-figma';
 export * from '@builder.io/html-to-figma';
 
 /**
@@ -39,27 +39,16 @@ export interface ConvertOptions {
  * console.log(result);
  */
 export async function convertHtmlToFigma(
-    html: string,
+    htmlString: string,
     options: ConvertOptions = {}
 ): Promise<ConversionResult> {
     try {
-        if (!html || html.trim().length === 0) {
+        if (!htmlString || htmlString.trim().length === 0) {
             throw new Error('HTML input is empty');
         }
 
-        // Cria um container temporário para parse
-        const container = document.createElement('div');
-        container.innerHTML = html;
-
-        // Obtém o primeiro elemento (ou usa o container se houver múltiplos)
-        const rootElement = container.children.length === 1
-            ? container.children[0]
-            : container;
-
-        // Converte usando @builder.io/html-to-figma
-        const figmaJson = await htmlToFigma({
-            html: rootElement.outerHTML,
-        });
+        // Usa htmlToFigma da biblioteca
+        const figmaJson = await htmlToFigma(htmlString);
 
         if (!figmaJson) {
             throw new Error('Failed to convert HTML to Figma');
@@ -77,11 +66,11 @@ export async function convertHtmlToFigma(
  * Versão assíncrona com suporte a imagens
  */
 export async function convertHtmlToFigmaWithImages(
-    html: string,
+    htmlString: string,
     options: ConvertOptions = {}
 ): Promise<ConversionResult> {
     try {
-        const result = await convertHtmlToFigma(html, options);
+        const result = await convertHtmlToFigma(htmlString, options);
 
         // Futuro: processar imagens se necessário
         if (options.imagePlaceholders) {
@@ -127,5 +116,6 @@ export function getConversionMetadata(result: ConversionResult) {
         name: result.name
     };
 }
+
 
 

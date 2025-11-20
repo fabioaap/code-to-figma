@@ -34,13 +34,13 @@ Implementar MVP funcional do fluxo Storybook → Figma em 2 semanas, com fundaç
   - ID Backlog: MVP-2
   - ✅ **CONCLUÍDO**: Função implementada com sanitização, 14 testes passando
 
-- [ ] **Task 2.2**: Integrar html-to-figma-core (MVP-3)
+- [x] **Task 2.2**: Integrar html-to-figma-core (MVP-3)
   - Completar função `convertHtmlToFigma` real
   - Usar `htmlToFigma()` do @builder.io
   - Retornar JSON inicial
   - Testes: snapshot do JSON gerado
   - ID Backlog: MVP-3
-  - Tempo estimado: 2h
+  - ✅ **CONCLUÍDO**: 11 testes passando, implementação concluída
 
 - [ ] **Task 2.3**: Teste de integração end-to-end
   - HTML Button → JSON Figma
