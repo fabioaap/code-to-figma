@@ -6,7 +6,10 @@
         "dev": "turbo run dev",
         "build": "turbo run build",
         "lint": "turbo run lint",
-        "test": "turbo run test"
+        "test": "turbo run test",
+        "test:autolayout": "pnpm --filter @figma-sync-engine/autolayout-interpreter test",
+        "test:html-core": "pnpm --filter @figma-sync-engine/html-to-figma-core test",
+        "test:storybook-addon": "pnpm --filter @figma-sync-engine/storybook-addon-export test"
     },
     "devDependencies": {
         "typescript": "^5.3.3",
