@@ -2,6 +2,105 @@
 
 Este diretório contém scripts utilitários para automação de tarefas do projeto.
 
+## 🚀 Quick Start
+
+Para criar todas as issues do backlog no GitHub em um único comando:
+
+```bash
+./scripts/setup-backlog-issues.sh
+```
+
+Este script master irá:
+1. Verificar pré-requisitos (GitHub CLI e Node.js)
+2. Criar todas as labels necessárias
+3. Criar todas as 42 issues do backlog
+4. Gerar arquivo tracker com links das issues
+
+---
+
+## Fluxo Completo de Criação de Issues
+
+Se preferir executar passo a passo:
+
+1. **Criar labels** (uma vez): `./scripts/create-github-labels.sh`
+2. **Criar issues**: `node scripts/create-github-issues.js`
+3. **Acompanhar**: Veja `figma-sync-engine/docs/backlog-issues-tracker.md`
+
+---
+
+## setup-backlog-issues.sh
+
+Script master que orquestra todo o processo de criação de issues.
+
+### Uso
+
+```bash
+./scripts/setup-backlog-issues.sh
+```
+
+### Pré-requisitos
+
+- GitHub CLI (gh) instalado e autenticado
+- Node.js instalado
+
+### O que o script faz
+
+1. Valida que todos os pré-requisitos estão instalados
+2. Executa `create-github-labels.sh` para criar labels
+3. Executa `create-github-issues.js` para criar issues
+4. Fornece links e próximos passos
+
+---
+
+## create-github-labels.sh
+
+Script bash para criar todas as labels necessárias no repositório GitHub.
+
+### Uso
+
+```bash
+# A partir da raiz do projeto
+./scripts/create-github-labels.sh
+```
+
+### O que o script faz
+
+Cria todas as labels necessárias para organizar as issues do backlog:
+
+**Épicos (verde - #0E8A16):**
+- epic:mvp
+- epic:autolayout
+- epic:variants
+- epic:performance
+- epic:observability
+- epic:tokens
+- epic:security
+- epic:documentation
+
+**Prioridades:**
+- priority:must (vermelho - #B60205)
+- priority:should (amarelo - #FBCA04)
+- priority:could (azul - #0075CA)
+- priority:wont (cinza claro - #E4E669)
+
+**Tipos:**
+- type:delivery (roxo - #5319E7)
+- type:discovery (azul claro - #C5DEF5)
+
+**Áreas (lavanda - #D4C5F9):**
+- area:autolayout
+- area:figma-plugin
+- area:testing
+- area:documentation
+- area:observability
+- area:feature-flags
+- area:security
+- area:examples
+
+O script verifica se cada label já existe antes de criar, então é seguro executá-lo múltiplas vezes.
+
+---
+
 ## create-github-issues.js
 
 Script Node.js para criar issues no GitHub a partir do backlog estruturado.

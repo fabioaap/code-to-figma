@@ -44,8 +44,23 @@ O interpretador lê propriedades CSS (display:flex, flex-direction, gap, padding
 - Logs estruturados sem PII
 - Testes de regressão e snapshot nos exemplos
 
+## Backlog & Roadmap
+
+O projeto segue um [backlog estruturado](docs/backlog.md) organizado em 8 EPICs com priorização MoSCoW. Para criar issues a partir do backlog:
+
+```bash
+./scripts/setup-backlog-issues.sh
+```
+
+Veja o [tracker de issues](docs/backlog-issues-tracker.md) para acompanhar o progresso.
+
 ## Contribuição
-Pull requests são bem-vindos. Abra issues para discutir heurísticas de Auto Layout, suporte a variantes ou melhorias de desempenho.
+
+Pull requests são bem-vindos! Veja o [Guia de Contribuição](CONTRIBUTING.md) para:
+- Configurar ambiente de desenvolvimento
+- Padrões de código e commits
+- Processo de testes e review
+- Como escolher issues para trabalhar
 
 ## Licença
 MIT – ver `LICENSE`.
