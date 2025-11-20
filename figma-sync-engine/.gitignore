@@ -4,3 +4,6 @@ dist/
 .DS_Store
 coverage/
 .playwright-cache
+storybook-static/
+.turbo/
+pnpm-lock.yaml
