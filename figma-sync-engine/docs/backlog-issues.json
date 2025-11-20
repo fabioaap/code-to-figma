@@ -1,0 +1,689 @@
+{
+  "epics": [
+    {
+      "id": "EPIC-1",
+      "title": "MVP Export Storybook → Figma",
+      "description": "Foco em fluxo mínimo funcional",
+      "issues": [
+        {
+          "id": "MVP-1",
+          "title": "Botão 'Exportar para Figma' no painel do addon",
+          "description": "Como designer, quero exportar a história atual para Figma para acelerar documentação visual.",
+          "acceptance_criteria": [
+            "Botão visível e acionável no painel do Storybook addon",
+            "Botão bem posicionado e com UI consistente com Storybook",
+            "Tooltip explicativo sobre a funcionalidade"
+          ],
+          "priority": "Must",
+          "type": "Delivery",
+          "dependencies": ["Storybook-addon base instalado e configurado"],
+          "labels": ["epic:mvp", "priority:must", "type:delivery"]
+        },
+        {
+          "id": "MVP-2",
+          "title": "Captura segura do HTML da história ativa",
+          "description": "Como dev, quero capturar o HTML da história ativa de forma segura e confiável.",
+          "acceptance_criteria": [
+            "HTML bruto da história renderizada está acessível",
+            "Captura funciona em diferentes browsers",
+            "Tratamento de erros adequado para histórias não renderizadas"
+          ],
+          "priority": "Must",
+          "type": "Delivery",
+          "dependencies": ["MVP-1"],
+          "labels": ["epic:mvp", "priority:must", "type:delivery"]
+        },
+        {
+          "id": "MVP-3",
+          "title": "Conversão via html-to-figma-core",
+          "description": "Como dev, quero converter o HTML capturado em JSON do Figma usando html-to-figma-core.",
+          "acceptance_criteria": [
+            "JSON inicial é gerado a partir do HTML",
+            "Estrutura de nodes do Figma está correta",
+            "Tratamento de casos edge (SVG, imagens, etc)"
+          ],
+          "priority": "Must",
+          "type": "Delivery",
+          "dependencies": ["MVP-2"],
+          "labels": ["epic:mvp", "priority:must", "type:delivery"]
+        },
+        {
+          "id": "MVP-4",
+          "title": "Pós-processar Auto Layout (flex → layoutMode, gap, padding)",
+          "description": "Implementar pós-processamento para converter propriedades CSS flexbox em campos Auto Layout do Figma.",
+          "acceptance_criteria": [
+            "layoutMode mapeado corretamente (HORIZONTAL/VERTICAL)",
+            "gap extraído e aplicado",
+            "padding processado e populado",
+            "Campos do Auto Layout devidamente preenchidos"
+          ],
+          "priority": "Must",
+          "type": "Delivery",
+          "dependencies": ["MVP-3", "AL-1"],
+          "labels": ["epic:mvp", "priority:must", "type:delivery", "area:autolayout"]
+        },
+        {
+          "id": "MVP-5",
+          "title": "Exportar .figma.json (clipboard e download)",
+          "description": "Implementar funcionalidade de exportação do JSON gerado para clipboard e arquivo.",
+          "acceptance_criteria": [
+            "Botão de copiar para clipboard funcional",
+            "Download do arquivo .figma.json funcional",
+            "Feedback visual ao usuário após ação",
+            "Arquivo salvo com nome significativo"
+          ],
+          "priority": "Must",
+          "type": "Delivery",
+          "dependencies": ["MVP-4"],
+          "labels": ["epic:mvp", "priority:must", "type:delivery"]
+        },
+        {
+          "id": "MVP-6",
+          "title": "Plugin Figma importa JSON e cria frame",
+          "description": "Desenvolver plugin Figma que importa o JSON exportado e cria os frames no canvas.",
+          "acceptance_criteria": [
+            "Plugin reconhece formato .figma.json",
+            "Frame é criado no canvas na posição atual",
+            "Estrutura de nodes reflete corretamente o JSON",
+            "Tratamento de erros para JSON inválido"
+          ],
+          "priority": "Must",
+          "type": "Delivery",
+          "dependencies": ["MVP-5"],
+          "labels": ["epic:mvp", "priority:must", "type:delivery", "area:figma-plugin"]
+        },
+        {
+          "id": "MVP-7",
+          "title": "Testes Vitest core + snapshot JSON exemplo",
+          "description": "Implementar testes unitários com Vitest e snapshots para validar conversão HTML→JSON.",
+          "acceptance_criteria": [
+            "Testes Vitest configurados e executando",
+            "Snapshots de JSON gerados para componentes exemplo",
+            "Todos os testes passando",
+            "Cobertura de testes adequada (>80%)"
+          ],
+          "priority": "Must",
+          "type": "Delivery",
+          "dependencies": ["MVP-3"],
+          "labels": ["epic:mvp", "priority:must", "type:delivery", "area:testing"]
+        },
+        {
+          "id": "MVP-8",
+          "title": "Documentar formato em figma-json-format.md",
+          "description": "Criar documentação detalhada do formato JSON gerado para o Figma.",
+          "acceptance_criteria": [
+            "Arquivo figma-json-format.md criado",
+            "Campos principais descritos com exemplos",
+            "Estrutura de nodes documentada",
+            "Exemplos de diferentes tipos de componentes"
+          ],
+          "priority": "Must",
+          "type": "Delivery",
+          "dependencies": ["MVP-3"],
+          "labels": ["epic:mvp", "priority:must", "type:delivery", "area:documentation"]
+        },
+        {
+          "id": "MVP-9",
+          "title": "Log simples de export (storyId, tamanho JSON)",
+          "description": "Implementar logging estruturado do processo de exportação.",
+          "acceptance_criteria": [
+            "Log estruturado sem PII (dados pessoais)",
+            "Registra storyId da história exportada",
+            "Registra tamanho do JSON gerado",
+            "Timestamp e nível de log adequados"
+          ],
+          "priority": "Should",
+          "type": "Delivery",
+          "dependencies": ["MVP-5"],
+          "labels": ["epic:mvp", "priority:should", "type:delivery", "area:observability"]
+        },
+        {
+          "id": "MVP-10",
+          "title": "Kill-switch de addon (flag env)",
+          "description": "Implementar feature flag (variável de ambiente) para desativar addon remotamente.",
+          "acceptance_criteria": [
+            "Flag de ambiente configurável",
+            "Desativa o botão de exportação quando flag ativa",
+            "Mensagem informativa ao usuário quando desativado",
+            "Documentação sobre uso da flag"
+          ],
+          "priority": "Should",
+          "type": "Delivery",
+          "dependencies": ["MVP-1"],
+          "labels": ["epic:mvp", "priority:should", "type:delivery", "area:feature-flags"]
+        }
+      ]
+    },
+    {
+      "id": "EPIC-2",
+      "title": "Auto Layout Engine Avançado",
+      "description": "Expandir heurísticas CSS → Figma",
+      "metrics": "≥90% de fidelidade visual para componentes flex simples",
+      "issues": [
+        {
+          "id": "AL-1",
+          "title": "Parser padding/margin robusto",
+          "description": "Como dev, quero um parser robusto de padding/margin que cubra todos os casos de CSS.",
+          "acceptance_criteria": [
+            "Suporta 1, 2, 3 e 4 valores de padding/margin",
+            "Unidades CSS tratadas corretamente (px, rem, em, %)",
+            "Valores computados extraídos quando necessário",
+            "Testes para casos edge"
+          ],
+          "priority": "Must",
+          "type": "Delivery",
+          "dependencies": ["MVP-3"],
+          "labels": ["epic:autolayout", "priority:must", "type:delivery"]
+        },
+        {
+          "id": "AL-2",
+          "title": "Suporte a align-items e justify-content",
+          "description": "Mapear propriedades CSS align-items e justify-content para campos correspondentes no Figma.",
+          "acceptance_criteria": [
+            "align-items mapeado para eixo correto",
+            "justify-content mapeado corretamente",
+            "Diferentes combinações testadas",
+            "Documentação do mapeamento"
+          ],
+          "priority": "Must",
+          "type": "Delivery",
+          "dependencies": ["AL-1"],
+          "labels": ["epic:autolayout", "priority:must", "type:delivery"]
+        },
+        {
+          "id": "AL-3",
+          "title": "Detecção de direção com fallback",
+          "description": "Implementar detecção de flex-direction com valor padrão HORIZONTAL.",
+          "acceptance_criteria": [
+            "flex-direction row/column detectado corretamente",
+            "Fallback para HORIZONTAL quando não especificado",
+            "Casos edge tratados (row-reverse, column-reverse)"
+          ],
+          "priority": "Should",
+          "type": "Delivery",
+          "dependencies": ["AL-1"],
+          "labels": ["epic:autolayout", "priority:should", "type:delivery"]
+        },
+        {
+          "id": "AL-4",
+          "title": "Gap composto (row/column futuro)",
+          "description": "Explorar suporte a gap multi-eixo para flex containers.",
+          "acceptance_criteria": [
+            "POC implementado para gap multi-eixo",
+            "Análise de viabilidade documentada",
+            "Casos de uso identificados",
+            "Decisão sobre implementação futura"
+          ],
+          "priority": "Could",
+          "type": "Discovery",
+          "dependencies": ["AL-2"],
+          "labels": ["epic:autolayout", "priority:could", "type:discovery"]
+        },
+        {
+          "id": "AL-5",
+          "title": "Wrap flex → múltiplos frames",
+          "description": "Pesquisar como lidar com flex-wrap criando múltiplos frames no Figma.",
+          "acceptance_criteria": [
+            "Prova de conceito implementada",
+            "Limitações identificadas",
+            "Estratégia proposta documentada",
+            "Decisão sobre viabilidade"
+          ],
+          "priority": "Could",
+          "type": "Discovery",
+          "dependencies": ["AL-2"],
+          "labels": ["epic:autolayout", "priority:could", "type:discovery"]
+        },
+        {
+          "id": "AL-6",
+          "title": "Relatório divergências CSS vs Figma",
+          "description": "Criar relatório de propriedades CSS que não têm mapeamento direto para Figma.",
+          "acceptance_criteria": [
+            "Lista de campos CSS não mapeados",
+            "Análise de impacto de cada divergência",
+            "Sugestões de workarounds quando possível",
+            "Documentação das limitações"
+          ],
+          "priority": "Should",
+          "type": "Discovery",
+          "dependencies": ["AL-2"],
+          "labels": ["epic:autolayout", "priority:should", "type:discovery"]
+        },
+        {
+          "id": "AL-7",
+          "title": "Mapeamento de font, weight, line-height",
+          "description": "Mapear propriedades tipográficas CSS para nodes TEXT do Figma.",
+          "acceptance_criteria": [
+            "font-family mapeado corretamente",
+            "font-weight suportado",
+            "line-height calculado adequadamente",
+            "Nodes TEXT refletindo estilo correto"
+          ],
+          "priority": "Must",
+          "type": "Delivery",
+          "dependencies": ["MVP-3"],
+          "labels": ["epic:autolayout", "priority:must", "type:delivery"]
+        }
+      ]
+    },
+    {
+      "id": "EPIC-3",
+      "title": "Variantes & Componentes",
+      "description": "Suporte a geração de Component + VariantSets",
+      "metrics": "Reduzir tempo de criação de variantes Figma em ≥70%",
+      "issues": [
+        {
+          "id": "VAR-1",
+          "title": "Definir convenção de args → variantProperties",
+          "description": "Como designer, quero que variantes de componentes sejam mapeadas automaticamente.",
+          "acceptance_criteria": [
+            "Convenção de mapeamento documentada em README",
+            "Exemplos práticos fornecidos",
+            "Compatível com Storybook args/controls",
+            "Validação de casos de uso comum"
+          ],
+          "priority": "Must",
+          "type": "Delivery",
+          "dependencies": ["MVP completo"],
+          "labels": ["epic:variants", "priority:must", "type:delivery", "area:documentation"]
+        },
+        {
+          "id": "VAR-2",
+          "title": "Export múltiplas stories selecionadas",
+          "description": "Permitir seleção e exportação de múltiplas histórias do Storybook simultaneamente.",
+          "acceptance_criteria": [
+            "UI para seleção de múltiplas histórias",
+            "Pacote JSON consolidado gerado",
+            "Mantém estrutura de variantes",
+            "Performance adequada para >10 histórias"
+          ],
+          "priority": "Should",
+          "type": "Delivery",
+          "dependencies": ["VAR-1"],
+          "labels": ["epic:variants", "priority:should", "type:delivery"]
+        },
+        {
+          "id": "VAR-3",
+          "title": "Plugin cria ComponentSet",
+          "description": "Plugin Figma deve criar ComponentSet agrupando variantes corretamente.",
+          "acceptance_criteria": [
+            "ComponentSet criado no Figma",
+            "Variants agrupadas corretamente",
+            "Propriedades de variante aplicadas",
+            "Nomenclatura consistente"
+          ],
+          "priority": "Must",
+          "type": "Delivery",
+          "dependencies": ["VAR-2"],
+          "labels": ["epic:variants", "priority:must", "type:delivery", "area:figma-plugin"]
+        },
+        {
+          "id": "VAR-4",
+          "title": "Detectar estados via data-state",
+          "description": "Explorar detecção automática de estados via atributo data-state.",
+          "acceptance_criteria": [
+            "Demonstra 2+ estados funcionando",
+            "Análise de viabilidade técnica",
+            "Proposta de implementação",
+            "Casos de uso validados"
+          ],
+          "priority": "Could",
+          "type": "Discovery",
+          "dependencies": ["VAR-1"],
+          "labels": ["epic:variants", "priority:could", "type:discovery"]
+        },
+        {
+          "id": "VAR-5",
+          "title": "Diferencial de diffs visual (snapshot)",
+          "description": "Criar snapshot visual comparativo entre variantes.",
+          "acceptance_criteria": [
+            "Snapshot comparativo gerado",
+            "Diferenças visuais destacadas",
+            "Ferramenta/técnica proposta",
+            "Utilidade validada"
+          ],
+          "priority": "Could",
+          "type": "Discovery",
+          "dependencies": ["VAR-2"],
+          "labels": ["epic:variants", "priority:could", "type:discovery"]
+        }
+      ]
+    },
+    {
+      "id": "EPIC-4",
+      "title": "Performance & Escalabilidade",
+      "description": "Otimização de performance e escalabilidade",
+      "metrics": "Export de componente médio (<300 nodes) < 1.5s",
+      "issues": [
+        {
+          "id": "PERF-1",
+          "title": "Benchmark conversão (tempo médio)",
+          "description": "Criar benchmark para medir tempo de conversão HTML → JSON.",
+          "acceptance_criteria": [
+            "Script de benchmark implementado",
+            "Relatório base gerado com métricas",
+            "Diferentes tamanhos de componentes testados",
+            "Baseline documentado"
+          ],
+          "priority": "Must",
+          "type": "Delivery",
+          "dependencies": ["MVP-3"],
+          "labels": ["epic:performance", "priority:must", "type:delivery", "area:testing"]
+        },
+        {
+          "id": "PERF-2",
+          "title": "Cache de conversão por hash HTML",
+          "description": "Implementar sistema de cache baseado em hash do HTML para evitar reconversões.",
+          "acceptance_criteria": [
+            "Cache implementado com hash MD5/SHA",
+            "Cache hit registrado em logs",
+            "Invalidação de cache funcional",
+            "Melhoria de performance mensurável"
+          ],
+          "priority": "Should",
+          "type": "Delivery",
+          "dependencies": ["PERF-1"],
+          "labels": ["epic:performance", "priority:should", "type:delivery"]
+        },
+        {
+          "id": "PERF-3",
+          "title": "Profiling nodes > 500",
+          "description": "Realizar profiling de componentes grandes (>500 nodes) para identificar gargalos.",
+          "acceptance_criteria": [
+            "Profiling executado em componentes grandes",
+            "Relatório de gargalos gerado",
+            "Recomendações documentadas",
+            "Casos críticos identificados"
+          ],
+          "priority": "Could",
+          "type": "Discovery",
+          "dependencies": ["PERF-1"],
+          "labels": ["epic:performance", "priority:could", "type:discovery"]
+        },
+        {
+          "id": "PERF-4",
+          "title": "Streaming parcial (HTML grande)",
+          "description": "Explorar processamento em streaming para HTML muito grande.",
+          "acceptance_criteria": [
+            "POC de streaming implementado",
+            "Viabilidade técnica avaliada",
+            "Trade-offs documentados",
+            "Decisão sobre implementação"
+          ],
+          "priority": "Could",
+          "type": "Discovery",
+          "dependencies": ["PERF-3"],
+          "labels": ["epic:performance", "priority:could", "type:discovery"]
+        }
+      ]
+    },
+    {
+      "id": "EPIC-5",
+      "title": "Observabilidade & Guardrails",
+      "description": "Logging, monitoramento e mecanismos de segurança",
+      "issues": [
+        {
+          "id": "OBS-1",
+          "title": "Logger estruturado (level, event, size)",
+          "description": "Implementar logger estruturado com níveis, eventos e tamanhos registrados.",
+          "acceptance_criteria": [
+            "JSON logs no console",
+            "Níveis (debug, info, warn, error) funcionais",
+            "Eventos estruturados e consistentes",
+            "Tamanho de payloads registrado"
+          ],
+          "priority": "Must",
+          "type": "Delivery",
+          "dependencies": ["MVP-5"],
+          "labels": ["epic:observability", "priority:must", "type:delivery"]
+        },
+        {
+          "id": "OBS-2",
+          "title": "Sanitização de PII (remoção atributos sensíveis)",
+          "description": "Implementar sanitização para remover dados pessoais identificáveis dos logs.",
+          "acceptance_criteria": [
+            "Lista de atributos sensíveis definida e auditável",
+            "Remoção automática de PII",
+            "Testes de validação de sanitização",
+            "Documentação de privacidade"
+          ],
+          "priority": "Must",
+          "type": "Delivery",
+          "dependencies": ["OBS-1"],
+          "labels": ["epic:observability", "priority:must", "type:delivery", "area:security"]
+        },
+        {
+          "id": "OBS-3",
+          "title": "TTL de feature flags",
+          "description": "Implementar Time-To-Live automático para feature flags.",
+          "acceptance_criteria": [
+            "TTL configurável para flags",
+            "Expiração automática funcional",
+            "Alertas de flags próximas ao vencimento",
+            "Documentação do mecanismo"
+          ],
+          "priority": "Should",
+          "type": "Delivery",
+          "dependencies": ["MVP-10"],
+          "labels": ["epic:observability", "priority:should", "type:delivery"]
+        },
+        {
+          "id": "OBS-4",
+          "title": "Dashboard simples (script CLI)",
+          "description": "Criar dashboard CLI simples para visualizar métricas de uso.",
+          "acceptance_criteria": [
+            "Script CLI implementado",
+            "Sumário de métricas exibido",
+            "Dados agregados de forma útil",
+            "Viabilidade de dashboard completo avaliada"
+          ],
+          "priority": "Could",
+          "type": "Discovery",
+          "dependencies": ["OBS-1"],
+          "labels": ["epic:observability", "priority:could", "type:discovery"]
+        }
+      ]
+    },
+    {
+      "id": "EPIC-6",
+      "title": "Design Tokens",
+      "description": "Extração e aplicação de design tokens",
+      "issues": [
+        {
+          "id": "TOK-1",
+          "title": "Extração de cores inline → tokens",
+          "description": "Extrair cores inline e convertê-las em design tokens.",
+          "acceptance_criteria": [
+            "Mapeia 80% das cores únicas usadas",
+            "Estratégia de naming proposta",
+            "Análise de viabilidade",
+            "Casos de uso validados"
+          ],
+          "priority": "Should",
+          "type": "Discovery",
+          "dependencies": ["MVP-3"],
+          "labels": ["epic:tokens", "priority:should", "type:discovery"]
+        },
+        {
+          "id": "TOK-2",
+          "title": "Tipografia → tokens (font families)",
+          "description": "Normalizar famílias de fontes como design tokens.",
+          "acceptance_criteria": [
+            "Font families extraídas e normalizadas",
+            "Campos de tipografia padronizados",
+            "Mapeamento consistente",
+            "Documentação de tokens"
+          ],
+          "priority": "Must",
+          "type": "Delivery",
+          "dependencies": ["TOK-1"],
+          "labels": ["epic:tokens", "priority:must", "type:delivery"]
+        },
+        {
+          "id": "TOK-3",
+          "title": "Export tokens sidecar file",
+          "description": "Gerar arquivo sidecar tokens.json junto com o export.",
+          "acceptance_criteria": [
+            "Arquivo tokens.json gerado",
+            "Formato padronizado e documentado",
+            "Sincronizado com export principal",
+            "Validação de schema"
+          ],
+          "priority": "Should",
+          "type": "Delivery",
+          "dependencies": ["TOK-1"],
+          "labels": ["epic:tokens", "priority:should", "type:delivery"]
+        },
+        {
+          "id": "TOK-4",
+          "title": "Plugin aplica tokens se existirem",
+          "description": "Plugin Figma deve aplicar tokens quando arquivo sidecar estiver presente.",
+          "acceptance_criteria": [
+            "Plugin detecta arquivo de tokens",
+            "Matching de tokens por nome",
+            "Aplicação de estilos do Figma",
+            "Fallback quando tokens ausentes"
+          ],
+          "priority": "Could",
+          "type": "Delivery",
+          "dependencies": ["TOK-3"],
+          "labels": ["epic:tokens", "priority:could", "type:delivery", "area:figma-plugin"]
+        }
+      ]
+    },
+    {
+      "id": "EPIC-7",
+      "title": "Segurança & Compliance",
+      "description": "Segurança, auditoria e conformidade",
+      "issues": [
+        {
+          "id": "SEC-1",
+          "title": "Revisão de dependências (audit script)",
+          "description": "Criar script de auditoria de dependências para detectar vulnerabilidades.",
+          "acceptance_criteria": [
+            "Script de audit implementado",
+            "Relatório sem vulnerabilidades críticas",
+            "Automatização em CI/CD",
+            "Documentação de processo"
+          ],
+          "priority": "Must",
+          "type": "Delivery",
+          "dependencies": ["MVP-3"],
+          "labels": ["epic:security", "priority:must", "type:delivery", "area:security"]
+        },
+        {
+          "id": "SEC-2",
+          "title": "Kill-switch remoto (env var)",
+          "description": "Implementar kill-switch remoto via variável de ambiente.",
+          "acceptance_criteria": [
+            "Variável de ambiente configurável",
+            "Desativa export quando ativada",
+            "Mensagem ao usuário sobre desativação",
+            "Documentação de uso"
+          ],
+          "priority": "Should",
+          "type": "Delivery",
+          "dependencies": ["MVP-10"],
+          "labels": ["epic:security", "priority:should", "type:delivery"]
+        },
+        {
+          "id": "SEC-3",
+          "title": "Política de versionamento sem breaking",
+          "description": "Documentar política de versionamento semântico sem breaking changes.",
+          "acceptance_criteria": [
+            "Política documentada",
+            "Estratégia de deprecation definida",
+            "Guidelines para contributors",
+            "Automação de versionamento"
+          ],
+          "priority": "Should",
+          "type": "Delivery",
+          "dependencies": ["SEC-1"],
+          "labels": ["epic:security", "priority:should", "type:delivery", "area:documentation"]
+        }
+      ]
+    },
+    {
+      "id": "EPIC-8",
+      "title": "Comunidade & Documentação",
+      "description": "Documentação, exemplos e suporte à comunidade",
+      "issues": [
+        {
+          "id": "DOC-1",
+          "title": "Guia Contribuição (CONTRIBUTING.md)",
+          "description": "Criar guia de contribuição para novos contributors.",
+          "acceptance_criteria": [
+            "Arquivo CONTRIBUTING.md criado",
+            "Processo de contribuição documentado",
+            "Guidelines de código e testes",
+            "Informações sobre desenvolvimento local"
+          ],
+          "priority": "Must",
+          "type": "Delivery",
+          "dependencies": ["MVP completo"],
+          "labels": ["epic:documentation", "priority:must", "type:delivery", "area:documentation"]
+        },
+        {
+          "id": "DOC-2",
+          "title": "Changelog automático",
+          "description": "Implementar geração automática de CHANGELOG.",
+          "acceptance_criteria": [
+            "Script de release implementado",
+            "CHANGELOG.md gerado automaticamente",
+            "Formato convencional seguido",
+            "Integração com CI/CD"
+          ],
+          "priority": "Should",
+          "type": "Delivery",
+          "dependencies": ["DOC-1"],
+          "labels": ["epic:documentation", "priority:should", "type:delivery"]
+        },
+        {
+          "id": "DOC-3",
+          "title": "Exemplos adicionais (Input, Card, Navbar)",
+          "description": "Criar exemplos adicionais de componentes: Input, Card e Navbar.",
+          "acceptance_criteria": [
+            "3 novos exemplos implementados",
+            "Cada exemplo com histórias no Storybook",
+            "Testes de conversão para cada exemplo",
+            "Documentação de cada caso de uso"
+          ],
+          "priority": "Should",
+          "type": "Delivery",
+          "dependencies": ["MVP completo"],
+          "labels": ["epic:documentation", "priority:should", "type:delivery", "area:examples"]
+        },
+        {
+          "id": "DOC-4",
+          "title": "Badge de status CI",
+          "description": "Adicionar badge de status CI no README.",
+          "acceptance_criteria": [
+            "Badge de CI configurado",
+            "README atualizado com badge",
+            "Badge reflete status atual",
+            "Link para workflow correto"
+          ],
+          "priority": "Must",
+          "type": "Delivery",
+          "dependencies": ["CI configurado"],
+          "labels": ["epic:documentation", "priority:must", "type:delivery", "area:documentation"]
+        },
+        {
+          "id": "DOC-5",
+          "title": "FAQ (limitações e roadmap)",
+          "description": "Criar seção de FAQ no README com limitações e roadmap.",
+          "acceptance_criteria": [
+            "Seção FAQ adicionada ao README",
+            "Limitações conhecidas documentadas",
+            "Roadmap público compartilhado",
+            "Perguntas comuns respondidas"
+          ],
+          "priority": "Should",
+          "type": "Delivery",
+          "dependencies": ["MVP completo"],
+          "labels": ["epic:documentation", "priority:should", "type:delivery", "area:documentation"]
+        }
+      ]
+    }
+  ]
+}

@@ -1,7 +1,20 @@
 # Backlog do Projeto – figma-sync-engine
 
-> Última atualização: 19/11/2025
+> Última atualização: 20/11/2025
 > Objetivo macro: Reduzir em até 80% o tempo de documentação de componentes no Figma via fluxo Storybook → Figma.
+
+## 🔗 Rastreamento de Issues
+
+- **[Tracker de Issues](./backlog-issues-tracker.md)** - Acompanhamento de issues criadas no GitHub
+- **[Estrutura JSON](./backlog-issues.json)** - Dados estruturados do backlog
+- **[Script de Automação](../../scripts/create-github-issues.js)** - Ferramenta para criar issues automaticamente
+
+Para criar as issues no GitHub a partir deste backlog, execute:
+```bash
+node scripts/create-github-issues.js
+```
+
+---
 
 ## Estrutura do Backlog
 - Epics
