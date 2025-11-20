@@ -1,1 +1,5 @@
 
+> @figma-sync-engine/storybook-addon-export@0.1.0 build /home/runner/work/code-to-figma/code-to-figma/figma-sync-engine/packages/storybook-addon-export
+> tsc -p tsconfig.json && vite build
+
+ ELIFECYCLE  Command failed.

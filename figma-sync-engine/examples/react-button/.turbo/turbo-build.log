@@ -3,4 +3,4 @@
 > storybook build
 
 sh: 1: storybook: not found
-[41m[30m ELIFECYCLE [39m[49m [31mCommand failed.[39m
+ ELIFECYCLE  Command failed.

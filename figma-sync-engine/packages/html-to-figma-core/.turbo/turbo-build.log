@@ -2,4 +2,4 @@
 > @figma-sync-engine/html-to-figma-core@0.1.0 build /home/runner/work/code-to-figma/code-to-figma/figma-sync-engine/packages/html-to-figma-core
 > tsc -p tsconfig.json
 
-[41m[30m ELIFECYCLE [39m[49m [31mCommand failed.[39m
+ ELIFECYCLE  Command failed.
