@@ -173,10 +173,10 @@ Status 20/11/2025: DOC-1 entregue (CONTRIBUTING.md publicado); demais itens pend
 - RICE será preenchido após coleta de Reach & Effort.
 
 ---
-## Kanban Atualizado (20/11/2025 - 14:45)
+## Kanban Atualizado (20/11/2025 - 14:58)
 | Backlog | Em Progresso | Em Review | Concluído |
 |---------|--------------|-----------|-----------|
-| MVP-4, MVP-5, MVP-6, MVP-7, MVP-8, MVP-9, MVP-10, AL-1, AL-2, AL-3, AL-4, AL-5, AL-6, VAR-1, VAR-2, VAR-3, VAR-4, VAR-5, PERF-1, PERF-2, PERF-3, PERF-4, OBS-1, OBS-2, OBS-3, OBS-4, TOK-1, TOK-2, TOK-3, TOK-4, SEC-1, SEC-2, SEC-3, DOC-2, DOC-3, DOC-4, DOC-5 | MVP-1 | – | DOC-1, MVP-2, MVP-3, MVP-11, MVP-12 |
+| MVP-6, MVP-7, MVP-8, MVP-9, MVP-10, AL-3, AL-4, AL-5, AL-6, VAR-1, VAR-2, VAR-3, VAR-4, VAR-5, PERF-1, PERF-2, PERF-3, PERF-4, OBS-1, OBS-2, OBS-3, OBS-4, TOK-1, TOK-2, TOK-3, TOK-4, SEC-1, SEC-2, SEC-3, DOC-2, DOC-3, DOC-4, DOC-5 | MVP-1 | – | DOC-1, MVP-2, MVP-3, MVP-4, MVP-5, MVP-11, MVP-12, AL-1, AL-2 |
 
 ---
 ## Anotações Finais
