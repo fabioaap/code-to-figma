@@ -1,6 +1,15 @@
-import { addons } from '@storybook/addons';
-import { ADDON_ID } from './shared';
+import React from 'react';
+import { addons, types } from '@storybook/addons';
+import { ADDON_ID, PANEL_ID } from './shared';
+import { ExportPanel } from './panel';
 
 addons.register(ADDON_ID, () => {
-    // Placeholder para futuras integrações de canal.
+    addons.add(PANEL_ID, {
+        type: types.PANEL,
+        title: 'Figma Export',
+        render: ({ active }) => {
+            if (!active) return null;
+            return React.createElement(ExportPanel, {});
+        }
+    });
 });

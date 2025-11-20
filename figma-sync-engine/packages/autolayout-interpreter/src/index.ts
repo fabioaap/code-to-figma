@@ -1,5 +1,7 @@
 import { FigmaNode } from './types';
 
+export type { FigmaNode } from './types';
+
 interface CssSnapshot {
     display?: string;
     flexDirection?: string;

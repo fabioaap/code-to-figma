@@ -4,6 +4,20 @@
     "type": "module",
     "main": "dist/index.js",
     "types": "dist/index.d.ts",
+    "exports": {
+        ".": {
+            "import": "./dist/index.js",
+            "types": "./dist/index.d.ts"
+        },
+        "./preview": {
+            "import": "./dist/preview.js",
+            "types": "./dist/preview.d.ts"
+        },
+        "./register": {
+            "import": "./dist/register.js",
+            "types": "./dist/register.d.ts"
+        }
+    },
     "scripts": {
         "dev": "vite",
         "build": "tsc -p tsconfig.json && vite build",
@@ -11,16 +25,21 @@
         "test": "vitest"
     },
     "dependencies": {
+        "@figma-sync-engine/html-to-figma-core": "workspace:*",
+        "@figma-sync-engine/autolayout-interpreter": "workspace:*",
         "@storybook/addons": "^7.6.0",
         "@storybook/manager-api": "^7.6.0",
         "@storybook/preview-api": "^7.6.0",
+        "@storybook/components": "^7.6.0",
         "react": "^18.2.0",
         "react-dom": "^18.2.0"
     },
     "devDependencies": {
         "typescript": "^5.3.3",
         "vite": "^5.0.0",
+        "vitest": "^1.0.0",
         "@types/react": "^18.2.0",
-        "@types/react-dom": "^18.2.0"
+        "@types/react-dom": "^18.2.0",
+        "jsdom": "^23.0.0"
     }
 }
