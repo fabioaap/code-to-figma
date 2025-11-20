@@ -4,3 +4,7 @@ dist/
 .DS_Store
 coverage/
 .playwright-cache
+.turbo/
+*.log
+playwright-report/
+test-results/
