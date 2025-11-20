@@ -1,0 +1,6 @@
+
+> @figma-sync-engine/example-react-button@0.1.0 build /home/runner/work/code-to-figma/code-to-figma/figma-sync-engine/examples/react-button
+> storybook build
+
+sh: 1: storybook: not found
+[41m[30m ELIFECYCLE [39m[49m [31mCommand failed.[39m
