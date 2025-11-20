@@ -27,12 +27,12 @@ Implementar MVP funcional do fluxo Storybook → Figma em 2 semanas, com fundaç
   - Tempo estimado: 30min
 
 ### Dia 2: Core de Conversão (MVP-2, MVP-3)
-- [ ] **Task 2.1**: Implementar captura HTML (MVP-2)
+- [x] **Task 2.1**: Implementar captura HTML (MVP-2)
   - Usar `@storybook/preview-api` para acessar rendered DOM
   - Criar função `captureStoryHTML(storyId: string): Promise<string>`
   - Testes: validar HTML retornado para Button example
   - ID Backlog: MVP-2
-  - Tempo estimado: 3h
+  - ✅ **CONCLUÍDO**: Função implementada com sanitização, 14 testes passando
 
 - [ ] **Task 2.2**: Integrar html-to-figma-core (MVP-3)
   - Completar função `convertHtmlToFigma` real
