@@ -25,6 +25,15 @@ function validateEnvironment() {
     errors.push('E2E_BASE_URL must start with http:// or https://');
   }
 
+  // Validate timeout
+  const timeoutStr = process.env.E2E_TIMEOUT;
+  if (timeoutStr) {
+    const timeout = parseInt(timeoutStr, 10);
+    if (isNaN(timeout) || timeout <= 0) {
+      errors.push('E2E_TIMEOUT must be a positive number');
+    }
+  }
+
   // Check if Storybook is likely to be running (in non-CI environments)
   if (!isCI && baseURL.includes('localhost')) {
     warnings.push('E2E tests require a running Storybook instance. Make sure to start it with: pnpm dev');
