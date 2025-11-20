@@ -1,0 +1,15 @@
+
+> @figma-sync-engine/autolayout-interpreter@0.1.0 test /home/runner/work/code-to-figma/code-to-figma/figma-sync-engine/packages/autolayout-interpreter
+> vitest
+
+
+[7m[1m[36m RUN [39m[22m[27m [36mv1.6.1[39m [90m/home/runner/work/code-to-figma/code-to-figma/figma-sync-engine/packages/autolayout-interpreter[39m
+
+ [32m✓[39m tests/interpret.test.ts [2m ([22m[2m2 tests[22m[2m)[22m[90m 3[2mms[22m[39m
+
+[2m Test Files [22m [1m[32m1 passed[39m[22m[90m (1)[39m
+[2m      Tests [22m [1m[32m2 passed[39m[22m[90m (2)[39m
+[2m   Start at [22m 20:18:25
+[2m   Duration [22m 315ms[2m (transform 45ms, setup 0ms, collect 39ms, tests 3ms, environment 0ms, prepare 80ms)[22m
+
+[?25h
