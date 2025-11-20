@@ -1,0 +1,4 @@
+
+> @figma-sync-engine/example-react-button@0.1.0 lint /home/runner/work/code-to-figma/code-to-figma/figma-sync-engine/examples/react-button
+> eslint src --ext .ts,.tsx
+

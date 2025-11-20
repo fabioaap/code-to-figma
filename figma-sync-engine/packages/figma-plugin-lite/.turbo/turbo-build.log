@@ -1,0 +1,4 @@
+
+> @figma-sync-engine/figma-plugin-lite@0.1.0 build /home/runner/work/code-to-figma/code-to-figma/figma-sync-engine/packages/figma-plugin-lite
+> tsc -p tsconfig.json
+

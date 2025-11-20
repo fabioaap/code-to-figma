@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useChannel, useStorybookState } from '@storybook/manager-api';
-import { EVENT_EXPORT_REQUEST, PANEL_ID } from './shared';
+import { EVENT_EXPORT_REQUEST } from './shared';
 
 export const ExportPanel: React.FC = () => {
     const state = useStorybookState();
