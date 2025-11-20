@@ -6,12 +6,17 @@
         "dev": "turbo run dev",
         "build": "turbo run build",
         "lint": "turbo run lint",
-        "test": "turbo run test"
+        "test": "turbo run test",
+        "audit": "node scripts/audit.mjs",
+        "audit:outdated": "node scripts/audit.mjs --check-outdated"
     },
     "devDependencies": {
         "typescript": "^5.3.3",
         "turbo": "^1.12.0",
         "eslint": "^8.56.0",
+        "@typescript-eslint/parser": "^6.0.0",
+        "@typescript-eslint/eslint-plugin": "^6.0.0",
+        "eslint-plugin-react": "^7.33.0",
         "prettier": "^3.1.0",
         "vitest": "^1.0.0",
         "@types/node": "^20.10.0",

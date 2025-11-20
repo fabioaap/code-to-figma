@@ -8,5 +8,7 @@ export interface FigmaNode {
     paddingRight?: number;
     paddingBottom?: number;
     paddingLeft?: number;
+    primaryAxisAlignItems?: 'MIN' | 'CENTER' | 'MAX' | 'SPACE_BETWEEN';
+    counterAxisAlignItems?: 'MIN' | 'CENTER' | 'MAX' | 'BASELINE';
     [key: string]: any;
 }
