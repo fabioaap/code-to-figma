@@ -23,6 +23,25 @@ pnpm lint          # lint em todos os workspaces
 pnpm test          # testes (Vitest / futura suíte Playwright)
 ```
 
+### Testes por pacote
+Para rodar testes de um pacote específico, use um dos atalhos abaixo:
+```bash
+pnpm test:autolayout       # testes do autolayout-interpreter
+pnpm test:html-core        # testes do html-to-figma-core
+pnpm test:storybook-addon  # testes do storybook-addon-export
+```
+
+Ou use o comando pnpm filter diretamente com o nome do pacote:
+```bash
+pnpm --filter @figma-sync-engine/<nome-do-pacote> test
+```
+
+Exemplos:
+```bash
+pnpm --filter @figma-sync-engine/autolayout-interpreter test
+pnpm --filter @figma-sync-engine/html-to-figma-core test
+```
+
 ## Arquitetura (Clean)
 Camadas: Domain → Application → Infrastructure → Interface. Ver `docs/architecture.md` para visão detalhada e `docs/figma-json-format.md` para o formato de saída.
 
