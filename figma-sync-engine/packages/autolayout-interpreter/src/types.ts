@@ -8,5 +8,5 @@ export interface FigmaNode {
     paddingRight?: number;
     paddingBottom?: number;
     paddingLeft?: number;
-    [key: string]: any;
+    [key: string]: unknown;
 }
