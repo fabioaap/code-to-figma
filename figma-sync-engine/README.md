@@ -5,6 +5,45 @@ Ferramenta open source para exportar componentes renderizados no Storybook como 
 ## Objetivo
 Automatizar a conversão Storybook → Figma reduzindo em até 80% o tempo de documentação e alinhamento entre design e desenvolvimento.
 
+## Primeiros Passos
+
+### Pré-requisitos
+- Node.js 20+ (recomendado v20.19.5)
+- pnpm 10+ (será instalado automaticamente se você usar npm)
+
+### Instalação
+
+1. Clone o repositório:
+```bash
+git clone https://github.com/fabioaap/code-to-figma.git
+cd code-to-figma/figma-sync-engine
+```
+
+2. Instale o pnpm (se não tiver instalado):
+```bash
+npm install -g pnpm
+```
+
+3. Instale as dependências:
+```bash
+pnpm install
+```
+
+4. Faça o build de todos os pacotes:
+```bash
+pnpm build
+```
+
+### Rodando o Exemplo
+
+Para testar o projeto, rode o exemplo do botão React:
+```bash
+cd examples/react-button
+pnpm dev
+```
+
+Isso abrirá o Storybook em http://localhost:6006
+
 ## Pacotes
 - `storybook-addon-export`: Addon que adiciona botão "Exportar para Figma" e captura HTML da história ativa.
 - `html-to-figma-core`: Fork/light wrapper sobre `@builder.io/html-to-figma` para extensões futuras.
