@@ -16,11 +16,50 @@ Automatizar a conversão Storybook → Figma reduzindo em até 80% o tempo de do
 
 ## Scripts (raiz)
 ```bash
-pnpm install       # instala dependências do monorepo
-pnpm dev           # roda todos os pacotes em modo desenvolvimento
-pnpm build         # build de todos os pacotes
-pnpm lint          # lint em todos os workspaces
-pnpm test          # testes (Vitest / futura suíte Playwright)
+pnpm install              # instala dependências do monorepo
+pnpm dev                  # roda todos os pacotes em modo desenvolvimento
+pnpm build                # build de todos os pacotes
+pnpm lint                 # lint em todos os workspaces
+pnpm test                 # testes unitários (Vitest)
+pnpm test:e2e             # testes E2E (Playwright)
+pnpm test:e2e:ui          # testes E2E com interface visual
+pnpm test:e2e:headed      # testes E2E com browser visível
+pnpm playwright:install   # instala browsers do Playwright
+```
+
+## Testes E2E
+
+O projeto inclui uma suíte completa de testes end-to-end usando Playwright com validação automática de ambiente. Os testes garantem que:
+
+- A instância do Storybook está acessível
+- A funcionalidade de exportação funciona corretamente
+- O formato JSON gerado está correto
+
+### Configuração Rápida
+
+1. Instalar browsers do Playwright:
+```bash
+pnpm playwright:install
+```
+
+2. Executar testes E2E:
+```bash
+pnpm test:e2e
+```
+
+Para mais detalhes, consulte [e2e/README.md](./e2e/README.md).
+
+### Variáveis de Ambiente
+
+Os testes E2E suportam as seguintes variáveis de ambiente:
+
+- `E2E_BASE_URL`: URL da instância do Storybook (padrão: `http://localhost:6006`)
+- `E2E_HEADLESS`: Executar em modo headless (padrão: `true`)
+- `E2E_TIMEOUT`: Timeout por teste em ms (padrão: `30000`)
+
+Exemplo:
+```bash
+E2E_BASE_URL=http://localhost:3000 pnpm test:e2e
 ```
 
 ## Arquitetura (Clean)

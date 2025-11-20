@@ -6,7 +6,12 @@
         "dev": "turbo run dev",
         "build": "turbo run build",
         "lint": "turbo run lint",
-        "test": "turbo run test"
+        "test": "turbo run test",
+        "test:e2e": "playwright test",
+        "test:e2e:ui": "playwright test --ui",
+        "test:e2e:headed": "E2E_HEADLESS=false playwright test",
+        "test:e2e:debug": "playwright test --debug",
+        "playwright:install": "playwright install chromium --with-deps"
     },
     "devDependencies": {
         "typescript": "^5.3.3",
@@ -15,6 +20,7 @@
         "prettier": "^3.1.0",
         "vitest": "^1.0.0",
         "@types/node": "^20.10.0",
-        "playwright": "^1.40.0"
+        "playwright": "^1.40.0",
+        "@playwright/test": "^1.40.0"
     }
 }
