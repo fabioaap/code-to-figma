@@ -1,0 +1,50 @@
+
+> @figma-sync-engine/example-react-button@0.1.0 build C:\Users\Educacross\Documents\code-to-figma\figma-sync-engine\examples\react-button
+> storybook build
+
+@storybook/cli v7.6.20
+
+info => Cleaning outputDir: \storybook-static
+info => Loading presets
+info => Building manager..
+info => Manager built (433 ms)
+info => Building preview..
+[33mThe CJS build of Vite's Node API is deprecated. See https://vite.dev/guide/troubleshooting.html#vite-cjs-node-api-deprecated for more details.[39m
+[36mvite v5.4.21 [32mbuilding for production...[36m[39m
+info => Copying static files: C:\Users\Educacross\Documents\code-to-figma\figma-sync-engine\node_modules\.pnpm\@storybook+manager@7.6.20\node_modules\@storybook\manager\static at C:\Users\Educacross\Documents\code-to-figma\figma-sync-engine\examples\react-button\storybook-static\sb-common-assets
+
+./sb-common-assets/fonts.css doesn't exist at build time, it will remain unchanged to be resolved at runtime
+transforming...
+[32m✓[39m 554 modules transformed.
+rendering chunks...
+computing gzip size...
+[2mstorybook-static/[22m[32miframe.html                                    [39m[1m[2m 12.57 kB[22m[1m[22m[2m │ gzip:   3.56 kB[22m
+[2mstorybook-static/[22m[36massets/preview-wny6kkX7.js                     [39m[1m[2m  0.06 kB[22m[1m[22m[2m │ gzip:   0.08 kB[22m
+[2mstorybook-static/[22m[36massets/WithTooltip-V3YHNWJZ-CXf1ZcLy.js        [39m[1m[2m  0.32 kB[22m[1m[22m[2m │ gzip:   0.22 kB[22m
+[2mstorybook-static/[22m[36massets/syntaxhighlighter-MJWPISIS-v_yKUi1j.js  [39m[1m[2m  0.33 kB[22m[1m[22m[2m │ gzip:   0.24 kB[22m
+[2mstorybook-static/[22m[36massets/index-B7LTuyD5.js                       [39m[1m[2m  0.40 kB[22m[1m[22m[2m │ gzip:   0.27 kB[22m
+[2mstorybook-static/[22m[36massets/preview-wlJdU0E7.js                     [39m[1m[2m  0.52 kB[22m[1m[22m[2m │ gzip:   0.35 kB[22m
+[2mstorybook-static/[22m[36massets/index-DrFu-skq.js                       [39m[1m[2m  0.77 kB[22m[1m[22m[2m │ gzip:   0.47 kB[22m
+[2mstorybook-static/[22m[36massets/preview-Cv3rAi2i.js                     [39m[1m[2m  0.86 kB[22m[1m[22m[2m │ gzip:   0.55 kB[22m
+[2mstorybook-static/[22m[36massets/entry-preview-BkZrvSMF.js               [39m[1m[2m  1.08 kB[22m[1m[22m[2m │ gzip:   0.63 kB[22m
+[2mstorybook-static/[22m[36massets/Button.stories-DFjunJum.js              [39m[1m[2m  1.98 kB[22m[1m[22m[2m │ gzip:   1.06 kB[22m
+[2mstorybook-static/[22m[36massets/preview-BcxrGG1y.js                     [39m[1m[2m  3.19 kB[22m[1m[22m[2m │ gzip:   1.37 kB[22m
+[2mstorybook-static/[22m[36massets/iframe-DUBDAwyi.js                      [39m[1m[2m  3.80 kB[22m[1m[22m[2m │ gzip:   1.64 kB[22m
+[2mstorybook-static/[22m[36massets/preview-FHoZfaOb.js                     [39m[1m[2m  5.17 kB[22m[1m[22m[2m │ gzip:   2.37 kB[22m
+[2mstorybook-static/[22m[36massets/preview-BAz7FMXc.js                     [39m[1m[2m  7.62 kB[22m[1m[22m[2m │ gzip:   1.56 kB[22m
+[2mstorybook-static/[22m[36massets/index-uubelm5h.js                       [39m[1m[2m  7.81 kB[22m[1m[22m[2m │ gzip:   3.08 kB[22m
+[2mstorybook-static/[22m[36massets/preview-BJKiUloN.js                     [39m[1m[2m  8.11 kB[22m[1m[22m[2m │ gzip:   3.09 kB[22m
+[2mstorybook-static/[22m[36massets/Color-6VNJS4EI-C5tfbVra.js              [39m[1m[2m 30.93 kB[22m[1m[22m[2m │ gzip:  11.71 kB[22m
+[2mstorybook-static/[22m[36massets/_getPrototype-CKiro0KA.js               [39m[1m[2m 77.21 kB[22m[1m[22m[2m │ gzip:  22.95 kB[22m
+[2mstorybook-static/[22m[36massets/react-18-C8LIfgPj.js                    [39m[1m[2m134.44 kB[22m[1m[22m[2m │ gzip:  43.36 kB[22m
+[2mstorybook-static/[22m[36massets/entry-preview-docs-DaDeGIdX.js          [39m[1m[2m211.79 kB[22m[1m[22m[2m │ gzip:  66.33 kB[22m
+[2mstorybook-static/[22m[36massets/DocsRenderer-NNNQARDV-B0CsqgQI.js       [39m[1m[33m543.24 kB[39m[22m[2m │ gzip: 177.52 kB[22m
+[2mstorybook-static/[22m[36massets/formatter-SWP5E3XI-Bif7K5XT.js          [39m[1m[33m601.49 kB[39m[22m[2m │ gzip: 186.18 kB[22m
+[33m
+(!) Some chunks are larger than 500 kB after minification. Consider:
+- Using dynamic import() to code-split the application
+- Use build.rollupOptions.output.manualChunks to improve chunking: https://rollupjs.org/configuration-options/#output-manualchunks
+- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.[39m
+[32m✓ built in 12.29s[39m
+info => Preview built (15 s)
+info => Output directory: C:\Users\Educacross\Documents\code-to-figma\figma-sync-engine\examples\react-button\storybook-static

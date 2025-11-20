@@ -1,6 +1,6 @@
 # Backlog do Projeto – figma-sync-engine
 
-> Última atualização: 19/11/2025
+> Última atualização: 20/11/2025
 > Objetivo macro: Reduzir em até 80% o tempo de documentação de componentes no Figma via fluxo Storybook → Figma.
 
 ## Estrutura do Backlog
@@ -14,6 +14,7 @@
 
 ---
 ## EPIC 1: MVP Export Storybook → Figma
+Status 20/11/2025 (atualizado): Build estável! MVP-11 e MVP-12 concluídos. Pronto para implementação do pipeline de exportação (MVP-2 a MVP-5).
 Foco em fluxo mínimo funcional.
 
 ### User Stories
@@ -33,6 +34,8 @@ Foco em fluxo mínimo funcional.
 | MVP-8 | Documentar formato em `figma-json-format.md` | Delivery | Campos principais descritos | Must | MVP-3 |
 | MVP-9 | Log simples de export (storyId, tamanho JSON) | Delivery | Log estruturado sem PII | Should | MVP-5 |
 | MVP-10 | Kill-switch de addon (flag env) | Delivery | Flag desativa botão | Should | MVP-1 |
+| MVP-11 | Ajustar typings/build do addon Storybook | Delivery | Build do addon sem erros de React | Must | MVP-1 |
+| MVP-12 | Ajustar typings/build do plugin Figma | Delivery | Build do plugin compila e gera dist | Must | MVP-6 |
 
 ---
 ## EPIC 2: Auto Layout Engine Avançado
@@ -112,6 +115,7 @@ Objetivo: Export de componente médio (<300 nodes) < 1.5s.
 
 ---
 ## EPIC 8: Comunidade & Documentação
+Status 20/11/2025: DOC-1 entregue (CONTRIBUTING.md publicado); demais itens pendentes.
 
 | ID | Item | Tipo | Aceite | Prioridade | Dependências |
 |----|------|------|--------|------------|--------------|
@@ -156,10 +160,11 @@ Objetivo: Export de componente médio (<300 nodes) < 1.5s.
 
 ---
 ## Próximas Ações Imediatas
-1. Integrar painel addon (registro real) – MVP-1 refinamento.
-2. Implementar AL-2 (align-items / justify-content).
-3. Adicionar logger OBS-1.
-4. Criar CONTRIBUTING.md (DOC-1).
+1. ✅ MVP-11 (Build do addon Storybook) – CONCLUÍDO: instalado `@storybook/react-vite`.
+2. ✅ MVP-12 (Build do plugin Figma) – CONCLUÍDO: configurado Vite com bundling de `code.ts` e `ui.tsx`.
+3. **Implementar MVP-2 a MVP-5** (pipeline de exportação: captura HTML → html-to-figma → Auto Layout → export).
+4. AL-2 (align-items / justify-content) após MVP-5 funcional.
+5. OBS-1 (logger estruturado) após pipeline ativo.
 
 ---
 ## Notação & Convenções
@@ -168,10 +173,10 @@ Objetivo: Export de componente médio (<300 nodes) < 1.5s.
 - RICE será preenchido após coleta de Reach & Effort.
 
 ---
-## Kanban Inicial (Status Atual)
+## Kanban Atualizado (20/11/2025)
 | Backlog | Em Progresso | Em Review | Concluído |
 |---------|--------------|-----------|-----------|
-| AL-2, OBS-1, DOC-1 | – | – | MVP-1..MVP-10, AL-1, AL-7 |
+| MVP-2, MVP-3, MVP-4, MVP-5, MVP-7, MVP-8, MVP-9, MVP-10, AL-2, AL-3, AL-4, AL-5, AL-6, VAR-1, VAR-2, VAR-3, VAR-4, VAR-5, PERF-1, PERF-2, PERF-3, PERF-4, OBS-1, OBS-2, OBS-3, OBS-4, TOK-1, TOK-2, TOK-3, TOK-4, SEC-1, SEC-2, SEC-3, DOC-2, DOC-3, DOC-4, DOC-5 | MVP-1 | – | DOC-1, MVP-11, MVP-12 |
 
 ---
 ## Anotações Finais

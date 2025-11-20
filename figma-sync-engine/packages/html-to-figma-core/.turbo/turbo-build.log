@@ -1,0 +1,4 @@
+
+> @figma-sync-engine/html-to-figma-core@0.1.0 build C:\Users\Educacross\Documents\code-to-figma\figma-sync-engine\packages\html-to-figma-core
+> tsc -p tsconfig.json
+

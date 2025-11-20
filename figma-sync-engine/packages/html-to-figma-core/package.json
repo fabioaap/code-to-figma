@@ -10,7 +10,7 @@
         "test": "vitest"
     },
     "dependencies": {
-        "@builder.io/html-to-figma": "^0.8.0"
+        "@builder.io/html-to-figma": "0.0.3"
     },
     "devDependencies": {
         "typescript": "^5.3.3"

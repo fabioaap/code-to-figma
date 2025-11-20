@@ -1,0 +1,4 @@
+
+> @figma-sync-engine/storybook-addon-export@0.1.0 build C:\Users\Educacross\Documents\code-to-figma\figma-sync-engine\packages\storybook-addon-export
+> tsc -p tsconfig.json
+
