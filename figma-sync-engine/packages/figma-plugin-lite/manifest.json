@@ -1,0 +1,7 @@
+{
+    "name": "Figma Sync Engine Lite",
+    "id": "figma-sync-engine-lite",
+    "api": "1.0.0",
+    "main": "dist/code.js",
+    "ui": "dist/ui.html"
+}

@@ -1,0 +1,24 @@
+{
+    "name": "@figma-sync-engine/storybook-addon-export",
+    "version": "0.1.0",
+    "type": "module",
+    "main": "dist/index.js",
+    "types": "dist/index.d.ts",
+    "scripts": {
+        "dev": "vite",
+        "build": "tsc -p tsconfig.json && vite build",
+        "lint": "eslint src --ext .ts,.tsx",
+        "test": "vitest"
+    },
+    "dependencies": {
+        "@storybook/addons": "^7.6.0",
+        "@storybook/manager-api": "^7.6.0",
+        "@storybook/preview-api": "^7.6.0",
+        "react": "^18.2.0",
+        "react-dom": "^18.2.0"
+    },
+    "devDependencies": {
+        "typescript": "^5.3.3",
+        "vite": "^5.0.0"
+    }
+}
