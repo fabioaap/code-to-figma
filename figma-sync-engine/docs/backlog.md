@@ -40,11 +40,11 @@ Foco em fluxo mínimo funcional.
 #### Snapshot de status (21/11/2025)
 - ✅ **MVP-1** – Painel registrado em `storybook-addon-export/src/register.ts` com botão funcional.
 - ✅ **MVP-2** – `captureStoryHTML` entregue com sanitização e testes.
-- 🟡 **MVP-3** – `convertHtmlToFigma` usa `htmlToFigma`, porém falta metadata/schema final e o pacote está bloqueado pela dependência `@storybook/addons@8.6.x` inexistente (**issue #13**).
+- 🟡 **MVP-3** – `convertHtmlToFigma` usa `htmlToFigma`, porém falta metadata/schema final. Dependência `@storybook/addons` corrigida (**issue #13** - Done).
 - ✅ **MVP-4** – `applyAutoLayout` cobre gap/padding básicos (aguarda AL-2 para alinhamentos completos).
 - ⛔ **MVP-5** – Exportação para clipboard/download ainda não implementada no painel (**issue #15**).
 - ✅ **MVP-6** – Plugin Lite compila (`pnpm build --filter @figma-sync-engine/figma-plugin-lite`) e cria frames/textos básicos.
-- 🟡 **MVP-7** – Testes Vitest ativos para módulos core, porém ausência de snapshots/E2E mantém item em progresso (**issue #14**).
+- ✅ **MVP-7** – Testes Vitest configurados para CI (`pnpm test` roda `vitest run`). Scripts ajustados (**issue #14** - Done).
 - ✅ **MVP-8** – `docs/figma-json-format.md` contém estrutura mínima (precisa ampliar quando variantes chegarem).
 - ⛔ **MVP-9** – Logger de export não iniciado (**issue #17**).
 - ⛔ **MVP-10** – Flag/kill-switch não iniciada (**issue #19**).

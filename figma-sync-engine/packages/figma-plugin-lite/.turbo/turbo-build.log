@@ -11,4 +11,4 @@ computing gzip size...
 [2mdist/[22m[32msrc/index.html  [39m[1m[2m  0.19 kB[22m[1m[22m[2m │ gzip:  0.15 kB[22m
 [2mdist/[22m[36mcode.js         [39m[1m[2m  0.89 kB[22m[1m[22m[2m │ gzip:  0.47 kB[22m
 [2mdist/[22m[36mui.js           [39m[1m[2m142.81 kB[22m[1m[22m[2m │ gzip: 45.94 kB[22m
-[32m✓ built in 4.85s[39m
+[32m✓ built in 1.82s[39m

@@ -1,0 +1,24 @@
+
+> @figma-sync-engine/storybook-addon-export@0.1.0 test C:\Users\Educacross\Documents\code-to-figma\figma-sync-engine\packages\storybook-addon-export
+> vitest run --passWithNoTests
+
+
+[7m[1m[36m RUN [39m[22m[27m [36mv1.6.1[39m [90mC:/Users/Educacross/Documents/code-to-figma/figma-sync-engine/packages/storybook-addon-export[39m
+
+ [32m✓[39m src/export.test.ts [2m ([22m[2m36 tests[22m[2m)[22m[90m 97[2mms[22m[39m
+[90mstderr[2m | src/export.test.ts[22m[39m
+Not implemented: navigation to another Document
+Not implemented: navigation to another Document
+Not implemented: navigation to another Document
+Not implemented: navigation to another Document
+Not implemented: navigation to another Document
+Not implemented: navigation to another Document
+Not implemented: navigation to another Document
+
+ [32m✓[39m src/captureHtml.test.ts [2m ([22m[2m14 tests[22m[2m)[22m[33m 1547[2mms[22m[39m
+
+[2m Test Files [22m [1m[32m2 passed[39m[22m[90m (2)[39m
+[2m      Tests [22m [1m[32m50 passed[39m[22m[90m (50)[39m
+[2m   Start at [22m 15:02:43
+[2m   Duration [22m 4.50s[2m (transform 232ms, setup 1ms, collect 291ms, tests 1.64s, environment 3.23s, prepare 1.13s)[22m
+
