@@ -20,8 +20,10 @@ pnpm install       # instala dependências do monorepo
 pnpm dev           # roda todos os pacotes em modo desenvolvimento
 pnpm build         # build de todos os pacotes
 pnpm lint          # lint em todos os workspaces
-pnpm test          # testes (Vitest / futura suíte Playwright)
+pnpm test          # testes em modo não-interativo (Vitest run)
 ```
+
+**Nota sobre testes**: Os scripts de teste foram configurados para rodar em modo não-interativo usando `vitest run --passWithNoTests`. Isso garante que o comando `pnpm test` termine automaticamente após executar todos os testes, adequado para ambientes CI/CD. Para desenvolvimento local com watch mode, use `pnpm -r exec vitest` nos pacotes individuais.
 
 ## Arquitetura (Clean)
 Camadas: Domain → Application → Infrastructure → Interface. Ver `docs/architecture.md` para visão detalhada e `docs/figma-json-format.md` para o formato de saída.
