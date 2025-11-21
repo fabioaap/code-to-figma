@@ -1,6 +1,15 @@
 # Pacote de Issues para concluir o projeto figma-sync-engine
 
-> Referência principal: `docs/backlog.md` (20/11/2025) + `docs/PROGRESS_CURRENT.md`.
+> Referência principal: `docs/backlog.md` (21/11/2025) + `docs/PROGRESS_CURRENT.md`.
+
+## Status rápido (21/11/2025)
+- ✅ Entregues: MVP-1, MVP-2, MVP-4, MVP-6, MVP-8, MVP-11, MVP-12, AL-1, DOC-1.
+- 🟡 Em andamento: MVP-3 (conversão html-to-figma ainda sem metadata/schema final) e MVP-7 (tests sem snapshots/E2E).
+- ⛔ Bloqueios atuais:
+  - Dependência `@storybook/addons@^8.6.14` inexistente no npm (usar `^7.6.17` ou aguardar release 8.6 real).
+  - `pnpm test` roda Vitest em modo watch, mantendo pipeline travada; ajustar scripts para `vitest run` antes de integrar à CI.
+  - MVP-5 ainda não implementa clipboard/download, impedindo validação end-to-end e itens subsequentes (MVP-6+, OBS-1, PERF-1).
+
 > Copie e cole cada bloco abaixo ao criar issues no GitHub. Ajuste labels, responsáveis e milestones conforme necessário.
 
 Legenda sugerida de labels:

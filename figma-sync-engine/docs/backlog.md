@@ -1,6 +1,6 @@
 # Backlog do Projeto – figma-sync-engine
 
-> Última atualização: 20/11/2025
+> Última atualização: 21/11/2025
 > Objetivo macro: Reduzir em até 80% o tempo de documentação de componentes no Figma via fluxo Storybook → Figma.
 
 ## Estrutura do Backlog
@@ -14,7 +14,7 @@
 
 ---
 ## EPIC 1: MVP Export Storybook → Figma
-Status 20/11/2025 (atualizado): Build estável! MVP-11 e MVP-12 concluídos. Pronto para implementação do pipeline de exportação (MVP-2 a MVP-5).
+Status 21/11/2025 (atualizado): `pnpm install` e `pnpm test` acusaram dependência inexistente (`@storybook/addons@^8.6.14`) e execução em modo watch; MVP-1, MVP-2, MVP-4, MVP-6, MVP-8, MVP-11 e MVP-12 estão válidos, porém MVP-3 permanece parcial e o pipeline de exportação (MVP-3 → MVP-5) segue como prioridade.
 Foco em fluxo mínimo funcional.
 
 ### User Stories
@@ -37,6 +37,20 @@ Foco em fluxo mínimo funcional.
 | MVP-11 | Ajustar typings/build do addon Storybook | Delivery | Build do addon sem erros de React | Must | MVP-1 |
 | MVP-12 | Ajustar typings/build do plugin Figma | Delivery | Build do plugin compila e gera dist | Must | MVP-6 |
 
+#### Snapshot de status (21/11/2025)
+- ✅ **MVP-1** – Painel registrado em `storybook-addon-export/src/register.ts` com botão funcional.
+- ✅ **MVP-2** – `captureStoryHTML` entregue com sanitização e testes.
+- 🟡 **MVP-3** – `convertHtmlToFigma` usa `htmlToFigma`, porém falta metadata/schema final e o pacote está bloqueado pela dependência `@storybook/addons@8.6.x` inexistente.
+- ✅ **MVP-4** – `applyAutoLayout` cobre gap/padding básicos (aguarda AL-2 para alinhamentos completos).
+- ⛔ **MVP-5** – Exportação para clipboard/download ainda não implementada no painel.
+- ✅ **MVP-6** – Plugin Lite compila (`pnpm build --filter @figma-sync-engine/figma-plugin-lite`) e cria frames/textos básicos.
+- 🟡 **MVP-7** – Testes Vitest ativos para módulos core, porém ausência de snapshots/E2E mantém item em progresso.
+- ✅ **MVP-8** – `docs/figma-json-format.md` contém estrutura mínima (precisa ampliar quando variantes chegarem).
+- ⛔ **MVP-9** – Logger de export não iniciado.
+- ⛔ **MVP-10** – Flag/kill-switch não iniciada.
+- ✅ **MVP-11** – Build do addon passa (`pnpm build --filter @figma-sync-engine/storybook-addon-export`).
+- ✅ **MVP-12** – Build do plugin passa (`pnpm build --filter @figma-sync-engine/figma-plugin-lite`).
+
 ---
 ## EPIC 2: Auto Layout Engine Avançado
 Expandir heurísticas CSS → Figma.
@@ -56,6 +70,15 @@ Expandir heurísticas CSS → Figma.
 | AL-6 | Relatório divergências CSS vs Figma | Discovery | Lista de campos não mapeados | Should | AL-2 |
 | AL-7 | Mapeamento de font, weight, line-height | Delivery | Nodes TEXT refletindo estilo | Must | MVP-3 |
 
+#### Snapshot de status (21/11/2025)
+- ✅ **AL-1** – Parser entregue com testes cobrindo 1/2/3/4 valores em `autolayout-interpreter`.
+- ⛔ **AL-2** – Não iniciado; dependência para alinhamentos ainda aberta.
+- ⛔ **AL-3** – Fallback de direção pendente.
+- ⛔ **AL-4** – Gap multi-eixo aguardando discovery.
+- ⛔ **AL-5** – POC flex-wrap não iniciada.
+- ⛔ **AL-6** – Relatório de divergências sem owner.
+- ⛔ **AL-7** – Mapeamento de tipografia não iniciado.
+
 Métrica alvo (Epic): ≥90% de fidelidade visual para componentes flex simples.
 
 ---
@@ -70,6 +93,13 @@ Suporte a geração de Component + VariantSets.
 | VAR-4 | Detectar estados via `data-state` | Discovery | Demonstra 2+ estados | Could | VAR-1 |
 | VAR-5 | Diferencial de diffs visual (snapshot) | Discovery | Snapshot comparativo | Could | VAR-2 |
 
+#### Snapshot de status (21/11/2025)
+- ⛔ **VAR-1** – Convenção args → variants não definida.
+- ⛔ **VAR-2** – Seleção múltipla não implementada.
+- ⛔ **VAR-3** – Plugin ainda não cria ComponentSet.
+- ⛔ **VAR-4** – Descoberta de estados pendente.
+- ⛔ **VAR-5** – Sem POC de snapshot diff.
+
 Métrica alvo: Reduzir tempo de criação de variantes Figma em ≥70%.
 
 ---
@@ -81,6 +111,12 @@ Métrica alvo: Reduzir tempo de criação de variantes Figma em ≥70%.
 | PERF-2 | Cache de conversão por hash HTML | Delivery | Cache hit registrado | Should | PERF-1 |
 | PERF-3 | Profiling nodes > 500 | Discovery | Relatório gargalos | Could | PERF-1 |
 | PERF-4 | Streaming parcial (HTML grande) | Discovery | POC streaming | Could | PERF-3 |
+
+#### Snapshot de status (21/11/2025)
+- ⛔ **PERF-1** – Benchmark não iniciado (aguarda pipeline estável).
+- ⛔ **PERF-2** – Cache por hash bloqueado por PERF-1.
+- ⛔ **PERF-3** – Profiling sem baseline.
+- ⛔ **PERF-4** – Streaming ainda em ideação.
 
 Objetivo: Export de componente médio (<300 nodes) < 1.5s.
 
@@ -94,6 +130,12 @@ Objetivo: Export de componente médio (<300 nodes) < 1.5s.
 | OBS-3 | TTL de feature flags | Delivery | Expiração automática | Should | MVP-10 |
 | OBS-4 | Dashboard simples (script CLI) | Discovery | Sumário métricas | Could | OBS-1 |
 
+#### Snapshot de status (21/11/2025)
+- ⛔ **OBS-1** – Logger estruturado aguardando MVP-5.
+- ⛔ **OBS-2** – Sanitização adicional ainda não planejada.
+- ⛔ **OBS-3** – TTL de flags sem implementação.
+- ⛔ **OBS-4** – Dashboard CLI não iniciado.
+
 ---
 ## EPIC 6: Design Tokens
 
@@ -104,6 +146,12 @@ Objetivo: Export de componente médio (<300 nodes) < 1.5s.
 | TOK-3 | Export tokens sidecar file | Delivery | `tokens.json` gerado | Should | TOK-1 |
 | TOK-4 | Plugin aplica tokens se existirem | Delivery | Matching por nome | Could | TOK-3 |
 
+#### Snapshot de status (21/11/2025)
+- ⛔ **TOK-1** – Extração de cores ainda em discovery.
+- ⛔ **TOK-2** – Tokens tipográficos dependem de TOK-1.
+- ⛔ **TOK-3** – Arquivo `tokens.json` não iniciado.
+- ⛔ **TOK-4** – Plugin ainda não interpreta tokens.
+
 ---
 ## EPIC 7: Segurança & Compliance
 
@@ -113,9 +161,14 @@ Objetivo: Export de componente médio (<300 nodes) < 1.5s.
 | SEC-2 | Kill-switch remoto (env var) | Delivery | Desativa export | Should | MVP-10 |
 | SEC-3 | Política de versionamento sem breaking | Delivery | Documentada | Should | SEC-1 |
 
+#### Snapshot de status (21/11/2025)
+- ⛔ **SEC-1** – Auditoria pendente; `pnpm audit` não executou devido ao erro anterior na pipeline.
+- ⛔ **SEC-2** – Kill-switch remoto não planejado.
+- ⛔ **SEC-3** – Política de versionamento sem owner.
+
 ---
 ## EPIC 8: Comunidade & Documentação
-Status 20/11/2025: DOC-1 entregue (CONTRIBUTING.md publicado); demais itens pendentes.
+Status 21/11/2025: DOC-1 entregue (CONTRIBUTING.md publicado); DOC-4 (badge CI) e DOC-5 (FAQ) continuam em aberto aguardando definição do pipeline.
 
 | ID | Item | Tipo | Aceite | Prioridade | Dependências |
 |----|------|------|--------|------------|--------------|
@@ -124,6 +177,13 @@ Status 20/11/2025: DOC-1 entregue (CONTRIBUTING.md publicado); demais itens pend
 | DOC-3 | Exemplos adicionais (Input, Card, Navbar) | Delivery | 3 novos exemplos | Should | MVP |
 | DOC-4 | Badge de status CI | Delivery | README atualizado | Must | CI |
 | DOC-5 | FAQ (limitações e roadmap) | Delivery | Sessão README | Should | MVP |
+
+#### Snapshot de status (21/11/2025)
+- ✅ **DOC-1** – CONTRIBUTING.md publicado.
+- ⛔ **DOC-2** – Fluxo de changelog não configurado.
+- ⛔ **DOC-3** – Exemplos adicionais não criados.
+- ⛔ **DOC-4** – Badge CI aguardando workflow.
+- ⛔ **DOC-5** – FAQ não iniciado.
 
 ---
 ## Roteiro Temporal (Proposta)
@@ -149,6 +209,8 @@ Status 20/11/2025: DOC-1 entregue (CONTRIBUTING.md publicado); demais itens pend
 | Performance em componentes grandes | Lentidão de fluxo | Benchmark + cache |
 | Complexidade de variantes | Curva de aprendizado | Documentação e convenções |
 | Tokens inconsistentes | Erros de design system | Validação por snapshot |
+| Dependência `@storybook/addons@^8.6.14` inexistente | Instalação falha bloqueando novos devs | Fixar dependência em `^7.6.17` ou aguardar release oficial 8.6, atualizar lockfile e rerodar `pnpm install` |
+| `pnpm test` em modo watch (Vitest DEV) | Pipeline local não conclui/retorna código ≠0 | Alterar script para `vitest run --passWithNoTests` (ou usar `CI=1`) garantindo saída determinística |
 
 ---
 ## Critérios de Saída do Discovery (Definição de Pronto)
@@ -160,11 +222,11 @@ Status 20/11/2025: DOC-1 entregue (CONTRIBUTING.md publicado); demais itens pend
 
 ---
 ## Próximas Ações Imediatas
-1. ✅ MVP-11 (Build do addon Storybook) – CONCLUÍDO: instalado `@storybook/react-vite`.
-2. ✅ MVP-12 (Build do plugin Figma) – CONCLUÍDO: configurado Vite com bundling de `code.ts` e `ui.tsx`.
-3. **Implementar MVP-2 a MVP-5** (pipeline de exportação: captura HTML → html-to-figma → Auto Layout → export).
-4. AL-2 (align-items / justify-content) após MVP-5 funcional.
-5. OBS-1 (logger estruturado) após pipeline ativo.
+1. **Corrigir dependência `@storybook/addons`** – alinhar `package.json` para `^7.6.17`, atualizar lockfile e reexecutar `pnpm install` para liberar onboarding.
+2. **Ajustar scripts de teste** – usar `vitest run`/`pnpm test --runInBand` para evitar modo watch e permitir CI local.
+3. **Fechar MVP-3 → MVP-5** – consolidar pipeline captura → conversão → Auto Layout → export (clipboard/download) e adicionar testes de integração.
+4. **Implementar AL-2** – mapear `align-items`/`justify-content` e atualizar documentação.
+5. **Planejar OBS-1 + MVP-9** – definir logger estruturado já alinhado ao kill-switch futuro.
 
 ---
 ## Notação & Convenções
@@ -173,10 +235,10 @@ Status 20/11/2025: DOC-1 entregue (CONTRIBUTING.md publicado); demais itens pend
 - RICE será preenchido após coleta de Reach & Effort.
 
 ---
-## Kanban Atualizado (20/11/2025 - 14:58)
+## Kanban Atualizado (21/11/2025 - 11:45)
 | Backlog | Em Progresso | Em Review | Concluído |
 |---------|--------------|-----------|-----------|
-| MVP-6, MVP-7, MVP-8, MVP-9, MVP-10, AL-3, AL-4, AL-5, AL-6, VAR-1, VAR-2, VAR-3, VAR-4, VAR-5, PERF-1, PERF-2, PERF-3, PERF-4, OBS-1, OBS-2, OBS-3, OBS-4, TOK-1, TOK-2, TOK-3, TOK-4, SEC-1, SEC-2, SEC-3, DOC-2, DOC-3, DOC-4, DOC-5 | MVP-1 | – | DOC-1, MVP-2, MVP-3, MVP-4, MVP-5, MVP-11, MVP-12, AL-1, AL-2 |
+| MVP-5, MVP-9, MVP-10, AL-2, AL-3, AL-4, AL-5, AL-6, AL-7, VAR-1, VAR-2, VAR-3, VAR-4, VAR-5, PERF-1, PERF-2, PERF-3, PERF-4, OBS-1, OBS-2, OBS-3, OBS-4, TOK-1, TOK-2, TOK-3, TOK-4, SEC-1, SEC-2, SEC-3, DOC-2, DOC-3, DOC-4, DOC-5 | MVP-3, MVP-7 | – | DOC-1, MVP-1, MVP-2, MVP-4, MVP-6, MVP-8, MVP-11, MVP-12, AL-1 |
 
 ---
 ## Anotações Finais
