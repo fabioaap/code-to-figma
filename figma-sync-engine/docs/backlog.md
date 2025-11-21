@@ -47,7 +47,7 @@ Foco em fluxo mínimo funcional.
 - 🟡 **MVP-7** – Testes Vitest ativos para módulos core, porém ausência de snapshots/E2E mantém item em progresso (**issue #14**).
 - ✅ **MVP-8** – `docs/figma-json-format.md` contém estrutura mínima (precisa ampliar quando variantes chegarem).
 - ⛔ **MVP-9** – Logger de export não iniciado (**issue #17**).
-- ⛔ **MVP-10** – Flag/kill-switch não iniciada.
+- ⛔ **MVP-10** – Flag/kill-switch não iniciada (**issue #19**).
 - ✅ **MVP-11** – Build do addon passa (`pnpm build --filter @figma-sync-engine/storybook-addon-export`).
 - ✅ **MVP-12** – Build do plugin passa (`pnpm build --filter @figma-sync-engine/figma-plugin-lite`).
 
@@ -182,7 +182,7 @@ Status 21/11/2025: DOC-1 entregue (CONTRIBUTING.md publicado); DOC-4 (badge CI) 
 - ✅ **DOC-1** – CONTRIBUTING.md publicado.
 - ⛔ **DOC-2** – Fluxo de changelog não configurado.
 - ⛔ **DOC-3** – Exemplos adicionais não criados.
-- ⛔ **DOC-4** – Badge CI aguardando workflow.
+- ⛔ **DOC-4** – Badge CI aguardando workflow (**issue #20**).
 - ⛔ **DOC-5** – FAQ não iniciado.
 
 ---
@@ -222,11 +222,8 @@ Status 21/11/2025: DOC-1 entregue (CONTRIBUTING.md publicado); DOC-4 (badge CI) 
 
 ---
 ## Próximas Ações Imediatas
-1. **Corrigir dependência `@storybook/addons`** – alinhar `package.json` para `^7.6.17`, atualizar lockfile e reexecutar `pnpm install` para liberar onboarding (**issue #13**).
-2. **Ajustar scripts de teste** – usar `vitest run`/`pnpm test --runInBand` para evitar modo watch e permitir CI local (**issue #14**).
-3. **Fechar MVP-3 → MVP-5** – consolidar pipeline captura → conversão → Auto Layout → export (clipboard/download) e adicionar testes de integração (**issue #15**).
-4. **Implementar AL-2** – mapear `align-items`/`justify-content` e atualizar documentação (**issue #16**).
-5. **Planejar OBS-1 + MVP-9** – definir logger estruturado já alinhado ao kill-switch futuro (**issue #17**).
+- 6. **Adicionar kill-switch configurável** – implementar flag `FIGMA_EXPORT_ENABLED` e documentação associada (**issue #19**).
+- 7. **Publicar badge da CI** – garantir workflow e badge no README para comunicar status (**issue #20**).
 
 ---
 ## Notação & Convenções
@@ -238,7 +235,7 @@ Status 21/11/2025: DOC-1 entregue (CONTRIBUTING.md publicado); DOC-4 (badge CI) 
 ## Kanban Atualizado (21/11/2025 - 11:45)
 | Backlog | Em Progresso | Em Review | Concluído |
 |---------|--------------|-----------|-----------|
-| MVP-5 (#15), MVP-9 (#17), MVP-10, AL-2 (#16), AL-3, AL-4, AL-5, AL-6, AL-7, VAR-1, VAR-2, VAR-3, VAR-4, VAR-5, PERF-1, PERF-2, PERF-3, PERF-4, OBS-1 (#17), OBS-2, OBS-3, OBS-4, TOK-1, TOK-2, TOK-3, TOK-4, SEC-1, SEC-2, SEC-3, DOC-2, DOC-3, DOC-4, DOC-5 | MVP-3 (#13), MVP-7 (#14) | – | DOC-1, MVP-1, MVP-2, MVP-4, MVP-6, MVP-8, MVP-11, MVP-12, AL-1 |
+| MVP-5 (#15), MVP-9 (#17), MVP-10 (#19), AL-2 (#16), AL-3, AL-4, AL-5, AL-6, AL-7, VAR-1, VAR-2, VAR-3, VAR-4, VAR-5, PERF-1, PERF-2, PERF-3, PERF-4, OBS-1 (#17), OBS-2, OBS-3, OBS-4, TOK-1, TOK-2, TOK-3, TOK-4, SEC-1, SEC-2, SEC-3, DOC-2, DOC-3, DOC-4 (#20), DOC-5 | MVP-3 (#13), MVP-7 (#14) | – | DOC-1, MVP-1, MVP-2, MVP-4, MVP-6, MVP-8, MVP-11, MVP-12, AL-1 |
 
 ---
 ## Anotações Finais
