@@ -16,12 +16,42 @@ Automatizar a conversão Storybook → Figma reduzindo em até 80% o tempo de do
 
 ## Scripts (raiz)
 ```bash
-pnpm install       # instala dependências do monorepo
-pnpm dev           # roda todos os pacotes em modo desenvolvimento
-pnpm build         # build de todos os pacotes
-pnpm lint          # lint em todos os workspaces
-pnpm test          # testes (Vitest / futura suíte Playwright)
+pnpm install        # instala dependências do monorepo
+pnpm dev            # roda todos os pacotes em modo desenvolvimento
+pnpm build          # build de todos os pacotes
+pnpm lint           # lint em todos os workspaces
+pnpm test           # testes (Vitest / futura suíte Playwright)
+pnpm health-check   # validação geral de saúde do repositório
+pnpm validate       # alias para health-check
 ```
+
+## Validação de Saúde do Repositório
+
+O repositório inclui um script completo de validação que verifica todos os aspectos da saúde do projeto:
+
+```bash
+pnpm health-check
+```
+
+Este comando executa as seguintes verificações:
+
+1. **Ambiente**: Node.js, npm, pnpm
+2. **Dependências**: Verifica se todas as dependências estão instaladas e íntegras
+3. **Lint**: Executa lint em todos os pacotes
+4. **Build**: Compila todos os pacotes e verifica artefatos
+5. **Testes**: Executa toda a suíte de testes
+6. **Segurança**: Realiza audit para detectar vulnerabilidades
+7. **Git**: Verifica status do working directory
+8. **Estrutura**: Valida estrutura do monorepo
+
+O script fornece um relatório visual detalhado com cores e estatísticas, facilitando a identificação rápida de problemas. É recomendado executar antes de fazer commits importantes ou pull requests.
+
+**Exemplo de saída:**
+- ✓ Checks passados aparecem em verde
+- ✗ Falhas aparecem em vermelho
+- ⚠ Avisos aparecem em amarelo
+- Tempo de execução e estatísticas no final
+
 
 ## Arquitetura (Clean)
 Camadas: Domain → Application → Infrastructure → Interface. Ver `docs/architecture.md` para visão detalhada e `docs/figma-json-format.md` para o formato de saída.
