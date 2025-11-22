@@ -1,7 +1,8 @@
 # Backlog do Projeto – figma-sync-engine
 
-> Última atualização: 21/11/2025
+> Última atualização: 22/11/2025
 > Objetivo macro: Reduzir em até 80% o tempo de documentação de componentes no Figma via fluxo Storybook → Figma.
+> **🤖 Prompts para Cloud Agent**: Veja `docs/README_CLOUD_AGENT_PROMPTS.md` para implementar MVP-5.
 
 ## Estrutura do Backlog
 - Epics
@@ -222,8 +223,27 @@ Status 21/11/2025: DOC-1 entregue (CONTRIBUTING.md publicado); DOC-4 (badge CI) 
 
 ---
 ## Próximas Ações Imediatas
-- 6. **Adicionar kill-switch configurável** – implementar flag `FIGMA_EXPORT_ENABLED` e documentação associada (**issue #19**).
-- 7. **Publicar badge da CI** – garantir workflow e badge no README para comunicar status (**issue #20**).
+1. **MVP-5: Exportação Clipboard e Download** (**issue #15**)
+   - Consulte: `docs/CLOUD_AGENT_MVP5_PROMPT.md` (contexto completo) ou `docs/MVP5_QUICK_START.md` (TL;DR).
+   - Status: 80% pronto. Faltam melhorias em `panel.tsx` e testes em `export.test.ts`.
+   - Esforço: ~2-3 horas.
+   - Desbloqueia: MVP-6, OBS-1, PERF-1.
+
+2. **AL-2: Suporte a `align-items` e `justify-content`** (**issue #16**)
+   - Estender `autolayout-interpreter` com mapeamento de alinhamentos.
+   - Esforço: ~6-8 horas.
+
+3. **OBS-1 + MVP-9: Logger Estruturado** (**issue #17**)
+   - Após MVP-5 concluído.
+   - Esforço: ~4-6 horas.
+
+4. **MVP-10: Kill-switch Configurável** (**issue #19**)
+   - Implementar flag `FIGMA_EXPORT_ENABLED`.
+   - Esforço: ~3-4 horas.
+
+5. **DOC-4: Badge da CI** (**issue #20**)
+   - Adicionar badge GitHub Actions ao README.
+   - Esforço: ~2-3 horas.
 
 ---
 ## Notação & Convenções
