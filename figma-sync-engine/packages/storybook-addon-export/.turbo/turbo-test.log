@@ -5,7 +5,7 @@
 
 [7m[1m[36m RUN [39m[22m[27m [36mv1.6.1[39m [90m/home/runner/work/code-to-figma/code-to-figma/figma-sync-engine/packages/storybook-addon-export[39m
 
- [32m✓[39m src/export.test.ts [2m ([22m[2m36 tests[22m[2m)[22m[90m 58[2mms[22m[39m
+ [32m✓[39m src/export.test.ts [2m ([22m[2m36 tests[22m[2m)[22m[90m 55[2mms[22m[39m
 [90mstderr[2m | src/export.test.ts[22m[39m
 Not implemented: navigation to another Document
 Not implemented: navigation to another Document
@@ -15,11 +15,16 @@ Not implemented: navigation to another Document
 Not implemented: navigation to another Document
 Not implemented: navigation to another Document
 
- [32m✓[39m src/captureHtml.test.ts [2m ([22m[2m14 tests[22m[2m)[22m[33m 1341[2mms[22m[39m
+[90mstdout[2m | src/pipeline.test.ts[2m > [22m[2mPipeline Integration Tests[2m > [22m[2mConsole Logging (MVP-9 prep)[2m > [22m[2mshould support logging at pipeline stages[22m[39m
+[Pipeline Test] Capture: { nodeCount: 1, htmlSize: 36 }
+[Pipeline Test] Created JSON: { type: 'FRAME' }
+[Pipeline Test] Export: { size: 163, method: 'clipboard' }
 
-[2m Test Files [22m [1m[32m2 passed[39m[22m[90m (2)[39m
-[2m      Tests [22m [1m[32m50 passed[39m[22m[90m (50)[39m
-[2m   Start at [22m 23:37:53
-[2m   Duration [22m 2.12s[2m (transform 108ms, setup 0ms, collect 135ms, tests 1.40s, environment 901ms, prepare 195ms)[22m
+ [32m✓[39m src/pipeline.test.ts [2m ([22m[2m9 tests[22m[2m)[22m[33m 867[2mms[22m[39m
+ [32m✓[39m src/captureHtml.test.ts [2m ([22m[2m14 tests[22m[2m)[22m[33m 1348[2mms[22m[39m
 
-[?25h
+[2m Test Files [22m [1m[32m3 passed[39m[22m[90m (3)[39m
+[2m      Tests [22m [1m[32m59 passed[39m[22m[90m (59)[39m
+[2m   Start at [22m 23:49:32
+[2m   Duration [22m 2.31s[2m (transform 150ms, setup 0ms, collect 220ms, tests 2.27s, environment 1.77s, prepare 387ms)[22m
+

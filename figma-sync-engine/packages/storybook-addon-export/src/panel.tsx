@@ -7,14 +7,16 @@ import React, { useState } from 'react';
 import { useStorybookState } from '@storybook/manager-api';
 import { captureStoryHTML } from './captureHtml';
 import { exportToClipboard, addExportMetadata, exportToFile } from './export';
+import { convertHtmlToFigma } from '@figma-sync-engine/html-to-figma-core';
+import { applyAutoLayoutRecursive } from '@figma-sync-engine/autolayout-interpreter';
 import { CSSProperties } from 'react';
 
 type Status = 'idle' | 'capturing' | 'exporting' | 'success' | 'error';
 
 const statusMessages: Record<Status, string> = {
-    idle: 'Pronto para exportar',
-    capturing: 'Capturando HTML...',
-    exporting: 'Exportando...',
+    idle: 'Pronto para exportar componente',
+    capturing: '⏳ Capturando HTML do componente...',
+    exporting: '🔄 Convertendo para Figma e aplicando Auto Layout...',
     success: '✅ Exportado com sucesso!',
     error: '❌ Erro na exportação'
 };
@@ -26,50 +28,107 @@ export const ExportPanel: React.FC = () => {
     const [exportMethod, setExportMethod] = useState<'clipboard' | 'download'>('clipboard');
 
     const handleExport = async () => {
+        const startTime = Date.now();
+        
         try {
             setError('');
             setStatus('capturing');
 
-            // Passo 1: Capturar HTML
+            // ========================================
+            // PASSO 1: Capturar HTML
+            // ========================================
+            console.log('[MVP-5] Iniciando exportação', {
+                storyId: state.storyId,
+                timestamp: new Date().toISOString()
+            });
+
             const capture = await captureStoryHTML();
             if (!capture.html) {
                 throw new Error('Nenhum HTML capturado');
             }
 
-            // Passo 2: Criar JSON Figma simples
-            let figmaJson: any = {
-                type: 'FRAME',
-                name: state.storyId || 'Exported Component',
-                children: [],
-                __html: capture.html
-            };
+            console.log('[MVP-5] HTML capturado', {
+                nodeCount: capture.nodeCount,
+                hasInteractiveElements: capture.hasInteractiveElements,
+                htmlSize: capture.html.length
+            });
 
-            // Passo 3: Adicionar metadados
-            figmaJson = addExportMetadata(figmaJson, {
+            // ========================================
+            // PASSO 2: Converter HTML → Figma JSON
+            // ========================================
+            setStatus('exporting'); // Usando 'exporting' para conversão também
+            
+            const figmaJson = await convertHtmlToFigma(capture.html);
+            
+            console.log('[MVP-5] HTML convertido para Figma JSON', {
+                type: figmaJson.type,
+                hasChildren: !!figmaJson.children,
+                childCount: figmaJson.children?.length || 0
+            });
+
+            // ========================================
+            // PASSO 3: Aplicar Auto Layout
+            // ========================================
+            const withAutoLayout = applyAutoLayoutRecursive(figmaJson as any, (_node: any) => {
+                // Extrair CSS do nó se disponível
+                // Por enquanto retorna objeto vazio, mas pode ser estendido
+                return {};
+            });
+
+            console.log('[MVP-5] Auto Layout aplicado');
+
+            // ========================================
+            // PASSO 4: Adicionar metadados
+            // ========================================
+            const finalJson = addExportMetadata(withAutoLayout, {
                 storyId: state.storyId || 'unknown',
                 nodeCount: capture.nodeCount,
                 hasInteractiveElements: capture.hasInteractiveElements,
-                timestamp: new Date().toISOString()
+                captureTimestamp: new Date().toISOString(),
+                exportMethod
             });
 
-            setStatus('exporting');
-            // Passo 4: Exportar
+            // ========================================
+            // PASSO 5: Exportar (clipboard ou download)
+            // ========================================
             let result;
             if (exportMethod === 'clipboard') {
-                result = await exportToClipboard(figmaJson);
+                result = await exportToClipboard(finalJson);
             } else {
-                const filename = `figma-${state.storyId || 'export'}.json`;
-                result = exportToFile(figmaJson, filename);
+                const filename = `${state.storyId || 'component'}.figma.json`;
+                result = exportToFile(finalJson, filename);
             }
 
             if (!result.success) {
                 throw new Error('Falha ao exportar');
             }
 
+            const duration = Date.now() - startTime;
+            
+            // ========================================
+            // MÉTRICAS FINAIS (MVP-9 prep)
+            // ========================================
+            console.log('[MVP-5] Exportação concluída com sucesso!', {
+                storyId: state.storyId,
+                exportMethod: result.method,
+                jsonSize: result.size,
+                duration: `${duration}ms`,
+                timestamp: result.timestamp
+            });
+
             setStatus('success');
             setTimeout(() => setStatus('idle'), 3000);
         } catch (err) {
+            const duration = Date.now() - startTime;
             const message = err instanceof Error ? err.message : String(err);
+            
+            console.error('[MVP-5] Erro na exportação:', {
+                storyId: state.storyId,
+                error: message,
+                duration: `${duration}ms`,
+                timestamp: new Date().toISOString()
+            });
+            
             setError(message);
             setStatus('error');
         }
@@ -205,7 +264,12 @@ export const ExportPanel: React.FC = () => {
             </div>
 
             {error && <div style={styles.errorMsg}>⚠️ {error}</div>}
-            {status === 'success' && <div style={styles.successMsg}>JSON exportado com sucesso! Pronto para importar no Figma.</div>}
+            {status === 'success' && (
+                <div style={styles.successMsg}>
+                    ✅ JSON exportado via {exportMethod === 'clipboard' ? 'clipboard' : 'download'}!<br/>
+                    Pronto para importar no Figma. Verifique o console para métricas detalhadas.
+                </div>
+            )}
         </div>
     );
 };
