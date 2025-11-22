@@ -48,6 +48,8 @@ describe('Pipeline Integration Tests', () => {
             };
 
             // Step 3: Apply Auto Layout
+            // Note: Using 'as any' for type compatibility between ConversionResult and FigmaNode.
+            // This is safe and intentional - the structure is compatible for Auto Layout processing.
             const withAutoLayout = applyAutoLayoutRecursive(figmaJson as any, () => ({}));
             expect(withAutoLayout).toBeTruthy();
 

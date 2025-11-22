@@ -69,9 +69,16 @@ export const ExportPanel: React.FC = () => {
             // ========================================
             // PASSO 3: Aplicar Auto Layout
             // ========================================
+            // Note: Using 'as any' here because ConversionResult and FigmaNode have slightly
+            // different type definitions. This is safe as the conversion result is compatible
+            // with what applyAutoLayoutRecursive expects. Future: align types across packages.
             const withAutoLayout = applyAutoLayoutRecursive(figmaJson as any, (_node: any) => {
                 // Extrair CSS do nó se disponível
-                // Por enquanto retorna objeto vazio, mas pode ser estendido
+                // TODO (MVP-4+): Implement CSS extraction from captured HTML
+                // This would analyze computed styles from the original HTML and pass them
+                // to applyAutoLayout for more accurate layout property mapping.
+                // For now, returning empty object - basic layout is still applied based on
+                // node structure from html-to-figma conversion.
                 return {};
             });
 
@@ -266,8 +273,8 @@ export const ExportPanel: React.FC = () => {
             {error && <div style={styles.errorMsg}>⚠️ {error}</div>}
             {status === 'success' && (
                 <div style={styles.successMsg}>
-                    ✅ JSON exportado via {exportMethod === 'clipboard' ? 'clipboard' : 'download'}!<br/>
-                    Pronto para importar no Figma. Verifique o console para métricas detalhadas.
+                    <div>✅ JSON exportado via {exportMethod === 'clipboard' ? 'clipboard' : 'download'}!</div>
+                    <div>Pronto para importar no Figma. Verifique o console para métricas detalhadas.</div>
                 </div>
             )}
         </div>
