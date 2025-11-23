@@ -226,3 +226,6 @@ export function applyAutoLayoutRecursive(
     return processed;
 }
 
+// AL-7: Re-exportar módulo de tipografia
+export * from './typography';
+

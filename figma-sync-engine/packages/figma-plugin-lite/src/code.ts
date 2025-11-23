@@ -1,5 +1,64 @@
 // MVP-6: Plugin code com suporte recursivo para criação de nós
 // Recebe JSON colado e cria árvore de nós recursivamente
+// AL-7: Carregamento robusto de fontes com fallback
+
+/**
+ * Lista de fontes de fallback em ordem de prioridade
+ */
+const FONT_FALLBACK_LIST = [
+    { family: 'Inter', style: 'Regular' },
+    { family: 'Roboto', style: 'Regular' },
+    { family: 'Arial', style: 'Regular' },
+    { family: 'Helvetica', style: 'Regular' }
+];
+
+/**
+ * Tenta carregar uma fonte com lista de fallback
+ * AL-7: Carregamento assíncrono robusto de fontes
+ * 
+ * @param primaryFont - Fonte primária desejada
+ * @returns Promise com a fonte carregada com sucesso
+ */
+async function loadFontWithFallback(primaryFont?: { family: string; style: string }): Promise<{ family: string; style: string }> {
+    // Construir lista de fontes para tentar
+    const fontsToTry: Array<{ family: string; style: string }> = [];
+    
+    if (primaryFont) {
+        fontsToTry.push(primaryFont);
+    }
+    
+    // Adicionar fallbacks (evitar duplicatas)
+    for (const fallback of FONT_FALLBACK_LIST) {
+        const isDuplicate = fontsToTry.some(
+            f => f.family === fallback.family && f.style === fallback.style
+        );
+        if (!isDuplicate) {
+            fontsToTry.push(fallback);
+        }
+    }
+    
+    // Tentar cada fonte sequencialmente
+    for (const font of fontsToTry) {
+        try {
+            await figma.loadFontAsync(font);
+            console.log(`✓ Fonte carregada: ${font.family} ${font.style}`);
+            return font;
+        } catch (err) {
+            console.warn(`✗ Falha ao carregar fonte: ${font.family} ${font.style}`, err);
+        }
+    }
+    
+    // Se todas falharem, tentar última chance com fonte padrão do sistema
+    const lastChance = { family: 'Arial', style: 'Regular' };
+    try {
+        await figma.loadFontAsync(lastChance);
+        console.log('✓ Usando fonte padrão do sistema: Arial');
+        return lastChance;
+    } catch (err) {
+        console.error('✗ Falha crítica: nenhuma fonte disponível');
+        throw new Error('Nenhuma fonte disponível para carregar');
+    }
+}
 
 /**
  * Cria um nó Figma a partir de dados JSON recursivamente
@@ -75,24 +134,41 @@ function createNodeFromJson(data: any): SceneNode | null {
                 const text = figma.createText();
                 text.name = data.name || 'Text';
 
-                // Carregar fonte antes de definir caracteres
-                // Usa fonte padrão se não especificado
-                const fontName = data.fontName || { family: 'Inter', style: 'Regular' };
-                
-                // Marcar como promise para não retornar imediatamente
+                // AL-7: Carregamento assíncrono robusto de fontes
                 const setupText = async () => {
                     try {
-                        await figma.loadFontAsync(fontName);
+                        // Obter fonte especificada ou usar padrão
+                        const requestedFont = data.fontName || { family: 'Inter', style: 'Regular' };
                         
+                        // Carregar fonte com fallback automático
+                        const loadedFont = await loadFontWithFallback(requestedFont);
+                        
+                        // Definir caracteres (deve vir DEPOIS de carregar a fonte)
                         text.characters = data.characters || '';
                         
-                        // Aplicar propriedades de texto
-                        if (data.fontSize) text.fontSize = data.fontSize;
-                        if (data.fontName) text.fontName = data.fontName;
-                        if (data.textAlignHorizontal) text.textAlignHorizontal = data.textAlignHorizontal;
-                        if (data.textAlignVertical) text.textAlignVertical = data.textAlignVertical;
-                        if (data.lineHeight) text.lineHeight = data.lineHeight;
-                        if (data.letterSpacing) text.letterSpacing = data.letterSpacing;
+                        // Aplicar fonte carregada
+                        text.fontName = loadedFont;
+                        
+                        // Aplicar outras propriedades de texto
+                        if (data.fontSize) {
+                            text.fontSize = data.fontSize;
+                        }
+                        
+                        if (data.textAlignHorizontal) {
+                            text.textAlignHorizontal = data.textAlignHorizontal;
+                        }
+                        
+                        if (data.textAlignVertical) {
+                            text.textAlignVertical = data.textAlignVertical;
+                        }
+                        
+                        if (data.lineHeight) {
+                            text.lineHeight = data.lineHeight;
+                        }
+                        
+                        if (data.letterSpacing) {
+                            text.letterSpacing = data.letterSpacing;
+                        }
                         
                         // Aplicar cor do texto
                         if (data.fills && Array.isArray(data.fills)) {
@@ -107,19 +183,17 @@ function createNodeFromJson(data: any): SceneNode | null {
                             }
                         }
                     } catch (err) {
-                        console.warn('Failed to load font, using default:', err);
-                        // Fallback: definir caracteres com fonte padrão
+                        console.error('Erro crítico ao configurar texto:', err);
+                        // Tentar definir pelo menos o texto, mesmo sem formatação
                         try {
-                            await figma.loadFontAsync({ family: 'Roboto', style: 'Regular' });
-                            text.characters = data.characters || '';
-                        } catch (fallbackErr) {
-                            console.error('Failed to load fallback font:', fallbackErr);
-                            text.characters = data.characters || '';
+                            text.characters = data.characters || 'Erro';
+                        } catch (charErr) {
+                            console.error('Não foi possível definir nem o texto:', charErr);
                         }
                     }
                 };
                 
-                // Iniciar setup mas não bloquear retorno
+                // Iniciar setup assíncrono
                 setupText();
 
                 node = text;
