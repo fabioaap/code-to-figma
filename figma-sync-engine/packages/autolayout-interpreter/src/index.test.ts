@@ -7,10 +7,16 @@ import {
     mapJustifyContent,
     applyAutoLayout,
     applyAutoLayoutRecursive,
+    detectFlexDirection,
+    mapFontWeight,
+    extractFontFamily,
+    parseLineHeight,
+    extractTypography,
+    applyTypography,
     CssSnapshot
 } from './index';
 
-describe('autolayout-interpreter - MVP-4, AL-1, AL-2', () => {
+describe('autolayout-interpreter - MVP-4, AL-1, AL-2, AL-3', () => {
     describe('parseSpacing', () => {
         it('should parse px values', () => {
             expect(parseSpacing('12px')).toBe(12);
@@ -140,6 +146,50 @@ describe('autolayout-interpreter - MVP-4, AL-1, AL-2', () => {
         it('should return undefined for unknown values', () => {
             expect(mapJustifyContent('invalid')).toBeUndefined();
             expect(mapJustifyContent(undefined)).toBeUndefined();
+        });
+    });
+
+    describe('detectFlexDirection - AL-3: Fallback robusto de direção', () => {
+        it('should return HORIZONTAL for row', () => {
+            expect(detectFlexDirection('row')).toBe('HORIZONTAL');
+        });
+
+        it('should return HORIZONTAL for row-reverse', () => {
+            expect(detectFlexDirection('row-reverse')).toBe('HORIZONTAL');
+        });
+
+        it('should return VERTICAL for column', () => {
+            expect(detectFlexDirection('column')).toBe('VERTICAL');
+        });
+
+        it('should return VERTICAL for column-reverse', () => {
+            expect(detectFlexDirection('column-reverse')).toBe('VERTICAL');
+        });
+
+        it('should return HORIZONTAL when flexDirection is undefined (fallback)', () => {
+            expect(detectFlexDirection(undefined)).toBe('HORIZONTAL');
+        });
+
+        it('should return HORIZONTAL when flexDirection is empty string (fallback)', () => {
+            expect(detectFlexDirection('')).toBe('HORIZONTAL');
+        });
+
+        it('should return HORIZONTAL for invalid values (fallback)', () => {
+            expect(detectFlexDirection('invalid')).toBe('HORIZONTAL');
+            expect(detectFlexDirection('block')).toBe('HORIZONTAL');
+            expect(detectFlexDirection('xyz')).toBe('HORIZONTAL');
+        });
+
+        it('should handle case variations', () => {
+            expect(detectFlexDirection('ROW')).toBe('HORIZONTAL');
+            expect(detectFlexDirection('COLUMN')).toBe('VERTICAL');
+            expect(detectFlexDirection('Row-Reverse')).toBe('HORIZONTAL');
+            expect(detectFlexDirection('Column-Reverse')).toBe('VERTICAL');
+        });
+
+        it('should handle whitespace', () => {
+            expect(detectFlexDirection(' row ')).toBe('HORIZONTAL');
+            expect(detectFlexDirection(' column ')).toBe('VERTICAL');
         });
     });
 
@@ -311,6 +361,159 @@ describe('autolayout-interpreter - MVP-4, AL-1, AL-2', () => {
             expect(result.top).toBe(12);
             expect(result.right).toBe(0); // invalid
             expect(result.bottom).toBe(8);
+        });
+    });
+
+    describe('Typography - AL-7', () => {
+        describe('mapFontWeight', () => {
+            it('should map numeric weights', () => {
+                expect(mapFontWeight('400')).toBe('Regular');
+                expect(mapFontWeight('700')).toBe('Bold');
+                expect(mapFontWeight('300')).toBe('Light');
+                expect(mapFontWeight('600')).toBe('Semi Bold');
+            });
+
+            it('should map named weights', () => {
+                expect(mapFontWeight('normal')).toBe('Regular');
+                expect(mapFontWeight('bold')).toBe('Bold');
+                expect(mapFontWeight('light')).toBe('Light');
+            });
+
+            it('should handle number type', () => {
+                expect(mapFontWeight(400)).toBe('Regular');
+                expect(mapFontWeight(700)).toBe('Bold');
+            });
+
+            it('should fallback to Regular for unknown values', () => {
+                expect(mapFontWeight(undefined)).toBe('Regular');
+                expect(mapFontWeight('unknown')).toBe('Regular');
+            });
+        });
+
+        describe('extractFontFamily', () => {
+            it('should extract first font from list', () => {
+                expect(extractFontFamily('Arial, sans-serif')).toBe('Arial');
+                expect(extractFontFamily('"Helvetica Neue", Helvetica, Arial')).toBe('Helvetica Neue');
+            });
+
+            it('should skip generic fonts', () => {
+                expect(extractFontFamily('sans-serif')).toBe('Inter');
+                expect(extractFontFamily('serif, sans-serif')).toBe('Inter');
+            });
+
+            it('should handle single font', () => {
+                expect(extractFontFamily('Roboto')).toBe('Roboto');
+            });
+
+            it('should fallback to Inter', () => {
+                expect(extractFontFamily(undefined)).toBe('Inter');
+                expect(extractFontFamily('')).toBe('Inter');
+            });
+
+            it('should remove quotes', () => {
+                expect(extractFontFamily('"Times New Roman"')).toBe('Times New Roman');
+                expect(extractFontFamily("'Georgia'")).toBe('Georgia');
+            });
+        });
+
+        describe('parseLineHeight', () => {
+            it('should parse unitless multiplier as PERCENT', () => {
+                const result = parseLineHeight('1.5', 16);
+                expect(result?.value).toBe(150);
+                expect(result?.unit).toBe('PERCENT');
+            });
+
+            it('should parse pixel values', () => {
+                const result = parseLineHeight('24px', 16);
+                expect(result?.value).toBe(24);
+                expect(result?.unit).toBe('PIXELS');
+            });
+
+            it('should parse percentage values', () => {
+                const result = parseLineHeight('120%', 16);
+                expect(result?.value).toBe(120);
+                expect(result?.unit).toBe('PERCENT');
+            });
+
+            it('should return undefined for normal', () => {
+                expect(parseLineHeight('normal', 16)).toBeUndefined();
+                expect(parseLineHeight(undefined, 16)).toBeUndefined();
+            });
+
+            it('should handle decimal multipliers', () => {
+                const result = parseLineHeight('1.2', 16);
+                expect(result?.value).toBe(120);
+                expect(result?.unit).toBe('PERCENT');
+            });
+        });
+
+        describe('extractTypography', () => {
+            it('should extract complete typography', () => {
+                const css: CssSnapshot = {
+                    fontFamily: 'Roboto, sans-serif',
+                    fontWeight: '700',
+                    fontSize: '18px',
+                    lineHeight: '1.5'
+                };
+                const result = extractTypography(css);
+                
+                expect(result.fontFamily).toBe('Roboto');
+                expect(result.fontStyle).toBe('Bold');
+                expect(result.fontSize).toBe(18);
+                expect(result.lineHeight?.value).toBe(150);
+                expect(result.lineHeight?.unit).toBe('PERCENT');
+            });
+
+            it('should use defaults for missing values', () => {
+                const css: CssSnapshot = {};
+                const result = extractTypography(css);
+                
+                expect(result.fontFamily).toBe('Inter');
+                expect(result.fontStyle).toBe('Regular');
+                expect(result.fontSize).toBe(16);
+            });
+
+            it('should handle various font weights', () => {
+                const css: CssSnapshot = { fontWeight: '300' };
+                expect(extractTypography(css).fontStyle).toBe('Light');
+            });
+        });
+
+        describe('applyTypography', () => {
+            it('should apply typography to TEXT nodes', () => {
+                const node = { type: 'TEXT' };
+                const css: CssSnapshot = {
+                    fontFamily: 'Arial',
+                    fontWeight: 'bold',
+                    fontSize: '20px',
+                    lineHeight: '1.4',
+                    color: '#333333'
+                };
+                const result = applyTypography(node, css);
+                
+                expect(result.fontName?.family).toBe('Arial');
+                expect(result.fontName?.style).toBe('Bold');
+                expect(result.fontSize).toBe(20);
+                expect(result.lineHeight?.value).toBe(140);
+                expect(result.color).toBe('#333333');
+            });
+
+            it('should not modify non-TEXT nodes', () => {
+                const node = { type: 'FRAME' };
+                const css: CssSnapshot = { fontFamily: 'Arial' };
+                const result = applyTypography(node, css);
+                
+                expect(result.fontName).toBeUndefined();
+            });
+
+            it('should handle missing optional properties', () => {
+                const node = { type: 'TEXT' };
+                const css: CssSnapshot = { fontSize: '16px' };
+                const result = applyTypography(node, css);
+                
+                expect(result.fontName?.family).toBe('Inter');
+                expect(result.fontSize).toBe(16);
+            });
         });
     });
 });
