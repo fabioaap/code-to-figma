@@ -37,7 +37,8 @@ Write-Host "1.1: Checking Node.js and pnpm..."
 try {
     node --version
     pnpm --version
-} catch {
+}
+catch {
     Write-Host "⚠️ Warning: Some tools not found" -ForegroundColor Yellow
 }
 
@@ -87,7 +88,8 @@ pnpm test
 Write-Host "3.4: Running lint..."
 try {
     pnpm lint
-} catch {
+}
+catch {
     Write-Host "⚠️ Some lint warnings (check if critical)" -ForegroundColor Yellow
 }
 
@@ -150,7 +152,8 @@ Write-Host "6.2: Staging files..."
 git add packages/storybook-addon-export/src/panel.tsx
 try {
     git add packages/storybook-addon-export/src/panel.test.tsx
-} catch {
+}
+catch {
     Write-Host "⚠️ panel.test.tsx might not exist yet" -ForegroundColor Yellow
 }
 git add docs/PROGRESS_CURRENT.md
