@@ -2,7 +2,7 @@
 
 > Última atualização: 23/11/2025 (17:15 UTC-3)
 > Objetivo macro: Reduzir em até 80% o tempo de documentação de componentes no Figma via fluxo Storybook → Figma.
-> **✅ Status Recente**: Pipeline ✅ 100% funcional. MVP-5 ✅ COMPLETO (implementado, testado, deployed). MVP-6 e sucessores desbloqueados.
+> **✅ Status Recente**: Phase 2 ✅ COMPLETA. MVP-6, MVP-9, MVP-10 e AL-2 implementados e merged. Iniciando Sprint 3 (Fidelidade Visual).
 
 ## Estrutura do Backlog
 - Epics
@@ -15,7 +15,7 @@
 
 ---
 ## EPIC 1: MVP Export Storybook → Figma
-Status 22/11/2025 (atualizado): Pipeline totalmente desbloqueado ✅. Issues #13 e #14 resolvidas. MVP-1 a MVP-4, MVP-6 a MVP-8, MVP-11, MVP-12 concluídos. MVP-5 está 80% pronto (código completo) com 7 prompts + copilot-instructions criados. Completar feedback visual + testes desbloqueia MVP-6 e fluxo end-to-end.
+Status 23/11/2025 (atualizado): EPIC 1 COMPLETO ✅. Todos os MVPs (1-12) foram entregues.
 
 ### User Stories
 1. Como designer quero exportar a história atual para Figma para acelerar documentação visual.
@@ -42,12 +42,12 @@ Status 22/11/2025 (atualizado): Pipeline totalmente desbloqueado ✅. Issues #13
 - ✅ **MVP-2** – `captureStoryHTML` entregue com sanitização e testes.
 - ✅ **MVP-3** – `convertHtmlToFigma` usa `htmlToFigma` com metadata/schema. Dependência `@storybook/addons` resolvida (issue #13).
 - ✅ **MVP-4** – `applyAutoLayout` cobre gap/padding básicos com testes.
-- ✅ **MVP-5** – **COMPLETO**: Exportação para clipboard/download implementada com feedback visual (duração ⏱️ em ms) e validação JSON. Commit: `feat(addon): enhance MVP-5 with feedback visual and validation (#15)`. Todos os 50 testes passando ✅
-- ⏳ **MVP-6** – Plugin Lite compila, aguarda MVP-5 complete (agora desbloqueado ✅).
+- ✅ **MVP-5** – **COMPLETO**: Exportação para clipboard/download implementada com feedback visual (duração ⏱️ em ms) e validação JSON.
+- ✅ **MVP-6** – **COMPLETO**: Plugin recursivo implementado com suporte a FRAME, TEXT, RECTANGLE e Auto Layout.
 - ✅ **MVP-7** – Testes Vitest configurados para CI. Scripts ajustados (issue #14 - Done).
 - ✅ **MVP-8** – `docs/figma-json-format.md` com estrutura básica.
-- ⛔ **MVP-9** – Logger de export aguarda priorização (**issue #17**).
-- ⛔ **MVP-10** – Flag/kill-switch não iniciada (**issue #19**).
+- ✅ **MVP-9** – **COMPLETO**: Logger estruturado implementado com níveis (debug, info, warn, error).
+- ✅ **MVP-10** – **COMPLETO**: Kill-switch implementado via `VITE_FIGMA_EXPORT_ENABLED`.
 - ✅ **MVP-11** – Build do addon passa.
 - ✅ **MVP-12** – Build do plugin passa.
 
@@ -70,14 +70,14 @@ Expandir heurísticas CSS → Figma.
 | AL-6 | Relatório divergências CSS vs Figma | Discovery | Lista de campos não mapeados | Should | AL-2 |
 | AL-7 | Mapeamento de font, weight, line-height | Delivery | Nodes TEXT refletindo estilo | Must | MVP-3 |
 
-#### Snapshot de status (21/11/2025)
+#### Snapshot de status (23/11/2025)
 - ✅ **AL-1** – Parser entregue com testes cobrindo 1/2/3/4 valores em `autolayout-interpreter`.
-- ⛔ **AL-2** – Não iniciado; dependência para alinhamentos ainda aberta (**issue #16**).
-- ⛔ **AL-3** – Fallback de direção pendente.
+- ✅ **AL-2** – **COMPLETO**: Mapeamento de `justify-content` e `align-items` implementado e validado.
+- ⏳ **AL-3** – Fallback de direção pendente (Sprint 3).
 - ⛔ **AL-4** – Gap multi-eixo aguardando discovery.
 - ⛔ **AL-5** – POC flex-wrap não iniciada.
 - ⛔ **AL-6** – Relatório de divergências sem owner.
-- ⛔ **AL-7** – Mapeamento de tipografia não iniciado.
+- ⏳ **AL-7** – Mapeamento de tipografia pendente (Sprint 3).
 
 Métrica alvo (Epic): ≥90% de fidelidade visual para componentes flex simples.
 
@@ -130,7 +130,7 @@ Objetivo: Export de componente médio (<300 nodes) < 1.5s.
 | OBS-3 | TTL de feature flags | Delivery | Expiração automática | Should | MVP-10 |
 | OBS-4 | Dashboard simples (script CLI) | Discovery | Sumário métricas | Could | OBS-1 |
 
-#### Snapshot de status (21/11/2025)
+#### Snapshot de status (23/11/2025)
 - ⛔ **OBS-1** – Logger estruturado aguardando MVP-5.
 - ⛔ **OBS-2** – Sanitização adicional ainda não planejada.
 - ⛔ **OBS-3** – TTL de flags sem implementação.
@@ -146,9 +146,9 @@ Objetivo: Export de componente médio (<300 nodes) < 1.5s.
 | TOK-3 | Export tokens sidecar file | Delivery | `tokens.json` gerado | Should | TOK-1 |
 | TOK-4 | Plugin aplica tokens se existirem | Delivery | Matching por nome | Could | TOK-3 |
 
-#### Snapshot de status (21/11/2025)
-- ⛔ **TOK-1** – Extração de cores ainda em discovery.
-- ⛔ **TOK-2** – Tokens tipográficos dependem de TOK-1.
+#### Snapshot de status (23/11/2025)
+- ⏳ **TOK-1** – Extração de cores em discovery (Sprint 3).
+- ⏳ **TOK-2** – Tokens tipográficos em planejamento (Sprint 3).
 - ⛔ **TOK-3** – Arquivo `tokens.json` não iniciado.
 - ⛔ **TOK-4** – Plugin ainda não interpreta tokens.
 
@@ -161,14 +161,14 @@ Objetivo: Export de componente médio (<300 nodes) < 1.5s.
 | SEC-2 | Kill-switch remoto (env var) | Delivery | Desativa export | Should | MVP-10 |
 | SEC-3 | Política de versionamento sem breaking | Delivery | Documentada | Should | SEC-1 |
 
-#### Snapshot de status (21/11/2025)
-- ⛔ **SEC-1** – Auditoria pendente; `pnpm audit` não executou devido ao erro anterior na pipeline.
-- ⛔ **SEC-2** – Kill-switch remoto não planejado.
+#### Snapshot de status (23/11/2025)
+- ⛔ **SEC-1** – Auditoria pendente (Sprint 5).
+- ✅ **SEC-2** – Kill-switch implementado (MVP-10).
 - ⛔ **SEC-3** – Política de versionamento sem owner.
 
 ---
 ## EPIC 8: Comunidade & Documentação
-Status 21/11/2025: DOC-1 entregue (CONTRIBUTING.md publicado); DOC-4 (badge CI) e DOC-5 (FAQ) continuam em aberto aguardando definição do pipeline.
+Status 23/11/2025: DOC-1 entregue. DOC-4 planejado para Sprint 5.
 
 | ID | Item | Tipo | Aceite | Prioridade | Dependências |
 |----|------|------|--------|------------|--------------|
@@ -178,19 +178,19 @@ Status 21/11/2025: DOC-1 entregue (CONTRIBUTING.md publicado); DOC-4 (badge CI) 
 | DOC-4 | Badge de status CI | Delivery | README atualizado | Must | CI |
 | DOC-5 | FAQ (limitações e roadmap) | Delivery | Sessão README | Should | MVP |
 
-#### Snapshot de status (21/11/2025)
+#### Snapshot de status (23/11/2025)
 - ✅ **DOC-1** – CONTRIBUTING.md publicado.
 - ⛔ **DOC-2** – Fluxo de changelog não configurado.
 - ⛔ **DOC-3** – Exemplos adicionais não criados.
-- ⛔ **DOC-4** – Badge CI aguardando workflow (**issue #20**).
+- ⏳ **DOC-4** – Badge CI aguardando workflow (Sprint 5).
 - ⛔ **DOC-5** – FAQ não iniciado.
 
 ---
 ## Roteiro Temporal (Proposta)
-- Semana 1-2: EPIC 1 (MVP completo)
-- Semana 3: AL-2, AL-7, PERF-1
-- Semana 4: VAR-1, VAR-2, OBS-1
-- Semana 5+: Descobertas (TOK-1, VAR-4, PERF-3) e refinamentos
+- Semana 1-2: EPIC 1 (MVP completo) ✅
+- Semana 3: Sprint 3 (Fidelidade Visual: AL-3, AL-7, TOK-1, TOK-2)
+- Semana 4: Sprint 4 (Variantes: VAR-1, VAR-2, VAR-3)
+- Semana 5: Sprint 5 (Produção: PERF-1, SEC-1, DOC-4)
 
 ---
 ## Métricas Globais
@@ -211,7 +211,7 @@ Status 21/11/2025: DOC-1 entregue (CONTRIBUTING.md publicado); DOC-4 (badge CI) 
 | Tokens inconsistentes | Erros de design system | Validação por snapshot |
 | ✅ Dependência `@storybook/addons@^8.6.14` inexistente | Instalação falha | Fixado em `^7.6.17` | **RESOLVIDO** ✅ |
 | ✅ `pnpm test` em modo watch | Pipeline local não conclui | Alterado para `vitest run` | **RESOLVIDO** ✅ |
-| Falta feedback visual MVP-5 | UX pobre no painel | Implementar duração + validação JSON | 🟡 MVP-5 em progresso |
+| ✅ Falta feedback visual MVP-5 | UX pobre no painel | Implementar duração + validação JSON | **RESOLVIDO** ✅ |
 | ESLint config quebrado | Build falha | Adicionar plugins + .eslintrc.cjs | **RESOLVIDO** ✅ |
 | Vulnerabilidade esbuild (dev dep) | CVE moderado | Documentado em testing.md | ✅ Known issue |
 
@@ -224,42 +224,26 @@ Status 21/11/2025: DOC-1 entregue (CONTRIBUTING.md publicado); DOC-4 (badge CI) 
 - Decisão documentada em CHANGELOG / ADR
 
 ---
-## Próximas Ações Imediatas (22/11/2025)
+## Próximas Ações Imediatas (23/11/2025)
 
-### 🔴 ALTA PRIORIDADE (Hoje/Amanhã)
+### 🔴 ALTA PRIORIDADE (Sprint 3 - Fidelidade Visual)
 
-1. **MVP-5: Exportação Clipboard e Download** (**issue #15**) – ⏱️ 2-3 horas
-   - **Status**: 🟡 80% código pronto + ✅ 100% documentação criada
-   - **O que fazer**: 
-     - Passo 1: Melhorar feedback visual em `panel.tsx` (45 min) → Consulte `docs/MVP5_CODE_EXAMPLES.md` seção 1
-     - Passo 2: Adicionar testes em `export.test.ts` (45 min) → Consulte `docs/MVP5_CODE_EXAMPLES.md` seção 4
-     - Passo 3: Smoke test manual em Storybook (30 min) → Validar copiar e baixar
-   - **Prompts disponíveis**:
-     - 📄 Rápido (5 min): `docs/CLOUD_AGENT_BRIEFING.md` ✅ CRIADO
-     - 📄 Completo (30 min): `docs/CLOUD_AGENT_MVP5_PROMPT.md` ✅ CRIADO
-     - 💻 Código pronto: `docs/MVP5_CODE_EXAMPLES.md` ✅ CRIADO
-   - **Desbloqueia**: MVP-6 completo, OBS-1, PERF-1
-   - **Branch**: `feat/mvp5-improve-export-feedback`
+1. **AL-3: Fallback de Direção** – ⏱️ 1-2 horas
+   - Garantir layout correto quando flex-direction não é explícito.
+   - **Prompt**: `docs/CLOUD_AGENT_BRIEFING_PHASE3_MASTER.md`
 
-### 🟡 MÉDIA PRIORIDADE (Após MVP-5)
+2. **AL-7: Tipografia Completa** – ⏱️ 2-3 horas
+   - Mapear font-family, weight, size, line-height.
+   - **Prompt**: `docs/CLOUD_AGENT_BRIEFING_PHASE3_MASTER.md`
 
-2. **AL-2: Suporte a `align-items` e `justify-content`** (**issue #16**) – ⏱️ 6-8 horas
-   - Estender `autolayout-interpreter` com mapeamento de alinhamentos
-   - Melhora fidelidade visual para ≥90%
-   - **Prompt**: Próximo a criar
+3. **TOK-1 & TOK-2: Tokens Básicos** – ⏱️ 2-3 horas
+   - Extrair cores e tipografia para JSON.
+   - **Prompt**: `docs/CLOUD_AGENT_BRIEFING_PHASE3_MASTER.md`
 
-3. **OBS-1 + MVP-9: Logger Estruturado** (**issue #17**) – ⏱️ 4-6 horas
-   - Observabilidade de exports
-   - **Dependência**: MVP-5 completo
-   - **Prompt**: Próximo a criar
+### 🟡 MÉDIA PRIORIDADE (Sprint 4 - Variantes)
 
-4. **MVP-10: Kill-switch Configurável** (**issue #19**) – ⏱️ 3-4 horas
-   - Flag `FIGMA_EXPORT_ENABLED` para mitigação rápida
-   - **Prompt**: Próximo a criar
-
-5. **DOC-4: Badge da CI** (**issue #20**) – ⏱️ 2-3 horas
-   - GitHub Actions workflow
-   - **Prompt**: Próximo a criar
+4. **VAR-1 a VAR-3: Component Sets** – ⏱️ 6-8 horas
+   - Suporte a variantes e múltiplos exports.
 
 ---
 ## Notação & Convenções
@@ -268,10 +252,10 @@ Status 21/11/2025: DOC-1 entregue (CONTRIBUTING.md publicado); DOC-4 (badge CI) 
 - RICE será preenchido após coleta de Reach & Effort.
 
 ---
-## Kanban Atualizado (22/11/2025 - 14:00 UTC-3)
+## Kanban Atualizado (23/11/2025 - 18:00 UTC-3)
 | Backlog | Em Progresso | Em Review | Concluído |
 |---------|--------------|-----------|-----------|
-| MVP-9 (#17), MVP-10 (#19), AL-2 (#16), AL-3, AL-4, AL-5, AL-6, AL-7, VAR-1, VAR-2, VAR-3, VAR-4, VAR-5, PERF-1, PERF-2, PERF-3, PERF-4, OBS-2, OBS-3, OBS-4, TOK-1, TOK-2, TOK-3, TOK-4, SEC-1, SEC-2, SEC-3, DOC-2, DOC-3, DOC-5 | **MVP-5** (#15) – Pronto para implementar (80% código + 100% docs). OBS-1 (#17) – Bloqueado por MVP-5 | – | DOC-1, **DOC-4 (Prompts 7 arquivos + copilot-instructions criados)**, MVP-1, MVP-2, MVP-3, MVP-4, MVP-6, MVP-7, MVP-8, MVP-11, MVP-12, AL-1, **#13 (Storybook deps)**, **#14 (Test scripts)**, **Pipeline desbloqueado** ✅ |
+| AL-4, AL-5, AL-6, VAR-1, VAR-2, VAR-3, VAR-4, VAR-5, PERF-1, PERF-2, PERF-3, PERF-4, OBS-2, OBS-3, OBS-4, TOK-3, TOK-4, SEC-1, SEC-3, DOC-2, DOC-3, DOC-5 | **Sprint 3** (AL-3, AL-7, TOK-1, TOK-2) | – | **MVP-1 a MVP-12**, **AL-1**, **AL-2**, **DOC-1**, **SEC-2** |
 
 ---
 ## Anotações Finais
