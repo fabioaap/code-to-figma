@@ -325,8 +325,10 @@ export function extractFontFamily(fontFamily?: string): string {
 
 /**
  * AL-7: Converte line-height CSS para formato Figma
+ * @param lineHeight - Valor CSS do line-height
+ * @param fontSize - Font size (not currently used, but available for future absolute pixel calculations)
  */
-export function parseLineHeight(lineHeight?: string, fontSize: number = 16): { value: number; unit: 'PIXELS' | 'PERCENT' } | undefined {
+export function parseLineHeight(lineHeight?: string, _fontSize: number = 16): { value: number; unit: 'PIXELS' | 'PERCENT' } | undefined {
     if (!lineHeight || lineHeight === 'normal') return undefined;
 
     // Se for número puro (unitless), é multiplicador do font-size

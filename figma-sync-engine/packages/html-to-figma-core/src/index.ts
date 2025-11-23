@@ -118,7 +118,7 @@ export function getConversionMetadata(result: ConversionResult) {
 }
 
 /**
- * TOK-1, TOK-2: Estrutura de tokens de design
+ * TOK-1, TOK-2: Design tokens structure
  */
 export interface DesignTokens {
     colors: ColorToken[];
@@ -146,7 +146,7 @@ export interface TypographyToken {
 export function extractColorTokens(node: ConversionResult, colors: Map<string, ColorToken> = new Map()): ColorToken[] {
     // Extrair cor de preenchimento (fills)
     if (node.fills && Array.isArray(node.fills)) {
-        node.fills.forEach((fill: any, index: number) => {
+        node.fills.forEach((fill: any) => {
             if (fill.type === 'SOLID' && fill.color) {
                 const { r, g, b } = fill.color;
                 const hexColor = rgbToHex(r, g, b);
