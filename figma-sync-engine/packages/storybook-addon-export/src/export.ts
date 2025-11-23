@@ -1,7 +1,10 @@
 /**
  * MVP-5: Exportação de JSON para Figma
  * Suporta clipboard (copy) e download (file)
+ * MVP-9: Integrado com logger estruturado
  */
+
+import { logger } from './logger';
 
 /**
  * Resultado da exportação
@@ -25,7 +28,11 @@ export interface ExportResult {
  * console.log(result.success); // true
  */
 export async function exportToClipboard(json: any): Promise<ExportResult> {
+    const startTime = performance.now();
+    
     try {
+        logger.info('export.started', { method: 'clipboard' });
+        
         const jsonString = JSON.stringify(json, null, 2);
         const size = new Blob([jsonString]).size;
 
@@ -36,6 +43,14 @@ export async function exportToClipboard(json: any): Promise<ExportResult> {
 
         await navigator.clipboard.writeText(jsonString);
 
+        const duration = Math.round(performance.now() - startTime);
+        
+        logger.info('export.completed', { 
+            method: 'clipboard', 
+            size,
+            duration
+        });
+
         return {
             success: true,
             method: 'clipboard',
@@ -44,8 +59,17 @@ export async function exportToClipboard(json: any): Promise<ExportResult> {
             message: `JSON copied to clipboard (${size} bytes)`
         };
     } catch (error) {
+        const duration = Math.round(performance.now() - startTime);
+        const errorMessage = error instanceof Error ? error.message : String(error);
+        
+        logger.error('export.failed', { 
+            method: 'clipboard', 
+            error: errorMessage,
+            duration
+        });
+        
         throw new Error(
-            `Failed to copy to clipboard: ${error instanceof Error ? error.message : String(error)}`
+            `Failed to copy to clipboard: ${errorMessage}`
         );
     }
 }
@@ -62,7 +86,11 @@ export async function exportToClipboard(json: any): Promise<ExportResult> {
  * console.log(result.success); // true
  */
 export function exportToFile(json: any, filename: string = 'figma-export.json'): ExportResult {
+    const startTime = performance.now();
+    
     try {
+        logger.info('export.started', { method: 'download', filename });
+        
         const jsonString = JSON.stringify(json, null, 2);
         const blob = new Blob([jsonString], { type: 'application/json' });
         const size = blob.size;
@@ -83,6 +111,15 @@ export function exportToFile(json: any, filename: string = 'figma-export.json'):
         // Limpa a URL
         URL.revokeObjectURL(url);
 
+        const duration = Math.round(performance.now() - startTime);
+        
+        logger.info('export.completed', { 
+            method: 'download', 
+            filename,
+            size,
+            duration
+        });
+
         return {
             success: true,
             method: 'download',
@@ -91,8 +128,18 @@ export function exportToFile(json: any, filename: string = 'figma-export.json'):
             message: `JSON downloaded as ${filename} (${size} bytes)`
         };
     } catch (error) {
+        const duration = Math.round(performance.now() - startTime);
+        const errorMessage = error instanceof Error ? error.message : String(error);
+        
+        logger.error('export.failed', { 
+            method: 'download', 
+            filename,
+            error: errorMessage,
+            duration
+        });
+        
         throw new Error(
-            `Failed to download file: ${error instanceof Error ? error.message : String(error)}`
+            `Failed to download file: ${errorMessage}`
         );
     }
 }
