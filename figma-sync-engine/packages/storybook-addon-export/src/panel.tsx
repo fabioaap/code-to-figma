@@ -6,7 +6,7 @@
 import React, { useState } from 'react';
 import { useStorybookState } from '@storybook/manager-api';
 import { captureStoryHTML } from './captureHtml';
-import { exportToClipboard, addExportMetadata, exportToFile } from './export';
+import { exportToClipboard, addExportMetadata, exportToFile, validateFigmaJson } from './export';
 import { CSSProperties } from 'react';
 
 type Status = 'idle' | 'capturing' | 'exporting' | 'success' | 'error';
@@ -24,11 +24,14 @@ export const ExportPanel: React.FC = () => {
     const [status, setStatus] = useState<Status>('idle');
     const [error, setError] = useState<string>('');
     const [exportMethod, setExportMethod] = useState<'clipboard' | 'download'>('clipboard');
+    const [duration, setDuration] = useState<number | null>(null);
 
     const handleExport = async () => {
         try {
             setError('');
             setStatus('capturing');
+            
+            const startTime = performance.now();
 
             // Passo 1: Capturar HTML
             const capture = await captureStoryHTML();
@@ -44,12 +47,21 @@ export const ExportPanel: React.FC = () => {
                 __html: capture.html
             };
 
+            // Passo 2.5: Validar JSON Figma
+            if (!validateFigmaJson(figmaJson)) {
+                throw new Error(
+                    'JSON Figma inválido. Verifique se captureHtml ou converter retornaram estrutura correta.'
+                );
+            }
+
             // Passo 3: Adicionar metadados
+            const exportDuration = Math.round(performance.now() - startTime);
             figmaJson = addExportMetadata(figmaJson, {
                 storyId: state.storyId || 'unknown',
                 nodeCount: capture.nodeCount,
                 hasInteractiveElements: capture.hasInteractiveElements,
-                timestamp: new Date().toISOString()
+                timestamp: new Date().toISOString(),
+                duration: exportDuration
             });
 
             setStatus('exporting');
@@ -66,12 +78,28 @@ export const ExportPanel: React.FC = () => {
                 throw new Error('Falha ao exportar');
             }
 
+            const totalDuration = Math.round(performance.now() - startTime);
+            setDuration(totalDuration);
             setStatus('success');
-            setTimeout(() => setStatus('idle'), 3000);
+            setTimeout(() => {
+                setStatus('idle');
+                setDuration(null);
+            }, 3000);
         } catch (err) {
             const message = err instanceof Error ? err.message : String(err);
+            
+            // Log detalhado no console para debugging
+            console.error('[Figma Export Error]', {
+                storyId: state.storyId,
+                error: message,
+                timestamp: new Date().toISOString()
+            });
+            
             setError(message);
             setStatus('error');
+            
+            // Auto-reset após 5 segundos
+            setTimeout(() => setStatus('idle'), 5000);
         }
     };
 
@@ -205,7 +233,11 @@ export const ExportPanel: React.FC = () => {
             </div>
 
             {error && <div style={styles.errorMsg}>⚠️ {error}</div>}
-            {status === 'success' && <div style={styles.successMsg}>JSON exportado com sucesso! Pronto para importar no Figma.</div>}
+            {status === 'success' && (
+                <div style={styles.successMsg}>
+                    ✅ Exportado com sucesso em {duration}ms! Pronto para importar no Figma.
+                </div>
+            )}
         </div>
     );
 };
