@@ -54,8 +54,7 @@ export function rgbToHex(color: FigmaColor): string {
     const b = Math.round(color.b * 255);
     
     const toHex = (n: number) => {
-        const hex = n.toString(16);
-        return hex.length === 1 ? '0' + hex : hex;
+        return n.toString(16).padStart(2, '0');
     };
     
     return `#${toHex(r)}${toHex(g)}${toHex(b)}`;
@@ -144,6 +143,16 @@ export function generateColorName(hex: string, index: number): string {
 }
 
 /**
+ * Normaliza cor hexadecimal adicionando # se necessário
+ * 
+ * @param color - Cor hexadecimal com ou sem #
+ * @returns Cor hexadecimal normalizada com #
+ */
+function normalizeHexColor(color: string): string {
+    return color.startsWith('#') ? color : `#${color}`;
+}
+
+/**
  * Extrai todas as cores de um nó Figma recursivamente
  * 
  * @param node - Nó do JSON Figma
@@ -166,17 +175,13 @@ function extractColorsFromNode(node: any, colors: Map<string, number>): void {
     
     // Extrair de backgroundColor (formato alternativo)
     if (node.backgroundColor && typeof node.backgroundColor === 'string') {
-        const hex = node.backgroundColor.startsWith('#') 
-            ? node.backgroundColor 
-            : `#${node.backgroundColor}`;
+        const hex = normalizeHexColor(node.backgroundColor);
         colors.set(hex, (colors.get(hex) || 0) + 1);
     }
     
     // Extrair de color (para textos)
     if (node.color && typeof node.color === 'string') {
-        const hex = node.color.startsWith('#') 
-            ? node.color 
-            : `#${node.color}`;
+        const hex = normalizeHexColor(node.color);
         colors.set(hex, (colors.get(hex) || 0) + 1);
     }
     
