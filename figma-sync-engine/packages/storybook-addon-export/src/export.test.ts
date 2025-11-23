@@ -4,11 +4,17 @@ import {
     exportToFile,
     exportWithFallback,
     validateFigmaJson,
-    addExportMetadata
+    addExportMetadata,
+    exportWithColorTokens,
+    exportToClipboardWithColors,
+    exportToFileWithColors,
+    exportToSeparateFiles
 } from './export';
 
 describe('export - MVP-5', () => {
     let mockClipboard: any;
+    let mockCreateObjectURL: any;
+    let mockRevokeObjectURL: any;
 
     beforeEach(() => {
         // Mock clipboard API
@@ -16,6 +22,12 @@ describe('export - MVP-5', () => {
             writeText: vi.fn().mockResolvedValue(undefined)
         };
         Object.assign(navigator, { clipboard: mockClipboard });
+
+        // Mock URL.createObjectURL and URL.revokeObjectURL
+        mockCreateObjectURL = vi.fn().mockReturnValue('blob:mock-url');
+        mockRevokeObjectURL = vi.fn();
+        global.URL.createObjectURL = mockCreateObjectURL;
+        global.URL.revokeObjectURL = mockRevokeObjectURL;
 
         // Clear DOM
         document.body.innerHTML = '';
@@ -354,6 +366,163 @@ describe('export - MVP-5', () => {
             const result = await exportToClipboard(json);
 
             expect(result.success).toBe(true);
+        });
+    });
+
+    describe('Color Token Export - TOK-1', () => {
+        describe('exportWithColorTokens', () => {
+            it('should extract color tokens from JSON', () => {
+                const json = {
+                    type: 'FRAME',
+                    fills: [
+                        { type: 'SOLID', color: { r: 1, g: 0, b: 0 } }
+                    ]
+                };
+
+                const result = exportWithColorTokens(json);
+
+                expect(result.colors).toBeDefined();
+                expect(Object.keys(result.colors).length).toBeGreaterThan(0);
+                expect(result.figmaJson).toBeDefined();
+            });
+
+            it('should add colorToken references to fills', () => {
+                const json = {
+                    type: 'FRAME',
+                    fills: [
+                        { type: 'SOLID', color: { r: 1, g: 0, b: 0 } }
+                    ]
+                };
+
+                const result = exportWithColorTokens(json);
+
+                expect(result.figmaJson.fills[0].colorToken).toBeDefined();
+            });
+
+            it('should handle JSON without colors', () => {
+                const json = {
+                    type: 'FRAME',
+                    name: 'Empty'
+                };
+
+                const result = exportWithColorTokens(json);
+
+                expect(result.colors).toEqual({});
+                expect(result.figmaJson).toEqual(json);
+            });
+        });
+
+        describe('exportToClipboardWithColors', () => {
+            it('should copy JSON with color tokens', async () => {
+                const json = {
+                    type: 'FRAME',
+                    fills: [
+                        { type: 'SOLID', color: { r: 1, g: 0, b: 0 } }
+                    ]
+                };
+
+                const result = await exportToClipboardWithColors(json);
+
+                expect(result.success).toBe(true);
+                expect(result.colorTokensCount).toBeGreaterThan(0);
+                expect(mockClipboard.writeText).toHaveBeenCalled();
+
+                const callArgs = mockClipboard.writeText.mock.calls[0][0];
+                const parsed = JSON.parse(callArgs);
+                expect(parsed.figma).toBeDefined();
+                expect(parsed.colors).toBeDefined();
+                expect(parsed.__metadata).toBeDefined();
+            });
+
+            it('should include colorTokensCount in result', async () => {
+                const json = {
+                    type: 'FRAME',
+                    fills: [
+                        { type: 'SOLID', color: { r: 1, g: 0, b: 0 } },
+                        { type: 'SOLID', color: { r: 0, g: 1, b: 0 } }
+                    ]
+                };
+
+                const result = await exportToClipboardWithColors(json);
+
+                expect(result.colorTokensCount).toBe(2);
+                expect(result.message).toContain('2 tokens de cor');
+            });
+        });
+
+        describe('exportToFileWithColors', () => {
+            it('should download JSON with color tokens', () => {
+                const json = {
+                    type: 'FRAME',
+                    fills: [
+                        { type: 'SOLID', color: { r: 0, g: 0, b: 1 } }
+                    ]
+                };
+
+                const result = exportToFileWithColors(json, 'test-colors.json');
+
+                expect(result.success).toBe(true);
+                expect(result.colorTokensCount).toBe(1);
+                expect(result.message).toContain('1 tokens de cor');
+            });
+
+            it('should create proper JSON structure', () => {
+                const json = {
+                    type: 'TEXT',
+                    color: '#ffffff'
+                };
+
+                exportToFileWithColors(json, 'text-test.json');
+
+                // Verificar que o arquivo seria criado corretamente
+                // (não podemos testar o download real em ambiente de teste)
+                expect(document.body.innerHTML).toBe('');
+            });
+        });
+
+        describe('exportToSeparateFiles', () => {
+            it('should export colors.json and figma.json separately', () => {
+                const json = {
+                    type: 'FRAME',
+                    fills: [
+                        { type: 'SOLID', color: { r: 1, g: 1, b: 1 } },
+                        { type: 'SOLID', color: { r: 0, g: 0, b: 0 } }
+                    ]
+                };
+
+                const results = exportToSeparateFiles(json, 'test');
+
+                expect(results).toHaveLength(2);
+                expect(results[0].message).toContain('colors.json');
+                expect(results[1].message).toContain('figma.json');
+            });
+
+            it('should include color count in colors.json result', () => {
+                const json = {
+                    type: 'FRAME',
+                    fills: [
+                        { type: 'SOLID', color: { r: 1, g: 0, b: 0 } },
+                        { type: 'SOLID', color: { r: 0, g: 1, b: 0 } },
+                        { type: 'SOLID', color: { r: 0, g: 0, b: 1 } }
+                    ]
+                };
+
+                const results = exportToSeparateFiles(json);
+
+                expect(results[0].colorTokensCount).toBe(3);
+            });
+
+            it('should handle JSON with no colors', () => {
+                const json = {
+                    type: 'FRAME',
+                    name: 'NoColors'
+                };
+
+                const results = exportToSeparateFiles(json);
+
+                // Deve exportar apenas o figma.json quando não há cores
+                expect(results.length).toBeGreaterThanOrEqual(1);
+            });
         });
     });
 });

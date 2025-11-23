@@ -19,6 +19,7 @@
         "test": "vitest run --passWithNoTests"
     },
     "dependencies": {
+        "@figma-sync-engine/color-tokens": "workspace:*",
         "@storybook/addons": "^7.6.17",
         "@storybook/manager-api": "^7.6.17",
         "@storybook/preview-api": "^7.6.17",

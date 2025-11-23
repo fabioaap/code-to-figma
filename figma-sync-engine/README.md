@@ -6,9 +6,10 @@ Ferramenta open source para exportar componentes renderizados no Storybook como 
 Automatizar a conversão Storybook → Figma reduzindo em até 80% o tempo de documentação e alinhamento entre design e desenvolvimento.
 
 ## Pacotes
-- `storybook-addon-export`: Addon que adiciona botão "Exportar para Figma" e captura HTML da história ativa. Inclui logger estruturado (MVP-9) e kill-switch (MVP-10).
+- `storybook-addon-export`: Addon que adiciona botão "Exportar para Figma" e captura HTML da história ativa. Inclui logger estruturado (MVP-9), kill-switch (MVP-10) e extração de tokens de cor (TOK-1).
 - `html-to-figma-core`: Fork/light wrapper sobre `@builder.io/html-to-figma` para extensões futuras.
 - `autolayout-interpreter`: Pós-processa o JSON para aplicar heurísticas de Auto Layout (gap, padding, alinhamento). Suporta `align-items` e `justify-content` mapeados corretamente (AL-2).
+- `color-tokens`: Extrai cores hexadecimais do JSON Figma e gera dicionário de tokens reutilizáveis (TOK-1).
 - `figma-plugin-lite`: Plugin que importa JSON e cria nodes recursivamente no canvas com suporte a FRAME, TEXT e RECTANGLE (MVP-6).
 
 ## Exemplo
@@ -31,6 +32,26 @@ Placeholder inicial – será detalhado em `docs/figma-json-format.md`.
 
 ## Auto Layout
 O interpretador lê propriedades CSS (display:flex, flex-direction, gap, padding, align-items, justify-content) e traduz para campos Figma equivalentes. Detalhes em `docs/autolayout-engine.md`.
+
+## Tokens de Cor (TOK-1)
+O sistema extrai automaticamente cores hexadecimais do JSON Figma e gera um dicionário de tokens reutilizáveis:
+- **Extração automática**: Identifica todas as cores usadas em fills, backgrounds e textos
+- **Nomes semânticos**: Atribui nomes descritivos para cores comuns (red, blue, white, etc)
+- **Contagem de uso**: Rastreia quantas vezes cada cor é usada
+- **Referências de tokens**: Substitui valores de cor por referências no payload principal
+- **Formatos de exportação**:
+  - Arquivo único com `figma` e `colors` separados
+  - Arquivos separados: `figma.json` + `colors.json`
+
+### Exemplo de uso
+
+```typescript
+import { extractColorTokens } from '@figma-sync-engine/color-tokens';
+
+const result = extractColorTokens(figmaJson);
+// result.tokens = { 'red': { name: 'red', value: '#ff0000', usage: 3 } }
+// result.figmaJson.fills[0].colorToken = 'red'
+```
 
 ## Roadmap MVP
 1. Capturar HTML da história atual

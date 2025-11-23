@@ -76,6 +76,18 @@ importers:
         specifier: ^1.0.0
         version: 1.6.1(@types/node@20.19.25)(jsdom@27.2.0)
 
+  packages/color-tokens:
+    devDependencies:
+      '@types/node':
+        specifier: ^20.10.0
+        version: 20.19.25
+      typescript:
+        specifier: ^5.3.3
+        version: 5.9.3
+      vitest:
+        specifier: ^1.0.0
+        version: 1.6.1(@types/node@20.19.25)(jsdom@27.2.0)
+
   packages/figma-plugin-lite:
     devDependencies:
       '@figma/plugin-typings':
@@ -115,6 +127,9 @@ importers:
 
   packages/storybook-addon-export:
     dependencies:
+      '@figma-sync-engine/color-tokens':
+        specifier: workspace:*
+        version: link:../color-tokens
       '@storybook/addons':
         specifier: ^7.6.17
         version: 7.6.17(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
