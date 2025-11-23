@@ -5,10 +5,10 @@
 
 [7m[1m[36m RUN [39m[22m[27m [36mv1.6.1[39m [90mC:/Users/Educacross/Documents/code-to-figma/figma-sync-engine/packages/html-to-figma-core[39m
 
- [32m✓[39m src/index.test.ts [2m ([22m[2m11 tests[22m[2m)[22m[90m 32[2mms[22m[39m
+ [32m✓[39m src/index.test.ts [2m ([22m[2m11 tests[22m[2m)[22m[90m 28[2mms[22m[39m
 
 [2m Test Files [22m [1m[32m1 passed[39m[22m[90m (1)[39m
 [2m      Tests [22m [1m[32m11 passed[39m[22m[90m (11)[39m
-[2m   Start at [22m 15:02:40
-[2m   Duration [22m 4.28s[2m (transform 142ms, setup 0ms, collect 145ms, tests 32ms, environment 2.25s, prepare 522ms)[22m
+[2m   Start at [22m 21:43:35
+[2m   Duration [22m 4.23s[2m (transform 134ms, setup 1ms, collect 143ms, tests 28ms, environment 2.41s, prepare 741ms)[22m
 

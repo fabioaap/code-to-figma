@@ -1,5 +1,5 @@
 # 📊 Progresso do Projeto - figma-sync-engine
-**Data**: 20/11/2025 | **Status**: MVP-1 CONCLUÍDO ✅
+**Data**: 22/11/2025 | **Status**: MVP-1 CONCLUÍDO ✅
 
 ---
 
@@ -35,6 +35,32 @@
 | **AL-1...7** | ⏳ BACKLOG | 5% | 7/50 | Auto Layout avançado |
 
 **Total**: 28% do projeto concluído (2 de 7 MVPs core)
+
+---
+
+## 📊 Gráfico de Barras do Progresso
+
+```
+MVP-1     | #################### | 100%
+MVP-2     | #################### | 100%
+MVP-3     | #################### | 100%
+MVP-4     |                      |   0%
+MVP-5     | #####               |  25%
+MVP-6     |                      |   0%
+MVP-7     |                      |   0%
+AL-1...7  | #                    |   5%
+```
+
+Escala: cada bloco (#) representa 5% de avanço.
+
+---
+
+## 🧪 Validação Automatizada (22/11/2025)
+
+- `pnpm test` executado às 21:43 (BRT) → `turbo run test` compilou 5 pacotes e executou as suítes
+- Testes por pacote: `storybook-addon-export` 50, `autolayout-interpreter` 44, `html-to-figma-core` 11 (total 105)
+- Builds de `figma-plugin-lite` e `example-react-button` concluídos durante o pipeline de testes
+- Avisos observados: uso de `eval` vindo do runtime do Storybook e aviso de chunk >500 kB (sem falhas)
 
 ---
 
@@ -173,10 +199,10 @@
 ┌─────────────────────────────────────────┐
 │        ESTATÍSTICAS DO PROJETO          │
 ├─────────────────────────────────────────┤
-│  Testes Passando:      25/25 ✅         │
+│  Testes Passando:      105/105 ✅       │
 │  Build Status:         ✅ Sucesso       │
 │  TypeScript Strict:    ✅ Ativo         │
-│  Pacotes Compilando:   4/4 ✅           │
+│  Pacotes Compilando:   5/5 ✅           │
 │  Lint Errors:          0 ✅             │
 │  Documentação:         90% ✅           │
 │                                         │
@@ -298,4 +324,4 @@ figma-sync-engine/
 
 ---
 
-*Atualizado em: 20/11/2025 às 18:18*
+*Atualizado em: 22/11/2025 às 21:55*
