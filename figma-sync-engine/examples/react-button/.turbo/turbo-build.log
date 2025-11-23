@@ -7,7 +7,7 @@
 info => Cleaning outputDir: [36mstorybook-static[39m
 info => Loading presets
 info => Building manager..
-info => Manager built ([38;2;181;126;229m482 ms[39m)
+info => Manager built ([38;2;181;126;229m238 ms[39m)
 info => Building preview..
 info Using tsconfig paths for react-docgen
 [36mvite v5.4.21 [32mbuilding for production...[36m[39m
@@ -46,6 +46,6 @@ computing gzip size...
 - Using dynamic import() to code-split the application
 - Use build.rollupOptions.output.manualChunks to improve chunking: https://rollupjs.org/configuration-options/#output-manualchunks
 - Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.[39m
-[32m✓ built in 4.45s[39m
-info => Preview built ([38;2;181;126;229m5.21 s[39m)
+[32m✓ built in 4.19s[39m
+info => Preview built ([38;2;181;126;229m4.9 s[39m)
 info => Output directory: /home/runner/work/code-to-figma/code-to-figma/figma-sync-engine/examples/react-button/storybook-static

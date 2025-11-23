@@ -180,7 +180,10 @@ describe('Logger - MVP-9', () => {
             testLogger.info('test.event');
             
             expect(consoleInfoSpy).toHaveBeenCalledWith(
-                expect.stringContaining('test.event'),
+                expect.stringContaining('test.event')
+            );
+            expect(consoleInfoSpy).not.toHaveBeenCalledWith(
+                expect.anything(),
                 ''
             );
         });

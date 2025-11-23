@@ -79,33 +79,48 @@ function createNodeFromJson(data: any): SceneNode | null {
                 // Usa fonte padrão se não especificado
                 const fontName = data.fontName || { family: 'Inter', style: 'Regular' };
                 
-                figma.loadFontAsync(fontName).then(() => {
-                    text.characters = data.characters || '';
-                    
-                    // Aplicar propriedades de texto
-                    if (data.fontSize) text.fontSize = data.fontSize;
-                    if (data.fontName) text.fontName = data.fontName;
-                    if (data.textAlignHorizontal) text.textAlignHorizontal = data.textAlignHorizontal;
-                    if (data.textAlignVertical) text.textAlignVertical = data.textAlignVertical;
-                    if (data.lineHeight) text.lineHeight = data.lineHeight;
-                    if (data.letterSpacing) text.letterSpacing = data.letterSpacing;
-                    
-                    // Aplicar cor do texto
-                    if (data.fills && Array.isArray(data.fills)) {
-                        text.fills = data.fills;
-                    } else if (data.color) {
-                        const rgb = hexToRgb(data.color);
-                        if (rgb) {
-                            text.fills = [{
-                                type: 'SOLID',
-                                color: { r: rgb.r / 255, g: rgb.g / 255, b: rgb.b / 255 }
-                            }];
+                // Marcar como promise para não retornar imediatamente
+                const setupText = async () => {
+                    try {
+                        await figma.loadFontAsync(fontName);
+                        
+                        text.characters = data.characters || '';
+                        
+                        // Aplicar propriedades de texto
+                        if (data.fontSize) text.fontSize = data.fontSize;
+                        if (data.fontName) text.fontName = data.fontName;
+                        if (data.textAlignHorizontal) text.textAlignHorizontal = data.textAlignHorizontal;
+                        if (data.textAlignVertical) text.textAlignVertical = data.textAlignVertical;
+                        if (data.lineHeight) text.lineHeight = data.lineHeight;
+                        if (data.letterSpacing) text.letterSpacing = data.letterSpacing;
+                        
+                        // Aplicar cor do texto
+                        if (data.fills && Array.isArray(data.fills)) {
+                            text.fills = data.fills;
+                        } else if (data.color) {
+                            const rgb = hexToRgb(data.color);
+                            if (rgb) {
+                                text.fills = [{
+                                    type: 'SOLID',
+                                    color: { r: rgb.r / 255, g: rgb.g / 255, b: rgb.b / 255 }
+                                }];
+                            }
+                        }
+                    } catch (err) {
+                        console.warn('Failed to load font, using default:', err);
+                        // Fallback: definir caracteres com fonte padrão
+                        try {
+                            await figma.loadFontAsync({ family: 'Roboto', style: 'Regular' });
+                            text.characters = data.characters || '';
+                        } catch (fallbackErr) {
+                            console.error('Failed to load fallback font:', fallbackErr);
+                            text.characters = data.characters || '';
                         }
                     }
-                }).catch((err) => {
-                    console.warn('Failed to load font:', err);
-                    text.characters = data.characters || '';
-                });
+                };
+                
+                // Iniciar setup mas não bloquear retorno
+                setupText();
 
                 node = text;
                 break;

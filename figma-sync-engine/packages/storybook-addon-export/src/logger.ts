@@ -92,16 +92,32 @@ export class Logger {
         
         switch (level) {
             case 'error':
-                console.error(message, metadata || '');
+                if (metadata) {
+                    console.error(message, metadata);
+                } else {
+                    console.error(message);
+                }
                 break;
             case 'warn':
-                console.warn(message, metadata || '');
+                if (metadata) {
+                    console.warn(message, metadata);
+                } else {
+                    console.warn(message);
+                }
                 break;
             case 'info':
-                console.info(message, metadata || '');
+                if (metadata) {
+                    console.info(message, metadata);
+                } else {
+                    console.info(message);
+                }
                 break;
             case 'debug':
-                console.debug(message, metadata || '');
+                if (metadata) {
+                    console.debug(message, metadata);
+                } else {
+                    console.debug(message);
+                }
                 break;
         }
     }
