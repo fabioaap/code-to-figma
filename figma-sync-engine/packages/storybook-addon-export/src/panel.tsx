@@ -1,13 +1,29 @@
 /**
  * MVP-1: Painel de Exportação do Addon
  * Interface visual para exportar componentes para Figma
+ * MVP-9: Integrado com logger estruturado
+ * MVP-10: Kill-switch de segurança
  */
 
 import React, { useState } from 'react';
 import { useStorybookState } from '@storybook/manager-api';
 import { captureStoryHTML } from './captureHtml';
 import { exportToClipboard, addExportMetadata, exportToFile, validateFigmaJson } from './export';
+import { logger } from './logger';
 import { CSSProperties } from 'react';
+
+// MVP-10: Kill-switch de segurança via variável de ambiente
+const isExportEnabled = (() => {
+    try {
+        // Tenta ler de import.meta.env (Vite)
+        if (typeof import.meta !== 'undefined' && (import.meta as any).env) {
+            return (import.meta as any).env.VITE_FIGMA_EXPORT_ENABLED !== 'false';
+        }
+    } catch {
+        // Fallback: habilitado por padrão
+    }
+    return true;
+})();
 
 type Status = 'idle' | 'capturing' | 'exporting' | 'success' | 'error';
 
@@ -27,10 +43,22 @@ export const ExportPanel: React.FC = () => {
     const [duration, setDuration] = useState<number | null>(null);
 
     const handleExport = async () => {
+        if (!isExportEnabled) {
+            logger.warn('export.blocked', { reason: 'kill-switch enabled' });
+            setError('Exportação desabilitada temporariamente');
+            setStatus('error');
+            return;
+        }
+        
         try {
             setError('');
             setStatus('capturing');
             const startTime = performance.now();
+            
+            logger.info('export.panel.started', { 
+                storyId: state.storyId,
+                method: exportMethod 
+            });
 
             // Passo 1: Capturar HTML
             const capture = await captureStoryHTML();
@@ -77,6 +105,14 @@ export const ExportPanel: React.FC = () => {
             const elapsed = Math.round(performance.now() - startTime);
             setDuration(elapsed);
             setStatus('success');
+            
+            logger.info('export.panel.completed', { 
+                storyId: state.storyId,
+                method: exportMethod,
+                duration: elapsed,
+                size: result.size
+            });
+            
             setTimeout(() => {
                 setStatus('idle');
                 setDuration(null);
@@ -85,6 +121,12 @@ export const ExportPanel: React.FC = () => {
             const message = err instanceof Error ? err.message : String(err);
             setError(message);
             setStatus('error');
+            
+            logger.error('export.panel.failed', { 
+                storyId: state.storyId,
+                method: exportMethod,
+                error: message
+            });
         }
     };
 
@@ -166,6 +208,26 @@ export const ExportPanel: React.FC = () => {
     };
 
     const isWorking = status !== 'idle' && status !== 'success' && status !== 'error';
+
+    // MVP-10: Se export desabilitado, mostrar mensagem informativa
+    if (!isExportEnabled) {
+        return (
+            <div style={styles.container}>
+                <div style={styles.header}>📤 Exportar para Figma</div>
+                <div style={{
+                    ...styles.statusBar,
+                    backgroundColor: '#fff3cd',
+                    color: '#856404',
+                    padding: '12px'
+                }}>
+                    ⚠️ Exportação temporariamente desabilitada para manutenção.
+                    <div style={{ fontSize: '11px', marginTop: '4px', opacity: 0.8 }}>
+                        Entre em contato com o administrador para mais informações.
+                    </div>
+                </div>
+            </div>
+        );
+    }
 
     return (
         <div style={styles.container}>

@@ -6,10 +6,10 @@ Ferramenta open source para exportar componentes renderizados no Storybook como 
 Automatizar a conversão Storybook → Figma reduzindo em até 80% o tempo de documentação e alinhamento entre design e desenvolvimento.
 
 ## Pacotes
-- `storybook-addon-export`: Addon que adiciona botão "Exportar para Figma" e captura HTML da história ativa.
+- `storybook-addon-export`: Addon que adiciona botão "Exportar para Figma" e captura HTML da história ativa. Inclui logger estruturado (MVP-9) e kill-switch (MVP-10).
 - `html-to-figma-core`: Fork/light wrapper sobre `@builder.io/html-to-figma` para extensões futuras.
-- `autolayout-interpreter`: Pós-processa o JSON para aplicar heurísticas básicas de Auto Layout (gap, padding, alinhamento).
-- `figma-plugin-lite`: Plugin mínimo que permite colar/importar JSON e criar nodes no canvas.
+- `autolayout-interpreter`: Pós-processa o JSON para aplicar heurísticas de Auto Layout (gap, padding, alinhamento). Suporta `align-items` e `justify-content` mapeados corretamente (AL-2).
+- `figma-plugin-lite`: Plugin que importa JSON e cria nodes recursivamente no canvas com suporte a FRAME, TEXT e RECTANGLE (MVP-6).
 
 ## Exemplo
 `examples/react-button` contém um componente simples para testar fluxo de exportação.
@@ -40,9 +40,21 @@ O interpretador lê propriedades CSS (display:flex, flex-direction, gap, padding
 5. Importar plugin Figma e gerar nodes
 
 ## Segurança & Guardrails
-- Kill-switch e TTL para funcionalidades experimentais (futuro)
-- Logs estruturados sem PII
+- **Kill-switch** (MVP-10): Variável de ambiente `VITE_FIGMA_EXPORT_ENABLED` permite desabilitar exportação temporariamente para manutenção
+- **Logs estruturados** (MVP-9): Logger com níveis (debug, info, warn, error) sem PII, configurável via `VITE_LOG_LEVEL`
 - Testes de regressão e snapshot nos exemplos
+
+## Variáveis de Ambiente
+
+Crie um arquivo `.env` na raiz do projeto baseado no `.env.example`:
+
+```bash
+# Kill-switch de segurança (MVP-10)
+VITE_FIGMA_EXPORT_ENABLED=true  # false para desabilitar exportação
+
+# Nível de log (MVP-9)
+VITE_LOG_LEVEL=info  # debug | info | warn | error
+```
 
 ## Contribuição
 Pull requests são bem-vindos. Abra issues para discutir heurísticas de Auto Layout, suporte a variantes ou melhorias de desempenho.

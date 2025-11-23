@@ -116,11 +116,11 @@ export function analyzeCss(css: CssSnapshot): CssAnalysis {
 
 /**
  * Mapeia align-items CSS para alignMode Figma
- * AL-2: Suporte a align-items e consideração de direção
+ * AL-2: Suporte a align-items (sempre secundário)
  */
 export function mapAlignItems(
     alignItems?: string,
-    isRow: boolean = true
+    _isRow: boolean = true
 ): 'MIN' | 'CENTER' | 'MAX' | 'STRETCH' | undefined {
     if (!alignItems) return undefined;
 

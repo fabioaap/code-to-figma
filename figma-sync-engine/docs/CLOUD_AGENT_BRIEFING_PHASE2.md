@@ -1,92 +1,237 @@
-# Cloud Agent Briefing - Phase 2: Plugin & Advanced Layout
+# 🚀 Cloud Agent Briefing — Fase 2
 
-> **Contexto**: O MVP-5 foi concluído com sucesso. O pipeline de exportação gera um JSON válido com feedback visual.
-> **Objetivo**: Implementar o lado do Plugin Figma (MVP-6) para consumir esse JSON, melhorar a fidelidade do layout (AL-2), adicionar observabilidade (MVP-9) e segurança (MVP-10).
-
-## 🎯 Objetivos da Sessão
-
-Você deve executar as seguintes tarefas, priorizando a qualidade e a robustez do código.
-
-### 1. MVP-6: Plugin Figma Importador (Prioridade Alta)
-**Arquivo alvo**: `packages/figma-plugin-lite/src/code.ts`
-**Estimativa**: 4-6h (mas tente ser eficiente)
-
-O plugin atual apenas cria um Frame raiz e textos simples. Ele precisa ser capaz de reconstruir a árvore de componentes recursivamente.
-
-**Requisitos Técnicos**:
-- [ ] Refatorar `code.ts` para usar uma função recursiva `createNode(nodeData)`.
-- [ ] Suportar tipos de node: `FRAME`, `TEXT`, `RECTANGLE`.
-- [ ] Mapear propriedades visuais básicas:
-    - `fills` (Solid Color)
-    - `strokes` & `strokeWeight`
-    - `cornerRadius`
-    - `opacity`
-- [ ] Mapear propriedades de Auto Layout:
-    - `layoutMode` (HORIZONTAL/VERTICAL)
-    - `primaryAxisAlignItems` (MIN, MAX, CENTER, SPACE_BETWEEN)
-    - `counterAxisAlignItems` (MIN, MAX, CENTER)
-    - `padding` (Top, Right, Bottom, Left)
-    - `itemSpacing` (Gap)
-- [ ] Tratamento de erro: Se o JSON for inválido ou tiver tipos desconhecidos, notificar o usuário via `figma.notify`.
-
-### 2. AL-2: Auto Layout Avançado (Prioridade Alta)
-**Arquivo alvo**: `packages/autolayout-interpreter/src/index.ts`
-**Estimativa**: 1-2h
-
-Melhorar a interpretação de estilos CSS para propriedades Figma.
-
-**Requisitos Técnicos**:
-- [ ] Mapear `justify-content` do CSS para `primaryAxisAlignItems` do Figma.
-    - `flex-start` -> `MIN`
-    - `center` -> `CENTER`
-    - `flex-end` -> `MAX`
-    - `space-between` -> `SPACE_BETWEEN`
-- [ ] Mapear `align-items` do CSS para `counterAxisAlignItems` do Figma.
-    - `flex-start` -> `MIN`
-    - `center` -> `CENTER`
-    - `flex-end` -> `MAX`
-- [ ] Considerar a direção (`flex-direction`) para garantir que Primary/Counter estejam corretos.
-
-### 3. MVP-9: Logger de Exportação (Prioridade Média - Paralelo)
-**Arquivo alvo**: `packages/storybook-addon-export/src/utils/logger.ts` (criar)
-**Estimativa**: 1h
-
-Criar um mecanismo simples de log para ajudar no debug de usuários.
-
-**Requisitos Técnicos**:
-- [ ] Criar classe/módulo `Logger`.
-- [ ] Métodos: `info`, `warn`, `error`.
-- [ ] Formato: `[FigmaSync] <Timestamp> <Level>: <Message> {metadata}`.
-- [ ] Integrar no `panel.tsx` para logar: "Iniciando exportação", "Sucesso (tamanho X bytes)", "Erro".
-- [ ] **Privacidade**: Não logar conteúdo do HTML ou textos do usuário, apenas metadados (IDs, tamanhos, tempos).
-
-### 4. MVP-10: Kill-switch (Prioridade Baixa)
-**Arquivo alvo**: `packages/storybook-addon-export/src/panel.tsx`
-**Estimativa**: 30min
-
-Mecanismo de segurança para desativar o addon globalmente se necessário.
-
-**Requisitos Técnicos**:
-- [ ] Verificar existência de flag global `window.FIGMA_SYNC_DISABLED` ou variável de ambiente `STORYBOOK_FIGMA_SYNC_DISABLED`.
-- [ ] Se `true`, renderizar mensagem "Exportação desativada temporariamente" no lugar do botão.
+**Data**: 23 de novembro de 2025  
+**Status**: 📋 Planejamento Completo  
+**Esforço Estimado**: 6-10 horas  
+**Impacto**: Melhora fidelidade visual, recursividade plugin, observabilidade e segurança
 
 ---
 
-## 📝 Plano de Execução Sugerido
+## 📌 Contexto
 
-1.  **Setup**: Verifique se o build está passando (`pnpm build`).
-2.  **AL-2 (Interpreter)**: Comece pela lógica de interpretação. É pura lógica e fácil de testar.
-    *   Edite `packages/autolayout-interpreter/src/index.ts`.
-    *   Adicione testes em `packages/autolayout-interpreter/tests/interpret.test.ts`.
-3.  **MVP-6 (Plugin)**: Implemente a recursão no plugin.
-    *   Edite `packages/figma-plugin-lite/src/code.ts`.
-    *   Como testar: Use o JSON gerado pelo Storybook (MVP-5) e cole no plugin rodando no Figma (ou mock se não tiver acesso visual). *Nota: Como agente, foque na correção do código TypeScript.*
-4.  **MVP-9 & MVP-10 (Addon)**: Implemente o Logger e o Kill-switch no addon.
-5.  **Validação Final**: Rode `pnpm test` e `pnpm build`.
+A Fase 1 (MVP-1 a MVP-5) está **✅ COMPLETA**. O pipeline básico Storybook → JSON Figma está funcional com 105 testes passando.
 
-## 🛡️ Definição de Pronto (DoD)
+A **Fase 2** adiciona 4 melhorias críticas para qualidade e robustez do sistema:
 
-- [ ] `pnpm build` passa em todos os pacotes.
-- [ ] `pnpm test` passa (especialmente novos testes de AL-2).
-- [ ] Plugin compila sem erros de TypeScript.
-- [ ] Código segue padrões do projeto (sem `any` desnecessário).
+---
+
+## 🎯 Escopo da Fase 2
+
+### 1. **AL-2: Melhorar Interpretador de Auto Layout**
+**Issue**: #16  
+**Objetivo**: Mapear `align-items` e `justify-content` para os eixos corretos do Figma
+
+**Status Atual**:
+- ✅ Estrutura já existe em `autolayout-interpreter/src/index.ts`
+- ✅ Funções `mapAlignItems()` e `mapJustifyContent()` implementadas
+- ❌ Falta aplicação correta aos eixos (primaryAxis vs counterAxis)
+
+**O que fazer**:
+- Corrigir lógica em `applyAutoLayout()` para mapear corretamente:
+  - `justify-content` → `primaryAxisAlignItems` (eixo principal)
+  - `align-items` → `counterAxisAlignItems` (eixo cruzado)
+- Adicionar testes para cobrir casos de `row` e `column`
+
+**Testes esperados**:
+```typescript
+// justify-content: flex-start → primaryAxisAlignItems: 'MIN'
+// align-items: center → counterAxisAlignItems: 'CENTER'
+// Para flexDirection: 'row' e 'column'
+```
+
+---
+
+### 2. **MVP-6: Implementar Recursividade no Plugin Figma**
+**Objetivo**: Plugin deve criar nós recursivamente, não apenas filhos diretos
+
+**Status Atual**:
+- ✅ Plugin básico criado em `figma-plugin-lite/src/code.ts`
+- ❌ Apenas processa 1 nível de filhos
+- ❌ Não suporta tipos de nó além de TEXT
+
+**O que fazer**:
+- Criar função recursiva `createNodeFromJson(nodeData)`
+- Suportar tipos: FRAME, TEXT, RECTANGLE (mínimo)
+- Aplicar propriedades de Auto Layout recursivamente
+- Adicionar tratamento de erros robusto
+
+**Estrutura esperada**:
+```typescript
+function createNodeFromJson(data: any, parent?: BaseNode): SceneNode | null {
+    switch(data.type) {
+        case 'FRAME':
+            const frame = figma.createFrame();
+            // aplicar propriedades
+            if (data.children) {
+                data.children.forEach(child => createNodeFromJson(child, frame));
+            }
+            return frame;
+        // ... outros tipos
+    }
+}
+```
+
+---
+
+### 3. **MVP-9: Adicionar Logger Estruturado no Addon**
+**Issue**: #17  
+**Objetivo**: Observabilidade de exports com logs estruturados (sem PII)
+
+**O que fazer**:
+- Criar arquivo `packages/storybook-addon-export/src/logger.ts`
+- Implementar logger com níveis: `info`, `warn`, `error`, `debug`
+- Formato estruturado JSON: `{ level, timestamp, event, metadata }`
+- Integrar no `panel.tsx` e `export.ts`
+- Log de eventos:
+  - `export.started`
+  - `export.completed` (duração, tamanho)
+  - `export.failed` (erro)
+
+**Exemplo**:
+```typescript
+logger.info('export.completed', {
+    method: 'clipboard',
+    size: 1234,
+    duration: 150
+});
+```
+
+---
+
+### 4. **MVP-10: Implementar Kill-Switch de Segurança**
+**Issue**: #19  
+**Objetivo**: Desativar addon via flag de ambiente (mitigação rápida)
+
+**O que fazer**:
+- Adicionar variável `FIGMA_EXPORT_ENABLED` (default: `true`)
+- Verificar em `panel.tsx` ao renderizar botões
+- Se desabilitado, mostrar mensagem: "Export desabilitado (manutenção)"
+- Adicionar documentação em README
+
+**Implementação**:
+```typescript
+// panel.tsx
+const isEnabled = import.meta.env.VITE_FIGMA_EXPORT_ENABLED !== 'false';
+
+if (!isEnabled) {
+    return <p>⚠️ Export temporariamente desabilitado</p>;
+}
+```
+
+---
+
+## 📋 Checklist de Execução
+
+### AL-2: Auto Layout (2-3h)
+- [ ] Revisar testes atuais em `autolayout-interpreter/src/index.test.ts`
+- [ ] Adicionar testes para justify-content e align-items em ambos eixos
+- [ ] Confirmar que `applyAutoLayout` já aplica corretamente os mapas
+- [ ] Validar com casos de teste row e column
+- [ ] Rodar `pnpm test --filter @figma-sync-engine/autolayout-interpreter`
+
+### MVP-6: Plugin Recursivo (3-4h)
+- [ ] Criar função `createNodeFromJson` recursiva
+- [ ] Suportar FRAME, TEXT, RECTANGLE
+- [ ] Aplicar layoutMode, padding, spacing
+- [ ] Tratar erros (JSON inválido, tipos desconhecidos)
+- [ ] Testar manualmente com JSON de exemplo
+- [ ] Rodar `pnpm build --filter @figma-sync-engine/figma-plugin-lite`
+
+### MVP-9: Logger (2-3h)
+- [ ] Criar `logger.ts` com interface estruturada
+- [ ] Implementar níveis de log
+- [ ] Adicionar flag `LOG_LEVEL` no ambiente
+- [ ] Integrar no `panel.tsx` (events de export)
+- [ ] Adicionar testes para logger
+- [ ] Validar logs no console do navegador
+
+### MVP-10: Kill-Switch (1-2h)
+- [ ] Adicionar `VITE_FIGMA_EXPORT_ENABLED` no `.env.example`
+- [ ] Implementar verificação em `panel.tsx`
+- [ ] Adicionar UI para estado desabilitado
+- [ ] Documentar em README
+- [ ] Testar com flag true/false
+
+---
+
+## 🧪 Testes e Validação
+
+### Build e Testes
+```bash
+# Rodar todos os testes
+pnpm test
+
+# Build completo
+pnpm build
+
+# Lint
+pnpm lint
+```
+
+### Testes Manuais
+1. **AL-2**: Inspecionar JSON gerado com diferentes align-items/justify-content
+2. **MVP-6**: Importar JSON complexo no plugin e validar árvore
+3. **MVP-9**: Verificar logs estruturados no console
+4. **MVP-10**: Testar com flag desabilitada
+
+---
+
+## 📊 Critérios de Aceite
+
+### AL-2
+- ✅ justify-content mapeia para primaryAxisAlignItems
+- ✅ align-items mapeia para counterAxisAlignItems
+- ✅ Funciona para row e column
+- ✅ Testes adicionados e passando
+
+### MVP-6
+- ✅ Plugin cria árvore recursiva (≥3 níveis)
+- ✅ Suporta FRAME, TEXT, RECTANGLE
+- ✅ Auto Layout aplicado corretamente
+- ✅ Erros tratados graciosamente
+
+### MVP-9
+- ✅ Logger estruturado implementado
+- ✅ Logs de export.started/completed/failed
+- ✅ Sem PII nos logs
+- ✅ Configurável via LOG_LEVEL
+
+### MVP-10
+- ✅ Flag FIGMA_EXPORT_ENABLED funcional
+- ✅ UI mostra estado desabilitado
+- ✅ Documentado em README
+- ✅ Testado com true/false
+
+---
+
+## 🚀 Ordem de Execução Recomendada
+
+1. **AL-2** (mais fácil, já tem estrutura)
+2. **MVP-9** (independente, útil para debugging)
+3. **MVP-10** (rápido, segurança)
+4. **MVP-6** (mais complexo, beneficia de AL-2 e MVP-9)
+
+---
+
+## 📚 Referências
+
+- Backlog: `docs/backlog.md`
+- Testes atuais: `packages/*/src/*.test.ts`
+- Plugin atual: `packages/figma-plugin-lite/src/code.ts`
+- Auto Layout: `packages/autolayout-interpreter/src/index.ts`
+
+---
+
+## ✅ Definição de Pronto
+
+- [ ] Todos os 4 items implementados
+- [ ] Testes adicionados e passando (cobertura ≥80%)
+- [ ] Build sem erros
+- [ ] Lint sem warnings críticos
+- [ ] Documentação atualizada
+- [ ] Smoke test manual realizado
+- [ ] Commit e PR criado
+
+---
+
+**Boa sorte! A Fase 2 eleva o projeto para produção. 🎉**
