@@ -11,6 +11,10 @@ import { CSSProperties } from 'react';
 
 type Status = 'idle' | 'capturing' | 'exporting' | 'success' | 'error';
 
+// Timeout constants for UI feedback
+const SUCCESS_AUTO_RESET_DELAY_MS = 3000;
+const ERROR_AUTO_RESET_DELAY_MS = 5000;
+
 const statusMessages: Record<Status, string> = {
     idle: 'Pronto para exportar',
     capturing: 'Capturando HTML...',
@@ -84,7 +88,7 @@ export const ExportPanel: React.FC = () => {
             setTimeout(() => {
                 setStatus('idle');
                 setDuration(null);
-            }, 3000);
+            }, SUCCESS_AUTO_RESET_DELAY_MS);
         } catch (err) {
             const message = err instanceof Error ? err.message : String(err);
             
@@ -99,7 +103,7 @@ export const ExportPanel: React.FC = () => {
             setStatus('error');
             
             // Auto-reset após 5 segundos
-            setTimeout(() => setStatus('idle'), 5000);
+            setTimeout(() => setStatus('idle'), ERROR_AUTO_RESET_DELAY_MS);
         }
     };
 
