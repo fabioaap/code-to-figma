@@ -6,7 +6,7 @@
 import React, { useState } from 'react';
 import { useStorybookState } from '@storybook/manager-api';
 import { captureStoryHTML } from './captureHtml';
-import { exportToClipboard, addExportMetadata, exportToFile } from './export';
+import { exportToClipboard, addExportMetadata, exportToFile, validateFigmaJson } from './export';
 import { CSSProperties } from 'react';
 
 type Status = 'idle' | 'capturing' | 'exporting' | 'success' | 'error';
@@ -24,11 +24,13 @@ export const ExportPanel: React.FC = () => {
     const [status, setStatus] = useState<Status>('idle');
     const [error, setError] = useState<string>('');
     const [exportMethod, setExportMethod] = useState<'clipboard' | 'download'>('clipboard');
+    const [duration, setDuration] = useState<number | null>(null);
 
     const handleExport = async () => {
         try {
             setError('');
             setStatus('capturing');
+            const startTime = performance.now();
 
             // Passo 1: Capturar HTML
             const capture = await captureStoryHTML();
@@ -44,7 +46,12 @@ export const ExportPanel: React.FC = () => {
                 __html: capture.html
             };
 
-            // Passo 3: Adicionar metadados
+            // Passo 3: Validar JSON antes de exportar
+            if (!validateFigmaJson(figmaJson)) {
+                throw new Error('JSON Figma inválido - estrutura não reconhecida');
+            }
+
+            // Passo 4: Adicionar metadados
             figmaJson = addExportMetadata(figmaJson, {
                 storyId: state.storyId || 'unknown',
                 nodeCount: capture.nodeCount,
@@ -53,7 +60,7 @@ export const ExportPanel: React.FC = () => {
             });
 
             setStatus('exporting');
-            // Passo 4: Exportar
+            // Passo 5: Exportar
             let result;
             if (exportMethod === 'clipboard') {
                 result = await exportToClipboard(figmaJson);
@@ -66,8 +73,14 @@ export const ExportPanel: React.FC = () => {
                 throw new Error('Falha ao exportar');
             }
 
+            // Calcular duração
+            const elapsed = Math.round(performance.now() - startTime);
+            setDuration(elapsed);
             setStatus('success');
-            setTimeout(() => setStatus('idle'), 3000);
+            setTimeout(() => {
+                setStatus('idle');
+                setDuration(null);
+            }, 3000);
         } catch (err) {
             const message = err instanceof Error ? err.message : String(err);
             setError(message);
@@ -164,6 +177,11 @@ export const ExportPanel: React.FC = () => {
 
             <div style={styles.statusBar}>
                 {statusMessages[status]}
+                {duration !== null && status === 'success' && (
+                    <span style={{ marginLeft: '8px', fontWeight: 700 }}>
+                        ⏱️ {duration}ms
+                    </span>
+                )}
             </div>
 
             <div style={styles.controls}>
