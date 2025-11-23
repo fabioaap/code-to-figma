@@ -6,10 +6,10 @@ The `MVP5_EXECUTION_SCRIPT.ps1` is a PowerShell automation script designed to va
 
 ## Prerequisites
 
-- **PowerShell**: PowerShell Core (pwsh) must be installed
-  - Windows: Pre-installed
+- **PowerShell**: PowerShell Core 6+ or PowerShell 7+ (pwsh) must be installed
+  - Windows: PowerShell 5.1 is pre-installed, but PowerShell 7+ is recommended
   - macOS: `brew install powershell`
-  - Linux: [Install PowerShell Core](https://docs.microsoft.com/en-us/powershell/scripting/install/installing-powershell)
+  - Linux: [Install PowerShell](https://docs.microsoft.com/en-us/powershell/scripting/install/installing-powershell)
   
 - **Node.js**: Version 20+ recommended
 - **pnpm**: Package manager (script will check if installed)
