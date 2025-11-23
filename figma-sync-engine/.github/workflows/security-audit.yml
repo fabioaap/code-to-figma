@@ -1,0 +1,143 @@
+name: Auditoria de Segurança
+
+on:
+  # Execução semanal às segundas-feiras às 8h UTC
+  schedule:
+    - cron: '0 8 * * 1'
+  
+  # Em pull requests que modificam dependências
+  pull_request:
+    branches: [ main ]
+    paths:
+      - 'package.json'
+      - 'pnpm-lock.yaml'
+      - 'packages/*/package.json'
+      - '.github/workflows/security-audit.yml'
+  
+  # Permitir execução manual
+  workflow_dispatch:
+
+jobs:
+  security-audit:
+    name: Auditoria de Segurança
+    runs-on: ubuntu-latest
+    
+    permissions:
+      contents: read
+      issues: write  # Para criar issues em caso de vulnerabilidades críticas
+    
+    steps:
+      - name: Checkout do repositório
+        uses: actions/checkout@v4
+      
+      - name: Configurar Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      
+      - name: Configurar pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 8
+      
+      - name: Cache do pnpm store
+        uses: actions/cache@v4
+        with:
+          path: ~/.pnpm-store
+          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-store-
+      
+      - name: Instalar dependências
+        run: pnpm install --frozen-lockfile
+      
+      - name: Executar auditoria de segurança
+        id: audit
+        continue-on-error: true
+        run: |
+          echo "Executando auditoria de segurança..."
+          pnpm audit || true
+          echo "Executando script customizado de auditoria..."
+          node scripts/security-audit.js
+        env:
+          NODE_ENV: production
+      
+      - name: Upload do relatório JSON
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: security-audit-report-json-${{ github.run_number }}
+          path: audit-reports/latest.json
+          retention-days: 90
+          if-no-files-found: warn
+      
+      - name: Upload do relatório TXT
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: security-audit-report-txt-${{ github.run_number }}
+          path: audit-reports/latest.txt
+          retention-days: 90
+          if-no-files-found: warn
+      
+      - name: Verificar vulnerabilidades críticas
+        if: failure()
+        run: |
+          echo "⚠️ Vulnerabilidades críticas ou altas encontradas!"
+          echo "Revise o relatório de auditoria nos artifacts acima."
+          exit 1
+      
+      - name: Comentar no PR (se aplicável)
+        if: github.event_name == 'pull_request' && always()
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            let reportContent = '';
+            
+            try {
+              if (fs.existsSync('audit-reports/latest.txt')) {
+                reportContent = fs.readFileSync('audit-reports/latest.txt', 'utf8');
+                
+                // Extrai apenas o resumo
+                const summaryMatch = reportContent.match(/RESUMO:[\s\S]*?Total:\s+\d+/);
+                const summary = summaryMatch ? summaryMatch[0] : 'Relatório não disponível';
+                
+                const comment = `## 🔒 Auditoria de Segurança
+                
+            ${summary}
+            
+            📊 Relatório completo disponível nos artifacts desta execução.
+            
+            ${process.env.AUDIT_STATUS === 'failure' ? '⚠️ **Atenção**: Vulnerabilidades críticas ou altas detectadas!' : '✅ Auditoria concluída'}`;
+                
+                github.rest.issues.createComment({
+                  issue_number: context.issue.number,
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  body: comment
+                });
+              }
+            } catch (error) {
+              console.log('Não foi possível postar comentário:', error.message);
+            }
+        env:
+          AUDIT_STATUS: ${{ job.status }}
+      
+      - name: Resumo da auditoria
+        if: always()
+        run: |
+          echo "## 🔒 Auditoria de Segurança Concluída" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          
+          if [ -f "audit-reports/latest.txt" ]; then
+            echo "### 📊 Resumo" >> $GITHUB_STEP_SUMMARY
+            echo '```' >> $GITHUB_STEP_SUMMARY
+            grep -A 10 "RESUMO:" audit-reports/latest.txt | head -n 8 >> $GITHUB_STEP_SUMMARY || echo "Resumo não disponível"
+            echo '```' >> $GITHUB_STEP_SUMMARY
+          else
+            echo "⚠️ Relatório não gerado" >> $GITHUB_STEP_SUMMARY
+          fi
+          
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "📥 Relatórios completos disponíveis nos artifacts" >> $GITHUB_STEP_SUMMARY

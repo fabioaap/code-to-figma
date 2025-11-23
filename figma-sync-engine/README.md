@@ -21,6 +21,8 @@ pnpm dev           # roda todos os pacotes em modo desenvolvimento
 pnpm build         # build de todos os pacotes
 pnpm lint          # lint em todos os workspaces
 pnpm test          # testes (Vitest / futura suíte Playwright)
+pnpm audit         # executa auditoria de segurança
+pnpm audit:fix     # tenta corrigir vulnerabilidades automaticamente
 ```
 
 ## Arquitetura (Clean)
@@ -40,9 +42,11 @@ O interpretador lê propriedades CSS (display:flex, flex-direction, gap, padding
 5. Importar plugin Figma e gerar nodes
 
 ## Segurança & Guardrails
+- **Auditoria de Segurança**: Sistema automatizado de auditoria de dependências via GitHub Actions (semanal) e script local. Ver `SECURITY.md` para detalhes.
 - **Kill-switch** (MVP-10): Variável de ambiente `VITE_FIGMA_EXPORT_ENABLED` permite desabilitar exportação temporariamente para manutenção
 - **Logs estruturados** (MVP-9): Logger com níveis (debug, info, warn, error) sem PII, configurável via `VITE_LOG_LEVEL`
 - Testes de regressão e snapshot nos exemplos
+- Relatórios de auditoria salvos em `audit-reports/` com histórico timestamped
 
 ## Variáveis de Ambiente
 

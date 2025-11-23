@@ -7,3 +7,7 @@ coverage/
 .turbo/
 *.log
 storybook-static/
+audit-reports/
+package-lock.json
+package-lock.json.backup
+

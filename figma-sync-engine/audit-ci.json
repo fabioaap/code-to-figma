@@ -1,0 +1,14 @@
+{
+  "low": false,
+  "moderate": false,
+  "high": true,
+  "critical": true,
+  "report": true,
+  "summary": true,
+  "package-manager": "pnpm",
+  "output-format": "text",
+  "report-type": "full",
+  "pass-enoaudit": true,
+  "skip-dev": false,
+  "allowlist": []
+}
