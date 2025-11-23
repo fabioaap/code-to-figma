@@ -5,3 +5,4 @@ dist/
 coverage/
 .playwright-cache
 .turbo/
+storybook-static/
