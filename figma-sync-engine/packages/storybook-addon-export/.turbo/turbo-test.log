@@ -1,11 +1,11 @@
 
-> @figma-sync-engine/storybook-addon-export@0.1.0 test C:\Users\Educacross\Documents\code-to-figma\figma-sync-engine\packages\storybook-addon-export
+> @figma-sync-engine/storybook-addon-export@0.1.0 test /home/runner/work/code-to-figma/code-to-figma/figma-sync-engine/packages/storybook-addon-export
 > vitest run --passWithNoTests
 
 
-[7m[1m[36m RUN [39m[22m[27m [36mv1.6.1[39m [90mC:/Users/Educacross/Documents/code-to-figma/figma-sync-engine/packages/storybook-addon-export[39m
+[7m[1m[36m RUN [39m[22m[27m [36mv1.6.1[39m [90m/home/runner/work/code-to-figma/code-to-figma/figma-sync-engine/packages/storybook-addon-export[39m
 
- [32m✓[39m src/export.test.ts [2m ([22m[2m36 tests[22m[2m)[22m[90m 72[2mms[22m[39m
+ [32m✓[39m src/export.test.ts [2m ([22m[2m36 tests[22m[2m)[22m[90m 78[2mms[22m[39m
 [90mstderr[2m | src/export.test.ts[22m[39m
 Not implemented: navigation to another Document
 Not implemented: navigation to another Document
@@ -15,10 +15,11 @@ Not implemented: navigation to another Document
 Not implemented: navigation to another Document
 Not implemented: navigation to another Document
 
- [32m✓[39m src/captureHtml.test.ts [2m ([22m[2m14 tests[22m[2m)[22m[33m 1532[2mms[22m[39m
+ [32m✓[39m src/captureHtml.test.ts [2m ([22m[2m14 tests[22m[2m)[22m[33m 1410[2mms[22m[39m
 
 [2m Test Files [22m [1m[32m2 passed[39m[22m[90m (2)[39m
 [2m      Tests [22m [1m[32m50 passed[39m[22m[90m (50)[39m
-[2m   Start at [22m 21:43:37
-[2m   Duration [22m 4.35s[2m (transform 192ms, setup 0ms, collect 242ms, tests 1.60s, environment 3.48s, prepare 710ms)[22m
+[2m   Start at [22m 03:33:46
+[2m   Duration [22m 2.77s[2m (transform 172ms, setup 0ms, collect 270ms, tests 1.49s, environment 1.63s, prepare 329ms)[22m
 
+[?25h
