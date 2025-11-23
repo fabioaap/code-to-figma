@@ -159,10 +159,10 @@ export const ExportPanel: React.FC = () => {
             padding: '8px 12px',
             borderRadius: '4px',
             marginBottom: '12px',
-            backgroundColor: status === 'success' ? '#d4edda' : 
-                           status === 'error' ? '#f8d7da' : '#e7f3ff',
-            color: status === 'success' ? '#155724' : 
-                   status === 'error' ? '#721c24' : '#004085',
+            backgroundColor: status === 'success' ? '#d4edda' :
+                status === 'error' ? '#f8d7da' : '#e7f3ff',
+            color: status === 'success' ? '#155724' :
+                status === 'error' ? '#721c24' : '#004085',
             fontWeight: 500
         } as CSSProperties,
         controls: {
@@ -232,7 +232,7 @@ export const ExportPanel: React.FC = () => {
     return (
         <div style={styles.container}>
             <div style={styles.header}>📤 Exportar para Figma</div>
-            
+
             <div style={styles.storyInfo}>
                 <strong>Story:</strong> {state.storyId || 'nenhuma selecionada'}
             </div>
@@ -247,8 +247,8 @@ export const ExportPanel: React.FC = () => {
             </div>
 
             <div style={styles.controls}>
-                <button 
-                    onClick={handleExport} 
+                <button
+                    onClick={handleExport}
                     disabled={isWorking}
                     style={{
                         ...styles.button,
@@ -258,8 +258,8 @@ export const ExportPanel: React.FC = () => {
                 >
                     {isWorking ? `${statusMessages[status]}` : '📥 Exportar'}
                 </button>
-                
-                <button 
+
+                <button
                     onClick={() => setExportMethod('clipboard')}
                     style={{
                         ...styles.selectButton,
@@ -270,8 +270,8 @@ export const ExportPanel: React.FC = () => {
                 >
                     📋
                 </button>
-                
-                <button 
+
+                <button
                     onClick={() => setExportMethod('download')}
                     style={{
                         ...styles.selectButton,
