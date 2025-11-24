@@ -91,10 +91,25 @@ export function normalizePadding(
 
 /**
  * Analisa propriedades CSS
+ * AL-3: Detecção robusta de direção com fallback para HORIZONTAL
  */
 export function analyzeCss(css: CssSnapshot): CssAnalysis {
     const isFlex = css.display === 'flex';
-    const isRow = !css.flexDirection || css.flexDirection.includes('row');
+    
+    // AL-3: Inferir direção com fallback seguro
+    let isRow = true; // Default: HORIZONTAL
+    
+    if (css.flexDirection) {
+        // Se flex-direction está definido, validar valor
+        const direction = css.flexDirection.toLowerCase();
+        if (direction === 'column' || direction === 'column-reverse') {
+            isRow = false; // VERTICAL
+        } else if (direction === 'row' || direction === 'row-reverse') {
+            isRow = true; // HORIZONTAL
+        }
+        // Valores inválidos mantêm o fallback (isRow = true)
+    }
+    // Se flex-direction não está definido, mantém fallback HORIZONTAL (isRow = true)
 
     const padding = normalizePadding(
         css.padding,
