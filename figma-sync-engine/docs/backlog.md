@@ -73,11 +73,11 @@ Expandir heurísticas CSS → Figma.
 #### Snapshot de status (23/11/2025)
 - ✅ **AL-1** – Parser entregue com testes cobrindo 1/2/3/4 valores em `autolayout-interpreter`.
 - ✅ **AL-2** – **COMPLETO**: Mapeamento de `justify-content` e `align-items` implementado e validado.
-- ⏳ **AL-3** – Fallback de direção pendente (Sprint 3).
+- ⏳ **AL-3** – Fallback de direção pendente (Sprint 3) - **Issue #27**.
 - ⛔ **AL-4** – Gap multi-eixo aguardando discovery.
 - ⛔ **AL-5** – POC flex-wrap não iniciada.
 - ⛔ **AL-6** – Relatório de divergências sem owner.
-- ⏳ **AL-7** – Mapeamento de tipografia pendente (Sprint 3).
+- ⏳ **AL-7** – Mapeamento de tipografia pendente (Sprint 3) - **Issue #28**.
 
 Métrica alvo (Epic): ≥90% de fidelidade visual para componentes flex simples.
 
@@ -93,10 +93,10 @@ Suporte a geração de Component + VariantSets.
 | VAR-4 | Detectar estados via `data-state` | Discovery | Demonstra 2+ estados | Could | VAR-1 |
 | VAR-5 | Diferencial de diffs visual (snapshot) | Discovery | Snapshot comparativo | Could | VAR-2 |
 
-#### Snapshot de status (21/11/2025)
-- ⛔ **VAR-1** – Convenção args → variants não definida.
-- ⛔ **VAR-2** – Seleção múltipla não implementada.
-- ⛔ **VAR-3** – Plugin ainda não cria ComponentSet.
+#### Snapshot de status (23/11/2025)
+- ⏳ **VAR-1** – Convenção args → variants (Sprint 4) - **Issue #31**.
+- ⏳ **VAR-2** – Seleção múltipla (Sprint 4) - **Issue #32**.
+- ⏳ **VAR-3** – Plugin cria ComponentSet (Sprint 4) - **Issue #33**.
 - ⛔ **VAR-4** – Descoberta de estados pendente.
 - ⛔ **VAR-5** – Sem POC de snapshot diff.
 
@@ -112,8 +112,8 @@ Métrica alvo: Reduzir tempo de criação de variantes Figma em ≥70%.
 | PERF-3 | Profiling nodes > 500 | Discovery | Relatório gargalos | Could | PERF-1 |
 | PERF-4 | Streaming parcial (HTML grande) | Discovery | POC streaming | Could | PERF-3 |
 
-#### Snapshot de status (21/11/2025)
-- ⛔ **PERF-1** – Benchmark não iniciado (aguarda pipeline estável).
+#### Snapshot de status (23/11/2025)
+- ⏳ **PERF-1** – Benchmark não iniciado (Sprint 5) - **Issue #34**.
 - ⛔ **PERF-2** – Cache por hash bloqueado por PERF-1.
 - ⛔ **PERF-3** – Profiling sem baseline.
 - ⛔ **PERF-4** – Streaming ainda em ideação.
@@ -147,8 +147,8 @@ Objetivo: Export de componente médio (<300 nodes) < 1.5s.
 | TOK-4 | Plugin aplica tokens se existirem | Delivery | Matching por nome | Could | TOK-3 |
 
 #### Snapshot de status (23/11/2025)
-- ⏳ **TOK-1** – Extração de cores em discovery (Sprint 3).
-- ⏳ **TOK-2** – Tokens tipográficos em planejamento (Sprint 3).
+- ⏳ **TOK-1** – Extração de cores em discovery (Sprint 3) - **Issue #29**.
+- ⏳ **TOK-2** – Tokens tipográficos em planejamento (Sprint 3) - **Issue #30**.
 - ⛔ **TOK-3** – Arquivo `tokens.json` não iniciado.
 - ⛔ **TOK-4** – Plugin ainda não interpreta tokens.
 
@@ -162,7 +162,7 @@ Objetivo: Export de componente médio (<300 nodes) < 1.5s.
 | SEC-3 | Política de versionamento sem breaking | Delivery | Documentada | Should | SEC-1 |
 
 #### Snapshot de status (23/11/2025)
-- ⛔ **SEC-1** – Auditoria pendente (Sprint 5).
+- ⏳ **SEC-1** – Auditoria pendente (Sprint 5) - **Issue #35**.
 - ✅ **SEC-2** – Kill-switch implementado (MVP-10).
 - ⛔ **SEC-3** – Política de versionamento sem owner.
 
@@ -182,7 +182,7 @@ Status 23/11/2025: DOC-1 entregue. DOC-4 planejado para Sprint 5.
 - ✅ **DOC-1** – CONTRIBUTING.md publicado.
 - ⛔ **DOC-2** – Fluxo de changelog não configurado.
 - ⛔ **DOC-3** – Exemplos adicionais não criados.
-- ⏳ **DOC-4** – Badge CI aguardando workflow (Sprint 5).
+- ⏳ **DOC-4** – Badge CI aguardando workflow (Sprint 5) - **Issue #36**.
 - ⛔ **DOC-5** – FAQ não iniciado.
 
 ---
@@ -230,20 +230,21 @@ Status 23/11/2025: DOC-1 entregue. DOC-4 planejado para Sprint 5.
 
 1. **AL-3: Fallback de Direção** – ⏱️ 1-2 horas
    - Garantir layout correto quando flex-direction não é explícito.
-   - **Prompt**: `docs/CLOUD_AGENT_BRIEFING_PHASE3_MASTER.md`
+   - **Issue**: #27
 
 2. **AL-7: Tipografia Completa** – ⏱️ 2-3 horas
    - Mapear font-family, weight, size, line-height.
-   - **Prompt**: `docs/CLOUD_AGENT_BRIEFING_PHASE3_MASTER.md`
+   - **Issue**: #28
 
 3. **TOK-1 & TOK-2: Tokens Básicos** – ⏱️ 2-3 horas
    - Extrair cores e tipografia para JSON.
-   - **Prompt**: `docs/CLOUD_AGENT_BRIEFING_PHASE3_MASTER.md`
+   - **Issues**: #29, #30
 
 ### 🟡 MÉDIA PRIORIDADE (Sprint 4 - Variantes)
 
 4. **VAR-1 a VAR-3: Component Sets** – ⏱️ 6-8 horas
    - Suporte a variantes e múltiplos exports.
+   - **Issues**: #31, #32, #33
 
 ---
 ## Notação & Convenções
@@ -252,10 +253,10 @@ Status 23/11/2025: DOC-1 entregue. DOC-4 planejado para Sprint 5.
 - RICE será preenchido após coleta de Reach & Effort.
 
 ---
-## Kanban Atualizado (23/11/2025 - 18:00 UTC-3)
+## Kanban Atualizado (23/11/2025 - 18:15 UTC-3)
 | Backlog | Em Progresso | Em Review | Concluído |
 |---------|--------------|-----------|-----------|
-| AL-4, AL-5, AL-6, VAR-1, VAR-2, VAR-3, VAR-4, VAR-5, PERF-1, PERF-2, PERF-3, PERF-4, OBS-2, OBS-3, OBS-4, TOK-3, TOK-4, SEC-1, SEC-3, DOC-2, DOC-3, DOC-5 | **Sprint 3** (AL-3, AL-7, TOK-1, TOK-2) | – | **MVP-1 a MVP-12**, **AL-1**, **AL-2**, **DOC-1**, **SEC-2** |
+| VAR-4, VAR-5, PERF-2, PERF-3, PERF-4, OBS-2, OBS-3, OBS-4, TOK-3, TOK-4, SEC-3, DOC-2, DOC-3, DOC-5 | **Sprint 3** (#27, #28, #29, #30) | – | **MVP-1 a MVP-12**, **AL-1**, **AL-2**, **DOC-1**, **SEC-2** |
 
 ---
 ## Anotações Finais
