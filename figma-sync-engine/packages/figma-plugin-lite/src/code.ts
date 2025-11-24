@@ -78,14 +78,14 @@ function createNodeFromJson(data: any): SceneNode | null {
                 // Carregar fonte antes de definir caracteres
                 // Usa fonte padrão se não especificado
                 const fontName = data.fontName || { family: 'Inter', style: 'Regular' };
-                
+
                 // Marcar como promise para não retornar imediatamente
                 const setupText = async () => {
                     try {
                         await figma.loadFontAsync(fontName);
-                        
+
                         text.characters = data.characters || '';
-                        
+
                         // Aplicar propriedades de texto
                         if (data.fontSize) text.fontSize = data.fontSize;
                         if (data.fontName) text.fontName = data.fontName;
@@ -93,7 +93,7 @@ function createNodeFromJson(data: any): SceneNode | null {
                         if (data.textAlignVertical) text.textAlignVertical = data.textAlignVertical;
                         if (data.lineHeight) text.lineHeight = data.lineHeight;
                         if (data.letterSpacing) text.letterSpacing = data.letterSpacing;
-                        
+
                         // Aplicar cor do texto
                         if (data.fills && Array.isArray(data.fills)) {
                             text.fills = data.fills;
@@ -118,7 +118,7 @@ function createNodeFromJson(data: any): SceneNode | null {
                         }
                     }
                 };
-                
+
                 // Iniciar setup mas não bloquear retorno
                 setupText();
 
@@ -175,24 +175,24 @@ function createNodeFromJson(data: any): SceneNode | null {
 function hexToRgb(hex: string): { r: number; g: number; b: number } | null {
     // Remove o # se presente
     hex = hex.replace(/^#/, '');
-    
+
     // Suporta formatos #RGB e #RRGGBB
     if (hex.length === 3) {
         hex = hex[0] + hex[0] + hex[1] + hex[1] + hex[2] + hex[2];
     }
-    
+
     if (hex.length !== 6) {
         return null;
     }
-    
+
     const r = parseInt(hex.substring(0, 2), 16);
     const g = parseInt(hex.substring(2, 4), 16);
     const b = parseInt(hex.substring(4, 6), 16);
-    
+
     if (isNaN(r) || isNaN(g) || isNaN(b)) {
         return null;
     }
-    
+
     return { r, g, b };
 }
 
@@ -204,21 +204,26 @@ figma.ui.onmessage = (msg) => {
     if (msg.type === 'import-json') {
         try {
             const data = JSON.parse(msg.payload);
-            
-            // Suporte para formato legado (data.root) e novo formato direto
-            const rootData = data.root || data;
-            
-            // Criar nó raiz recursivamente
-            const rootNode = createNodeFromJson(rootData);
-            
-            if (rootNode) {
-                figma.currentPage.appendChild(rootNode);
-                figma.viewport.scrollAndZoomIntoView([rootNode]);
-                
-                const nodeCount = countNodes(rootNode);
-                figma.notify(`✅ Importado: ${nodeCount} nó(s) criado(s)`);
+
+            // Suporte para múltiplas stories (VAR-3)
+            if (data.stories && Array.isArray(data.stories)) {
+                createComponentSetFromMultipleStories(data);
             } else {
-                figma.notify('❌ Falha ao criar estrutura do JSON');
+                // Suporte para formato legado (data.root) e novo formato direto
+                const rootData = data.root || data;
+
+                // Criar nó raiz recursivamente
+                const rootNode = createNodeFromJson(rootData);
+
+                if (rootNode) {
+                    figma.currentPage.appendChild(rootNode);
+                    figma.viewport.scrollAndZoomIntoView([rootNode]);
+
+                    const nodeCount = countNodes(rootNode);
+                    figma.notify(`✅ Importado: ${nodeCount} nó(s) criado(s)`);
+                } else {
+                    figma.notify('❌ Falha ao criar estrutura do JSON');
+                }
             }
         } catch (e) {
             console.error('Erro ao importar JSON:', e);
@@ -238,5 +243,98 @@ function countNodes(node: SceneNode): number {
         });
     }
     return count;
+}
+
+/**
+ * VAR-3: Cria um ComponentSet a partir de múltiplas stories
+ * Mapeia cada story como uma variante do componente
+ */
+function createComponentSetFromMultipleStories(data: {
+    stories: Array<{
+        storyId: string;
+        name: string;
+        figmaJson: any;
+        variantProperties?: Record<string, string>;
+    }>;
+    exportedAt?: string;
+    count?: number;
+}): void {
+    if (!data.stories || data.stories.length === 0) {
+        figma.notify('❌ Nenhuma story encontrada para criar ComponentSet');
+        return;
+    }
+
+    try {
+        const storyFrames: SceneNode[] = [];
+
+        // Criar um frame para cada story
+        data.stories.forEach((story, index) => {
+            const frame = createNodeFromJson(story.figmaJson);
+            if (frame) {
+                frame.name = `${story.name}`;
+
+                // Armazenar variant properties como dados do plugin
+                if (story.variantProperties && Object.keys(story.variantProperties).length > 0) {
+                    Object.entries(story.variantProperties).forEach(([key, value]) => {
+                        frame.setPluginData(`variant_${key}`, String(value));
+                    });
+                }
+
+                storyFrames.push(frame);
+            }
+        });
+
+        if (storyFrames.length === 0) {
+            figma.notify('❌ Falha ao processar stories');
+            return;
+        }
+
+        // Se apenas uma story, add direto à página
+        if (storyFrames.length === 1) {
+            figma.currentPage.appendChild(storyFrames[0]);
+            figma.viewport.scrollAndZoomIntoView(storyFrames);
+            figma.notify('✅ Story única importada');
+            return;
+        }
+
+        // Múltiplas stories: criar ComponentSet
+        // Posicionar frames lado a lado
+        let xOffset = 0;
+        storyFrames.forEach((frame) => {
+            frame.x = xOffset;
+            frame.y = 0;
+            if ('width' in frame) {
+                xOffset += (frame.width as number) + 40;
+            }
+            figma.currentPage.appendChild(frame);
+        });
+
+        // Criar container para variantes
+        const componentName = data.stories[0].name.split('/')[0] || 'Component';
+
+        // Designar primeira story como componente principal (se Figma permite)
+        if (storyFrames.length > 0 && 'setAsComponent' in storyFrames[0]) {
+            try {
+                // Nota: Esta é uma tentativa; Figma pode não suportar via plugin
+                storyFrames[0].name = `${componentName}=base`;
+            } catch (e) {
+                console.warn('Não foi possível designar componente principal');
+            }
+        }
+
+        // Nomear as variantes adicionais
+        storyFrames.forEach((frame, index) => {
+            if (index > 0) {
+                const variantName = data.stories[index].name.split('/').pop() || `variant-${index}`;
+                frame.name = `${componentName}=${variantName}`;
+            }
+        });
+
+        figma.viewport.scrollAndZoomIntoView(storyFrames);
+        figma.notify(`✅ ComponentSet com ${storyFrames.length} variantes criado`);
+    } catch (e) {
+        console.error('Erro ao criar ComponentSet:', e);
+        figma.notify(`❌ Erro ao criar ComponentSet: ${e instanceof Error ? e.message : 'desconhecido'}`);
+    }
 }
 
