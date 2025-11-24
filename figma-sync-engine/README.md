@@ -9,7 +9,7 @@ Automatizar a conversão Storybook → Figma reduzindo em até 80% o tempo de do
 - `storybook-addon-export`: Addon que adiciona botão "Exportar para Figma" e captura HTML da história ativa. Inclui logger estruturado (MVP-9) e kill-switch (MVP-10).
 - `html-to-figma-core`: Fork/light wrapper sobre `@builder.io/html-to-figma` para extensões futuras.
 - `autolayout-interpreter`: Pós-processa o JSON para aplicar heurísticas de Auto Layout (gap, padding, alinhamento). Suporta `align-items` e `justify-content` mapeados corretamente (AL-2).
-- `figma-plugin-lite`: Plugin que importa JSON e cria nodes recursivamente no canvas com suporte a FRAME, TEXT e RECTANGLE (MVP-6).
+- `figma-plugin-lite`: Plugin que importa JSON e cria nodes recursivamente no canvas com suporte a FRAME, TEXT e RECTANGLE (MVP-6). Suporta criação de ComponentSet quando múltiplas variantes são detectadas (VAR-3).
 
 ## Exemplo
 `examples/react-button` contém um componente simples para testar fluxo de exportação.

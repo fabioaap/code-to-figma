@@ -5,11 +5,11 @@
 
 [7m[1m[36m RUN [39m[22m[27m [36mv1.6.1[39m [90m/home/runner/work/code-to-figma/code-to-figma/figma-sync-engine/packages/html-to-figma-core[39m
 
- [32m✓[39m src/tokens.test.ts [2m ([22m[2m18 tests[22m[2m)[22m[90m 23[2mms[22m[39m
- [32m✓[39m src/index.test.ts [2m ([22m[2m22 tests[22m[2m)[22m[90m 49[2mms[22m[39m
+ [32m✓[39m src/tokens.test.ts [2m ([22m[2m18 tests[22m[2m)[22m[90m 25[2mms[22m[39m
+ [32m✓[39m src/index.test.ts [2m ([22m[2m22 tests[22m[2m)[22m[90m 52[2mms[22m[39m
 
 [2m Test Files [22m [1m[32m2 passed[39m[22m[90m (2)[39m
 [2m      Tests [22m [1m[32m40 passed[39m[22m[90m (40)[39m
-[2m   Start at [22m 04:05:24
-[2m   Duration [22m 1.69s[2m (transform 200ms, setup 0ms, collect 308ms, tests 72ms, environment 1.76s, prepare 497ms)[22m
+[2m   Start at [22m 04:10:21
+[2m   Duration [22m 3.11s[2m (transform 312ms, setup 0ms, collect 306ms, tests 77ms, environment 3.30s, prepare 959ms)[22m
 

@@ -5,70 +5,69 @@
 
 [7m[1m[36m RUN [39m[22m[27m [36mv1.6.1[39m [90m/home/runner/work/code-to-figma/code-to-figma/figma-sync-engine/packages/storybook-addon-export[39m
 
- [32m✓[39m src/logger.test.ts [2m ([22m[2m24 tests[22m[2m)[22m[90m 33[2mms[22m[39m
- [32m✓[39m src/export.test.ts [2m ([22m[2m36 tests[22m[2m)[22m[90m 93[2mms[22m[39m
+ [32m✓[39m src/logger.test.ts [2m ([22m[2m24 tests[22m[2m)[22m[90m 36[2mms[22m[39m
 [90mstdout[2m | src/export.test.ts[2m > [22m[2mexport - MVP-5[2m > [22m[2mexportToClipboard[2m > [22m[2mshould copy JSON to clipboard[22m[39m
-[2025-11-24T04:05:27.378Z] INFO: export.started { method: 'clipboard' }
-[2025-11-24T04:05:27.380Z] INFO: export.completed { method: 'clipboard', size: 41, duration: 2 }
+[2025-11-24T04:10:24.666Z] INFO: export.started { method: 'clipboard' }
+[2025-11-24T04:10:24.670Z] INFO: export.completed { method: 'clipboard', size: 41, duration: 3 }
 
 [90mstdout[2m | src/export.test.ts[2m > [22m[2mexport - MVP-5[2m > [22m[2mexportToClipboard[2m > [22m[2mshould format JSON with indentation[22m[39m
-[2025-11-24T04:05:27.383Z] INFO: export.started { method: 'clipboard' }
-[2025-11-24T04:05:27.383Z] INFO: export.completed { method: 'clipboard', size: 75, duration: 0 }
+[2025-11-24T04:10:24.672Z] INFO: export.started { method: 'clipboard' }
+[2025-11-24T04:10:24.673Z] INFO: export.completed { method: 'clipboard', size: 75, duration: 0 }
 
 [90mstdout[2m | src/export.test.ts[2m > [22m[2mexport - MVP-5[2m > [22m[2mexportToClipboard[2m > [22m[2mshould include timestamp[22m[39m
-[2025-11-24T04:05:27.384Z] INFO: export.started { method: 'clipboard' }
-[2025-11-24T04:05:27.385Z] INFO: export.completed { method: 'clipboard', size: 21, duration: 0 }
+[2025-11-24T04:10:24.674Z] INFO: export.started { method: 'clipboard' }
+[2025-11-24T04:10:24.674Z] INFO: export.completed { method: 'clipboard', size: 21, duration: 0 }
 
 [90mstdout[2m | src/export.test.ts[2m > [22m[2mexport - MVP-5[2m > [22m[2mexportToClipboard[2m > [22m[2mshould throw error if clipboard unavailable[22m[39m
-[2025-11-24T04:05:27.386Z] INFO: export.started { method: 'clipboard' }
+[2025-11-24T04:10:24.675Z] INFO: export.started { method: 'clipboard' }
 
 [90mstderr[2m | src/export.test.ts[2m > [22m[2mexport - MVP-5[2m > [22m[2mexportToClipboard[2m > [22m[2mshould throw error if clipboard unavailable[22m[39m
-[2025-11-24T04:05:27.386Z] ERROR: export.failed {
+[2025-11-24T04:10:24.675Z] ERROR: export.failed {
   method: 'clipboard',
   error: 'Clipboard API not available',
   duration: 0
 }
 
 [90mstdout[2m | src/export.test.ts[2m > [22m[2mexport - MVP-5[2m > [22m[2mexportToClipboard[2m > [22m[2mshould throw error if write fails[22m[39m
-[2025-11-24T04:05:27.389Z] INFO: export.started { method: 'clipboard' }
+[2025-11-24T04:10:24.678Z] INFO: export.started { method: 'clipboard' }
 
 [90mstderr[2m | src/export.test.ts[2m > [22m[2mexport - MVP-5[2m > [22m[2mexportToClipboard[2m > [22m[2mshould throw error if write fails[22m[39m
-[2025-11-24T04:05:27.389Z] ERROR: export.failed { method: 'clipboard', error: 'Permission denied', duration: 0 }
+[2025-11-24T04:10:24.679Z] ERROR: export.failed { method: 'clipboard', error: 'Permission denied', duration: 1 }
 
 [90mstdout[2m | src/export.test.ts[2m > [22m[2mexport - MVP-5[2m > [22m[2mexportToClipboard[2m > [22m[2mshould calculate correct file size[22m[39m
-[2025-11-24T04:05:27.390Z] INFO: export.started { method: 'clipboard' }
-[2025-11-24T04:05:27.390Z] INFO: export.completed { method: 'clipboard', size: 44, duration: 0 }
+[2025-11-24T04:10:24.680Z] INFO: export.started { method: 'clipboard' }
+[2025-11-24T04:10:24.680Z] INFO: export.completed { method: 'clipboard', size: 44, duration: 0 }
 
 [90mstdout[2m | src/export.test.ts[2m > [22m[2mexport - MVP-5[2m > [22m[2mexportToFile[2m > [22m[2mshould download file with default name[22m[39m
-[2025-11-24T04:05:27.392Z] INFO: export.started { method: 'download', filename: 'figma-export.json' }
-[2025-11-24T04:05:27.415Z] INFO: export.completed {
+[2025-11-24T04:10:24.682Z] INFO: export.started { method: 'download', filename: 'figma-export.json' }
+[2025-11-24T04:10:24.703Z] INFO: export.completed {
   method: 'download',
   filename: 'figma-export.json',
   size: 21,
-  duration: 23
+  duration: 21
 }
 
 [90mstdout[2m | src/export.test.ts[2m > [22m[2mexport - MVP-5[2m > [22m[2mexportToFile[2m > [22m[2mshould download file with custom name[22m[39m
-[2025-11-24T04:05:27.417Z] INFO: export.started { method: 'download', filename: 'my-button.json' }
-[2025-11-24T04:05:27.419Z] INFO: export.completed {
+[2025-11-24T04:10:24.705Z] INFO: export.started { method: 'download', filename: 'my-button.json' }
+[2025-11-24T04:10:24.708Z] INFO: export.completed {
   method: 'download',
   filename: 'my-button.json',
   size: 21,
-  duration: 2
+  duration: 3
 }
 
 [90mstdout[2m | src/export.test.ts[2m > [22m[2mexport - MVP-5[2m > [22m[2mexportToFile[2m > [22m[2mshould create blob and URL[22m[39m
-[2025-11-24T04:05:27.420Z] INFO: export.started { method: 'download', filename: 'figma-export.json' }
-[2025-11-24T04:05:27.422Z] INFO: export.completed {
+[2025-11-24T04:10:24.709Z] INFO: export.started { method: 'download', filename: 'figma-export.json' }
+[2025-11-24T04:10:24.715Z] INFO: export.completed {
   method: 'download',
   filename: 'figma-export.json',
   size: 21,
-  duration: 2
+  duration: 5
 }
 
 [90mstdout[2m | src/export.test.ts[2m > [22m[2mexport - MVP-5[2m > [22m[2mexportToFile[2m > [22m[2mshould clean up URL after download[22m[39m
-[2025-11-24T04:05:27.423Z] INFO: export.started { method: 'download', filename: 'figma-export.json' }
-[2025-11-24T04:05:27.425Z] INFO: export.completed {
+[2025-11-24T04:10:24.716Z] INFO: export.started { method: 'download', filename: 'figma-export.json' }
+[2025-11-24T04:10:24.718Z] INFO: export.completed {
   method: 'download',
   filename: 'figma-export.json',
   size: 21,
@@ -76,55 +75,55 @@
 }
 
 [90mstdout[2m | src/export.test.ts[2m > [22m[2mexport - MVP-5[2m > [22m[2mexportToFile[2m > [22m[2mshould handle large JSON[22m[39m
-[2025-11-24T04:05:27.426Z] INFO: export.started { method: 'download', filename: 'figma-export.json' }
-[2025-11-24T04:05:27.429Z] INFO: export.completed {
+[2025-11-24T04:10:24.718Z] INFO: export.started { method: 'download', filename: 'figma-export.json' }
+[2025-11-24T04:10:24.723Z] INFO: export.completed {
   method: 'download',
   filename: 'figma-export.json',
   size: 5641,
-  duration: 3
+  duration: 4
 }
 
 [90mstdout[2m | src/export.test.ts[2m > [22m[2mexport - MVP-5[2m > [22m[2mexportWithFallback[2m > [22m[2mshould use clipboard when available[22m[39m
-[2025-11-24T04:05:27.432Z] INFO: export.started { method: 'clipboard' }
-[2025-11-24T04:05:27.433Z] INFO: export.completed { method: 'clipboard', size: 21, duration: 0 }
+[2025-11-24T04:10:24.724Z] INFO: export.started { method: 'clipboard' }
+[2025-11-24T04:10:24.724Z] INFO: export.completed { method: 'clipboard', size: 21, duration: 0 }
 
 [90mstdout[2m | src/export.test.ts[2m > [22m[2mexport - MVP-5[2m > [22m[2mexportWithFallback[2m > [22m[2mshould fallback to download if clipboard fails[22m[39m
-[2025-11-24T04:05:27.433Z] INFO: export.started { method: 'clipboard' }
-[2025-11-24T04:05:27.434Z] INFO: export.started { method: 'download', filename: 'figma-export.json' }
-[2025-11-24T04:05:27.437Z] INFO: export.completed {
+[2025-11-24T04:10:24.725Z] INFO: export.started { method: 'clipboard' }
+[2025-11-24T04:10:24.726Z] INFO: export.started { method: 'download', filename: 'figma-export.json' }
+[2025-11-24T04:10:24.727Z] INFO: export.completed {
   method: 'download',
   filename: 'figma-export.json',
   size: 21,
-  duration: 4
+  duration: 2
 }
 
 [90mstderr[2m | src/export.test.ts[2m > [22m[2mexport - MVP-5[2m > [22m[2mexportWithFallback[2m > [22m[2mshould fallback to download if clipboard fails[22m[39m
-[2025-11-24T04:05:27.434Z] ERROR: export.failed { method: 'clipboard', error: 'No permission', duration: 0 }
+[2025-11-24T04:10:24.725Z] ERROR: export.failed { method: 'clipboard', error: 'No permission', duration: 0 }
 
 [90mstdout[2m | src/export.test.ts[2m > [22m[2mexport - MVP-5[2m > [22m[2mexportWithFallback[2m > [22m[2mshould use custom filename in fallback[22m[39m
-[2025-11-24T04:05:27.439Z] INFO: export.started { method: 'clipboard' }
-[2025-11-24T04:05:27.439Z] INFO: export.started { method: 'download', filename: 'custom-name.json' }
-[2025-11-24T04:05:27.442Z] INFO: export.completed {
+[2025-11-24T04:10:24.728Z] INFO: export.started { method: 'clipboard' }
+[2025-11-24T04:10:24.728Z] INFO: export.started { method: 'download', filename: 'custom-name.json' }
+[2025-11-24T04:10:24.730Z] INFO: export.completed {
   method: 'download',
   filename: 'custom-name.json',
   size: 21,
-  duration: 4
+  duration: 1
 }
 
 [90mstderr[2m | src/export.test.ts[2m > [22m[2mexport - MVP-5[2m > [22m[2mexportWithFallback[2m > [22m[2mshould use custom filename in fallback[22m[39m
-[2025-11-24T04:05:27.439Z] ERROR: export.failed { method: 'clipboard', error: 'No permission', duration: 0 }
+[2025-11-24T04:10:24.728Z] ERROR: export.failed { method: 'clipboard', error: 'No permission', duration: 0 }
 
 [90mstdout[2m | src/export.test.ts[2m > [22m[2mexport - MVP-5[2m > [22m[2mexportWithFallback[2m > [22m[2mshould throw if both methods fail[22m[39m
-[2025-11-24T04:05:27.443Z] INFO: export.started { method: 'clipboard' }
-[2025-11-24T04:05:27.444Z] INFO: export.started { method: 'download', filename: 'figma-export.json' }
+[2025-11-24T04:10:24.731Z] INFO: export.started { method: 'clipboard' }
+[2025-11-24T04:10:24.731Z] INFO: export.started { method: 'download', filename: 'figma-export.json' }
 
 [90mstderr[2m | src/export.test.ts[2m > [22m[2mexport - MVP-5[2m > [22m[2mexportWithFallback[2m > [22m[2mshould throw if both methods fail[22m[39m
-[2025-11-24T04:05:27.443Z] ERROR: export.failed {
+[2025-11-24T04:10:24.731Z] ERROR: export.failed {
   method: 'clipboard',
   error: 'Clipboard API not available',
   duration: 0
 }
-[2025-11-24T04:05:27.444Z] ERROR: export.failed {
+[2025-11-24T04:10:24.731Z] ERROR: export.failed {
   method: 'download',
   filename: 'figma-export.json',
   error: 'URL error',
@@ -132,18 +131,19 @@
 }
 
 [90mstdout[2m | src/export.test.ts[2m > [22m[2mexport - MVP-5[2m > [22m[2mEdge cases[2m > [22m[2mshould handle very large JSON[22m[39m
-[2025-11-24T04:05:27.455Z] INFO: export.started { method: 'clipboard' }
-[2025-11-24T04:05:27.463Z] INFO: export.completed { method: 'clipboard', size: 103041, duration: 8 }
+[2025-11-24T04:10:24.745Z] INFO: export.started { method: 'clipboard' }
+[2025-11-24T04:10:24.753Z] INFO: export.completed { method: 'clipboard', size: 103041, duration: 8 }
 
 [90mstdout[2m | src/export.test.ts[2m > [22m[2mexport - MVP-5[2m > [22m[2mEdge cases[2m > [22m[2mshould handle special characters in content[22m[39m
-[2025-11-24T04:05:27.464Z] INFO: export.started { method: 'clipboard' }
-[2025-11-24T04:05:27.464Z] INFO: export.completed { method: 'clipboard', size: 80, duration: 0 }
+[2025-11-24T04:10:24.755Z] INFO: export.started { method: 'clipboard' }
+[2025-11-24T04:10:24.756Z] INFO: export.completed { method: 'clipboard', size: 80, duration: 0 }
 
 [90mstdout[2m | src/export.test.ts[2m > [22m[2mexport - MVP-5[2m > [22m[2mEdge cases[2m > [22m[2mshould handle empty children array[22m[39m
-[2025-11-24T04:05:27.465Z] INFO: export.started { method: 'clipboard' }
-[2025-11-24T04:05:27.465Z] INFO: export.completed { method: 'clipboard', size: 39, duration: 0 }
+[2025-11-24T04:10:24.756Z] INFO: export.started { method: 'clipboard' }
+[2025-11-24T04:10:24.756Z] INFO: export.completed { method: 'clipboard', size: 39, duration: 0 }
 
-[90mstderr[2m | VirtualConsole.forward (/home/runner/work/code-to-figma/code-to-figma/figma-sync-engine/node_modules/.pnpm/jsdom@27.2.0/node_modules/jsdom/lib/jsdom/virtual-console.js:28:20)[22m[39m
+ [32m✓[39m src/export.test.ts [2m ([22m[2m36 tests[22m[2m)[22m[90m 95[2mms[22m[39m
+[90mstderr[2m | src/export.test.ts[22m[39m
 Not implemented: navigation to another Document
 Not implemented: navigation to another Document
 Not implemented: navigation to another Document
@@ -152,10 +152,10 @@ Not implemented: navigation to another Document
 Not implemented: navigation to another Document
 Not implemented: navigation to another Document
 
- [32m✓[39m src/captureHtml.test.ts [2m ([22m[2m14 tests[22m[2m)[22m[33m 1446[2mms[22m[39m
+ [32m✓[39m src/captureHtml.test.ts [2m ([22m[2m14 tests[22m[2m)[22m[33m 1427[2mms[22m[39m
 
 [2m Test Files [22m [1m[32m3 passed[39m[22m[90m (3)[39m
 [2m      Tests [22m [1m[32m74 passed[39m[22m[90m (74)[39m
-[2m   Start at [22m 04:05:25
-[2m   Duration [22m 3.10s[2m (transform 295ms, setup 0ms, collect 434ms, tests 1.57s, environment 2.86s, prepare 705ms)[22m
+[2m   Start at [22m 04:10:21
+[2m   Duration [22m 4.75s[2m (transform 449ms, setup 3ms, collect 614ms, tests 1.56s, environment 5.51s, prepare 1.67s)[22m
 

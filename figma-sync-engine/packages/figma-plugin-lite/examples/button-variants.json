@@ -1,0 +1,101 @@
+{
+  "name": "Button Component",
+  "variants": [
+    {
+      "type": "FRAME",
+      "name": "variant=primary",
+      "variantProperties": {
+        "variant": "primary"
+      },
+      "layoutMode": "HORIZONTAL",
+      "itemSpacing": 8,
+      "paddingTop": 12,
+      "paddingRight": 16,
+      "paddingBottom": 12,
+      "paddingLeft": 16,
+      "fills": [
+        {
+          "type": "SOLID",
+          "color": {
+            "r": 0.145,
+            "g": 0.388,
+            "b": 0.922
+          }
+        }
+      ],
+      "cornerRadius": 6,
+      "width": 120,
+      "height": 40,
+      "children": [
+        {
+          "type": "TEXT",
+          "name": "Label",
+          "characters": "Primary",
+          "fontSize": 14,
+          "fontName": {
+            "family": "Inter",
+            "style": "Medium"
+          },
+          "fills": [
+            {
+              "type": "SOLID",
+              "color": {
+                "r": 1,
+                "g": 1,
+                "b": 1
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "FRAME",
+      "name": "variant=secondary",
+      "variantProperties": {
+        "variant": "secondary"
+      },
+      "layoutMode": "HORIZONTAL",
+      "itemSpacing": 8,
+      "paddingTop": 12,
+      "paddingRight": 16,
+      "paddingBottom": 12,
+      "paddingLeft": 16,
+      "fills": [
+        {
+          "type": "SOLID",
+          "color": {
+            "r": 0.886,
+            "g": 0.910,
+            "b": 0.941
+          }
+        }
+      ],
+      "cornerRadius": 6,
+      "width": 120,
+      "height": 40,
+      "children": [
+        {
+          "type": "TEXT",
+          "name": "Label",
+          "characters": "Secondary",
+          "fontSize": 14,
+          "fontName": {
+            "family": "Inter",
+            "style": "Medium"
+          },
+          "fills": [
+            {
+              "type": "SOLID",
+              "color": {
+                "r": 0.118,
+                "g": 0.161,
+                "b": 0.231
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

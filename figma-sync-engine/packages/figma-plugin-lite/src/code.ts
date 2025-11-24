@@ -170,6 +170,45 @@ function createNodeFromJson(data: any): SceneNode | null {
 }
 
 /**
+ * Copia propriedades de um FrameNode para um ComponentNode
+ * Usado ao converter frames em components para ComponentSet
+ */
+function copyFrameProperties(source: FrameNode, target: ComponentNode): void {
+    // Copiar dimensões
+    target.resize(source.width, source.height);
+    
+    // Copiar Auto Layout
+    if (source.layoutMode !== 'NONE') {
+        target.layoutMode = source.layoutMode;
+        target.itemSpacing = source.itemSpacing;
+        target.primaryAxisAlignItems = source.primaryAxisAlignItems;
+        target.counterAxisAlignItems = source.counterAxisAlignItems;
+        target.primaryAxisSizingMode = source.primaryAxisSizingMode;
+        target.counterAxisSizingMode = source.counterAxisSizingMode;
+    }
+    
+    // Copiar padding
+    target.paddingTop = source.paddingTop;
+    target.paddingRight = source.paddingRight;
+    target.paddingBottom = source.paddingBottom;
+    target.paddingLeft = source.paddingLeft;
+    
+    // Copiar preenchimentos e traços
+    target.fills = source.fills;
+    target.strokes = source.strokes;
+    target.strokeWeight = source.strokeWeight;
+    
+    // Copiar corner radius
+    target.cornerRadius = source.cornerRadius;
+    
+    // Copiar efeitos
+    target.effects = source.effects;
+    
+    // Copiar opacidade
+    target.opacity = source.opacity;
+}
+
+/**
  * Converte cor hexadecimal para RGB
  */
 function hexToRgb(hex: string): { r: number; g: number; b: number } | null {
@@ -205,20 +244,75 @@ figma.ui.onmessage = (msg) => {
         try {
             const data = JSON.parse(msg.payload);
             
-            // Suporte para formato legado (data.root) e novo formato direto
-            const rootData = data.root || data;
-            
-            // Criar nó raiz recursivamente
-            const rootNode = createNodeFromJson(rootData);
-            
-            if (rootNode) {
-                figma.currentPage.appendChild(rootNode);
-                figma.viewport.scrollAndZoomIntoView([rootNode]);
+            // VAR-3: Verificar se existem múltiplas variantes
+            if (data.variants && Array.isArray(data.variants) && data.variants.length > 1) {
+                // Criar ComponentSet com múltiplas variantes
+                const componentNodes: ComponentNode[] = [];
                 
-                const nodeCount = countNodes(rootNode);
-                figma.notify(`✅ Importado: ${nodeCount} nó(s) criado(s)`);
+                for (const variantData of data.variants) {
+                    const node = createNodeFromJson(variantData);
+                    if (node && node.type === 'FRAME') {
+                        // Converter frame para component
+                        const component = figma.createComponent();
+                        component.name = variantData.name || 'Variant';
+                        
+                        // Copiar propriedades do frame para o component
+                        copyFrameProperties(node as FrameNode, component);
+                        
+                        // Copiar filhos
+                        if ('children' in node) {
+                            for (const child of [...node.children]) {
+                                component.appendChild(child);
+                            }
+                        }
+                        
+                        // Adicionar component à página temporariamente
+                        figma.currentPage.appendChild(component);
+                        componentNodes.push(component);
+                        
+                        // Remover frame original
+                        node.remove();
+                    }
+                }
+                
+                if (componentNodes.length > 1) {
+                    // Combinar components em ComponentSet
+                    const componentSet = figma.combineAsVariants(componentNodes, figma.currentPage);
+                    componentSet.name = data.name || 'Component';
+                    
+                    // Aplicar propriedades de variante se fornecidas
+                    if (data.variantProperties) {
+                        componentNodes.forEach((component, index) => {
+                            const variantProps = data.variants[index].variantProperties;
+                            if (variantProps) {
+                                // Definir propriedades de variante no nome do component
+                                const propString = Object.entries(variantProps)
+                                    .map(([key, value]) => `${key}=${value}`)
+                                    .join(', ');
+                                component.name = propString;
+                            }
+                        });
+                    }
+                    
+                    figma.viewport.scrollAndZoomIntoView([componentSet]);
+                    figma.notify(`✅ ComponentSet criado com ${componentNodes.length} variantes`);
+                } else {
+                    figma.notify('❌ Falha ao criar ComponentSet: mínimo de 2 variantes necessário');
+                }
             } else {
-                figma.notify('❌ Falha ao criar estrutura do JSON');
+                // Fluxo original: importação de nó único
+                const rootData = data.root || data;
+                const rootNode = createNodeFromJson(rootData);
+                
+                if (rootNode) {
+                    figma.currentPage.appendChild(rootNode);
+                    figma.viewport.scrollAndZoomIntoView([rootNode]);
+                    
+                    const nodeCount = countNodes(rootNode);
+                    figma.notify(`✅ Importado: ${nodeCount} nó(s) criado(s)`);
+                } else {
+                    figma.notify('❌ Falha ao criar estrutura do JSON');
+                }
             }
         } catch (e) {
             console.error('Erro ao importar JSON:', e);
