@@ -5,13 +5,12 @@
 
 [7m[1m[36m RUN [39m[22m[27m [36mv1.6.1[39m [90m/home/runner/work/code-to-figma/code-to-figma/figma-sync-engine/packages/autolayout-interpreter[39m
 
- [32m✓[39m tests/interpret.test.ts [2m ([22m[2m2 tests[22m[2m)[22m[90m 3[2mms[22m[39m
  [32m✓[39m tests/interpret.test.js [2m ([22m[2m2 tests[22m[2m)[22m[90m 4[2mms[22m[39m
- [32m✓[39m src/index.test.ts [2m ([22m[2m47 tests[22m[2m)[22m[90m 24[2mms[22m[39m
+ [32m✓[39m tests/interpret.test.ts [2m ([22m[2m2 tests[22m[2m)[22m[90m 10[2mms[22m[39m
+ [32m✓[39m src/index.test.ts [2m ([22m[2m47 tests[22m[2m)[22m[90m 41[2mms[22m[39m
 
 [2m Test Files [22m [1m[32m3 passed[39m[22m[90m (3)[39m
 [2m      Tests [22m [1m[32m51 passed[39m[22m[90m (51)[39m
-[2m   Start at [22m 01:19:12
-[2m   Duration [22m 466ms[2m (transform 126ms, setup 0ms, collect 234ms, tests 31ms, environment 1ms, prepare 450ms)[22m
+[2m   Start at [22m 01:24:04
+[2m   Duration [22m 995ms[2m (transform 290ms, setup 0ms, collect 542ms, tests 55ms, environment 1ms, prepare 842ms)[22m
 
-[?25h
