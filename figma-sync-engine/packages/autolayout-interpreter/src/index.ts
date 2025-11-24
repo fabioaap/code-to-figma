@@ -92,11 +92,21 @@ export function normalizePadding(
 /**
  * Infere direção do layout com fallback robusto
  * AL-3: Detecção de direção com fallback para HORIZONTAL
+ * @returns true para HORIZONTAL (row), false para VERTICAL (column)
  */
 export function inferDirection(css: CssSnapshot): boolean {
+    // Valores válidos que indicam direção vertical
+    const VERTICAL_DIRECTIONS = ['column', 'column-reverse'];
+    
     // Se flex-direction está explicitamente definido, usar ele
     if (css.flexDirection) {
-        return css.flexDirection.includes('row');
+        const direction = css.flexDirection.toLowerCase();
+        // Only return false (VERTICAL) for valid column values
+        if (VERTICAL_DIRECTIONS.includes(direction)) {
+            return false;
+        }
+        // For row, row-reverse, or any invalid value, default to HORIZONTAL
+        return true;
     }
     
     // Se display é flex mas sem direção, default do flexbox é row (HORIZONTAL)
@@ -113,27 +123,8 @@ export function inferDirection(css: CssSnapshot): boolean {
  * AL-3: Detecção robusta de direção com fallback para HORIZONTAL
  */
 export function analyzeCss(css: CssSnapshot): CssAnalysis {
-<<<<<<< HEAD
-    const isFlex = css.display === 'flex';
-    
-    // AL-3: Inferir direção com fallback seguro
-    let isRow = true; // Default: HORIZONTAL
-    
-    if (css.flexDirection) {
-        // Se flex-direction está definido, validar valor
-        const direction = css.flexDirection.toLowerCase();
-        if (direction === 'column' || direction === 'column-reverse') {
-            isRow = false; // VERTICAL
-        } else if (direction === 'row' || direction === 'row-reverse') {
-            isRow = true; // HORIZONTAL
-        }
-        // Valores inválidos mantêm o fallback (isRow = true)
-    }
-    // Se flex-direction não está definido, mantém fallback HORIZONTAL (isRow = true)
-=======
     const isFlex = css.display === 'flex' || css.display === 'inline-flex';
     const isRow = inferDirection(css);
->>>>>>> origin/main
 
     const padding = normalizePadding(
         css.padding,
