@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { extractColorTokens, rgbToHex, type FigmaNode, type RGB } from './tokens';
+import { extractColorTokens, extractTypographyTokens, rgbToHex, type FigmaNode, type RGB } from './tokens';
 
 describe('tokens - TOK-1: Color extraction', () => {
     describe('rgbToHex', () => {
@@ -167,6 +167,199 @@ describe('tokens - TOK-1: Color extraction', () => {
             };
 
             const tokens = extractColorTokens(tree);
+
+            const names = tokens.map(t => t.name);
+            const uniqueNames = new Set(names);
+
+            expect(names.length).toBe(uniqueNames.size);
+        });
+    });
+
+    describe('extractTypographyTokens - TOK-2', () => {
+        it('should extract typography from TEXT nodes', () => {
+            const tree: FigmaNode = {
+                type: 'FRAME',
+                children: [
+                    {
+                        type: 'TEXT',
+                        fontFamily: 'Helvetica',
+                        fontSize: 16,
+                        fontWeight: 400,
+                        lineHeight: 24,
+                        letterSpacing: 0
+                    }
+                ]
+            };
+
+            const tokens = extractTypographyTokens(tree);
+
+            expect(tokens).toHaveLength(1);
+            expect(tokens[0].fontFamily).toBe('Helvetica');
+            expect(tokens[0].fontSize).toBe(16);
+            expect(tokens[0].fontWeight).toBe(400);
+        });
+
+        it('should count duplicate typography styles', () => {
+            const tree: FigmaNode = {
+                type: 'FRAME',
+                children: [
+                    {
+                        type: 'TEXT',
+                        fontFamily: 'Arial',
+                        fontSize: 14,
+                        fontWeight: 700,
+                        lineHeight: 20,
+                        letterSpacing: 0
+                    },
+                    {
+                        type: 'TEXT',
+                        fontFamily: 'Arial',
+                        fontSize: 14,
+                        fontWeight: 700,
+                        lineHeight: 20,
+                        letterSpacing: 0
+                    },
+                    {
+                        type: 'TEXT',
+                        fontFamily: 'Arial',
+                        fontSize: 12,
+                        fontWeight: 400,
+                        lineHeight: 18,
+                        letterSpacing: 0
+                    }
+                ]
+            };
+
+            const tokens = extractTypographyTokens(tree);
+
+            expect(tokens).toHaveLength(2);
+            expect(tokens[0].usageCount).toBe(2); // Arial 14/700
+            expect(tokens[1].usageCount).toBe(1); // Arial 12/400
+        });
+
+        it('should sort by usage count', () => {
+            const tree: FigmaNode = {
+                type: 'FRAME',
+                children: [
+                    {
+                        type: 'TEXT',
+                        fontFamily: 'Times',
+                        fontSize: 18,
+                        fontWeight: 400,
+                        lineHeight: 'AUTO',
+                        letterSpacing: 0
+                    },
+                    {
+                        type: 'TEXT',
+                        fontFamily: 'Arial',
+                        fontSize: 14,
+                        fontWeight: 400,
+                        lineHeight: 20,
+                        letterSpacing: 0
+                    },
+                    {
+                        type: 'TEXT',
+                        fontFamily: 'Arial',
+                        fontSize: 14,
+                        fontWeight: 400,
+                        lineHeight: 20,
+                        letterSpacing: 0
+                    }
+                ]
+            };
+
+            const tokens = extractTypographyTokens(tree);
+
+            expect(tokens[0].fontFamily).toBe('Arial'); // Most used
+            expect(tokens[0].usageCount).toBe(2);
+            expect(tokens[1].fontFamily).toBe('Times');
+            expect(tokens[1].usageCount).toBe(1);
+        });
+
+        it('should handle nested TEXT nodes', () => {
+            const tree: FigmaNode = {
+                type: 'FRAME',
+                children: [
+                    {
+                        type: 'FRAME',
+                        children: [
+                            {
+                                type: 'TEXT',
+                                fontFamily: 'Roboto',
+                                fontSize: 16,
+                                fontWeight: 500,
+                                lineHeight: 24,
+                                letterSpacing: 0.5
+                            }
+                        ]
+                    }
+                ]
+            };
+
+            const tokens = extractTypographyTokens(tree);
+
+            expect(tokens).toHaveLength(1);
+            expect(tokens[0].fontFamily).toBe('Roboto');
+        });
+
+        it('should ignore non-TEXT nodes', () => {
+            const tree: FigmaNode = {
+                type: 'FRAME',
+                children: [
+                    { type: 'RECTANGLE' },
+                    { type: 'ELLIPSE' }
+                ]
+            };
+
+            const tokens = extractTypographyTokens(tree);
+
+            expect(tokens).toHaveLength(0);
+        });
+
+        it('should handle missing typography properties with defaults', () => {
+            const tree: FigmaNode = {
+                type: 'FRAME',
+                children: [
+                    {
+                        type: 'TEXT'
+                    }
+                ]
+            };
+
+            const tokens = extractTypographyTokens(tree);
+
+            expect(tokens).toHaveLength(1);
+            expect(tokens[0].fontFamily).toBe('inherit');
+            expect(tokens[0].fontSize).toBe(16);
+            expect(tokens[0].fontWeight).toBe(400);
+            expect(tokens[0].lineHeight).toBe('AUTO');
+            expect(tokens[0].letterSpacing).toBe(0);
+        });
+
+        it('should generate unique names', () => {
+            const tree: FigmaNode = {
+                type: 'FRAME',
+                children: [
+                    {
+                        type: 'TEXT',
+                        fontFamily: 'Arial',
+                        fontSize: 14,
+                        fontWeight: 400,
+                        lineHeight: 20,
+                        letterSpacing: 0
+                    },
+                    {
+                        type: 'TEXT',
+                        fontFamily: 'Helvetica',
+                        fontSize: 16,
+                        fontWeight: 700,
+                        lineHeight: 24,
+                        letterSpacing: 0.5
+                    }
+                ]
+            };
+
+            const tokens = extractTypographyTokens(tree);
 
             const names = tokens.map(t => t.name);
             const uniqueNames = new Set(names);
