@@ -5,6 +5,7 @@
 
 import { htmlToFigma } from '@builder.io/html-to-figma';
 export * from '@builder.io/html-to-figma';
+export * from './tokens';
 
 /**
  * Interface para resultado de conversão

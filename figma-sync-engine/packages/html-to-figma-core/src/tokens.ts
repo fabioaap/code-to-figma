@@ -1,0 +1,94 @@
+/**
+ * TOK-1: Extração de tokens de cor de árvore Figma JSON
+ */
+
+export interface ColorToken {
+    name: string;
+    value: string;
+    usageCount: number;
+}
+
+export interface RGB {
+    r: number;
+    g: number;
+    b: number;
+}
+
+export interface Fill {
+    type: string;
+    color?: RGB;
+}
+
+export interface FigmaNode {
+    type?: string;
+    fills?: Fill[];
+    strokes?: Fill[];
+    children?: FigmaNode[];
+    [key: string]: any;
+}
+
+/**
+ * Converte RGB (0-1) para HEX
+ */
+export function rgbToHex(rgb: RGB): string {
+    const r = Math.round(rgb.r * 255);
+    const g = Math.round(rgb.g * 255);
+    const b = Math.round(rgb.b * 255);
+
+    return `#${r.toString(16).padStart(2, '0')}${g.toString(16).padStart(2, '0')}${b.toString(16).padStart(2, '0')}`.toUpperCase();
+}
+
+/**
+ * Incrementa contagem de uso de uma cor
+ */
+function incrementColorUsage(colorMap: Map<string, ColorToken>, hex: string): void {
+    if (colorMap.has(hex)) {
+        colorMap.get(hex)!.usageCount++;
+    } else {
+        colorMap.set(hex, {
+            name: `color-${colorMap.size + 1}`,
+            value: hex,
+            usageCount: 1
+        });
+    }
+}
+
+/**
+ * TOK-1: Extrai todos os tokens de cor únicos de uma árvore Figma
+ */
+export function extractColorTokens(jsonTree: FigmaNode): ColorToken[] {
+    const colorMap = new Map<string, ColorToken>();
+
+    function traverse(node: FigmaNode): void {
+        // Processar fills (backgrounds)
+        if (node.fills && Array.isArray(node.fills)) {
+            node.fills.forEach(fill => {
+                if (fill.type === 'SOLID' && fill.color) {
+                    const hex = rgbToHex(fill.color);
+                    incrementColorUsage(colorMap, hex);
+                }
+            });
+        }
+
+        // Processar strokes (borders)
+        if (node.strokes && Array.isArray(node.strokes)) {
+            node.strokes.forEach(stroke => {
+                if (stroke.type === 'SOLID' && stroke.color) {
+                    const hex = rgbToHex(stroke.color);
+                    incrementColorUsage(colorMap, hex);
+                }
+            });
+        }
+
+        // Recursão em filhos
+        if (node.children && Array.isArray(node.children)) {
+            node.children.forEach(traverse);
+        }
+    }
+
+    traverse(jsonTree);
+
+    // Retorna ordenado por frequência (mais usado primeiro)
+    return Array.from(colorMap.values())
+        .sort((a, b) => b.usageCount - a.usageCount);
+}
