@@ -6,17 +6,22 @@
         "dev": "turbo run dev",
         "build": "turbo run build",
         "lint": "turbo run lint",
-        "test": "turbo run test"
+        "test": "turbo run test",
+        "benchmark": "tsx scripts/benchmark-conversion.ts",
+        "benchmark:verbose": "tsx scripts/benchmark-conversion.ts --verbose",
+        "benchmark:json": "tsx scripts/benchmark-conversion.ts --json"
     },
     "devDependencies": {
+        "@builder.io/html-to-figma": "0.0.3",
+        "@types/node": "^20.10.0",
         "@typescript-eslint/eslint-plugin": "^7.18.0",
         "@typescript-eslint/parser": "^7.18.0",
-        "eslint-plugin-react": "^7.35.0",
-        "@types/node": "^20.10.0",
         "eslint": "^8.56.0",
+        "eslint-plugin-react": "^7.35.0",
         "jsdom": "^27.2.0",
         "playwright": "^1.40.0",
         "prettier": "^3.1.0",
+        "tsx": "^4.20.6",
         "turbo": "^1.12.0",
         "typescript": "^5.3.3",
         "vitest": "^1.0.0"

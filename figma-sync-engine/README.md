@@ -21,7 +21,10 @@ pnpm dev           # roda todos os pacotes em modo desenvolvimento
 pnpm build         # build de todos os pacotes
 pnpm lint          # lint em todos os workspaces
 pnpm test          # testes (Vitest / futura suíte Playwright)
+pnpm benchmark     # executa benchmark de performance de conversão (PERF-1)
 ```
+
+Para mais opções de benchmark, consulte `scripts/BENCHMARK_README.md`.
 
 ## Arquitetura (Clean)
 Camadas: Domain → Application → Infrastructure → Interface. Ver `docs/architecture.md` para visão detalhada e `docs/figma-json-format.md` para o formato de saída.
