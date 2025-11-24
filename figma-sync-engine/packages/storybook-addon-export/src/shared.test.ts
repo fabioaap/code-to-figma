@@ -337,261 +337,261 @@ describe('[VAR-2] Export múltiplo de stories com seleção e consolidação', (
 });
 
 describe('[VAR-3] Plugin cria ComponentSet a partir de múltiplas stories', () => {
-  describe('ComponentSet creation logic', () => {
-    it('should identify multi-story export JSON format', () => {
-      const data = {
-        stories: [
-          {
-            storyId: 'Button/Primary',
-            name: 'Primary',
-            figmaJson: { type: 'FRAME', name: 'Button' }
-          }
-        ],
-        exportedAt: new Date().toISOString(),
-        count: 1
-      };
+    describe('ComponentSet creation logic', () => {
+        it('should identify multi-story export JSON format', () => {
+            const data = {
+                stories: [
+                    {
+                        storyId: 'Button/Primary',
+                        name: 'Primary',
+                        figmaJson: { type: 'FRAME', name: 'Button' }
+                    }
+                ],
+                exportedAt: new Date().toISOString(),
+                count: 1
+            };
 
-      expect(data.stories).toBeDefined();
-      expect(data.stories.length).toBeGreaterThan(0);
-      expect(data.stories[0]).toHaveProperty('storyId');
-      expect(data.stories[0]).toHaveProperty('figmaJson');
+            expect(data.stories).toBeDefined();
+            expect(data.stories.length).toBeGreaterThan(0);
+            expect(data.stories[0]).toHaveProperty('storyId');
+            expect(data.stories[0]).toHaveProperty('figmaJson');
+        });
+
+        it('should support variant properties in story data', () => {
+            const data = {
+                stories: [
+                    {
+                        storyId: 'Button/Primary',
+                        name: 'Primary',
+                        figmaJson: { type: 'FRAME' },
+                        variantProperties: { variant: 'primary', size: 'medium' }
+                    }
+                ]
+            };
+
+            expect(data.stories[0].variantProperties).toEqual({
+                variant: 'primary',
+                size: 'medium'
+            });
+        });
+
+        it('should handle multiple stories for ComponentSet', () => {
+            const data = {
+                stories: [
+                    {
+                        storyId: 'Button/Primary',
+                        name: 'Primary',
+                        figmaJson: { type: 'FRAME', name: 'Primary Button' }
+                    },
+                    {
+                        storyId: 'Button/Secondary',
+                        name: 'Secondary',
+                        figmaJson: { type: 'FRAME', name: 'Secondary Button' }
+                    },
+                    {
+                        storyId: 'Button/Large',
+                        name: 'Large',
+                        figmaJson: { type: 'FRAME', name: 'Large Button' }
+                    }
+                ]
+            };
+
+            expect(data.stories.length).toBe(3);
+            data.stories.forEach((story) => {
+                expect(story.figmaJson.type).toBe('FRAME');
+                expect(story.name).toBeDefined();
+            });
+        });
+
+        it('should extract component name from first story', () => {
+            const storyName = 'Button/Primary';
+            const componentName = storyName.split('/')[0];
+
+            expect(componentName).toBe('Button');
+        });
+
+        it('should extract variant name from story name', () => {
+            const storyName = 'Button/Primary';
+            const variantName = storyName.split('/').pop();
+
+            expect(variantName).toBe('Primary');
+        });
+
+        it('should generate variant naming convention', () => {
+            const componentName = 'Button';
+            const stories = [
+                { name: 'Button/Primary' },
+                { name: 'Button/Secondary' },
+                { name: 'Button/Large' }
+            ];
+
+            const variantNames = stories.map((story, index) => {
+                if (index === 0) {
+                    return `${componentName}=base`;
+                }
+                const variantName = story.name.split('/').pop() || `variant-${index}`;
+                return `${componentName}=${variantName}`;
+            });
+
+            expect(variantNames).toEqual([
+                'Button=base',
+                'Button=Secondary',
+                'Button=Large'
+            ]);
+        });
+
+        it('should handle stories without variant properties', () => {
+            const data = {
+                stories: [
+                    {
+                        storyId: 'Button/Primary',
+                        name: 'Primary',
+                        figmaJson: { type: 'FRAME' }
+                    }
+                ]
+            };
+
+            const story = data.stories[0];
+            const variantProps = story.variantProperties || {};
+
+            expect(variantProps).toEqual({});
+            expect(Object.keys(variantProps).length).toBe(0);
+        });
+
+        it('should validate story data structure', () => {
+            const validStory = {
+                storyId: 'Button/Primary',
+                name: 'Primary',
+                figmaJson: { type: 'FRAME' },
+                variantProperties: { variant: 'primary' }
+            };
+
+            expect(validStory).toHaveProperty('storyId');
+            expect(validStory).toHaveProperty('name');
+            expect(validStory).toHaveProperty('figmaJson');
+            expect(validStory.figmaJson).toHaveProperty('type');
+        });
+
+        it('should handle empty stories array', () => {
+            const data = {
+                stories: []
+            };
+
+            expect(data.stories.length).toBe(0);
+            expect(data.stories).toEqual([]);
+        });
+
+        it('should support stories with different node types', () => {
+            const stories = [
+                { figmaJson: { type: 'FRAME' } },
+                { figmaJson: { type: 'RECTANGLE' } },
+                { figmaJson: { type: 'TEXT' } }
+            ];
+
+            const types = stories.map(s => s.figmaJson.type);
+            expect(types).toContain('FRAME');
+            expect(types).toContain('RECTANGLE');
+            expect(types).toContain('TEXT');
+        });
+
+        it('should calculate layout positions for multiple stories', () => {
+            const stories = [
+                { figmaJson: { width: 100 } },
+                { figmaJson: { width: 100 } },
+                { figmaJson: { width: 100 } }
+            ];
+
+            let xOffset = 0;
+            const positions = stories.map((story) => {
+                const x = xOffset;
+                const width = story.figmaJson.width || 100;
+                xOffset += width + 40;
+                return { x, width };
+            });
+
+            expect(positions[0].x).toBe(0);
+            expect(positions[1].x).toBe(140);
+            expect(positions[2].x).toBe(280);
+        });
     });
 
-    it('should support variant properties in story data', () => {
-      const data = {
-        stories: [
-          {
-            storyId: 'Button/Primary',
-            name: 'Primary',
-            figmaJson: { type: 'FRAME' },
-            variantProperties: { variant: 'primary', size: 'medium' }
-          }
-        ]
-      };
+    describe('ComponentSet naming conventions', () => {
+        it('should name single variant as base', () => {
+            const name = 'Button/Primary';
+            const componentName = name.split('/')[0];
+            const baseVariantName = `${componentName}=base`;
 
-      expect(data.stories[0].variantProperties).toEqual({
-        variant: 'primary',
-        size: 'medium'
-      });
+            expect(baseVariantName).toBe('Button=base');
+        });
+
+        it('should name additional variants with property values', () => {
+            const stories = [
+                { name: 'Button/Primary' },
+                { name: 'Button/Secondary' },
+                { name: 'Button/Danger' }
+            ];
+
+            const variantNames = stories.map((s, i) => {
+                const baseName = s.name.split('/')[0];
+                if (i === 0) return `${baseName}=base`;
+                const variant = s.name.split('/').pop();
+                return `${baseName}=${variant}`;
+            });
+
+            expect(variantNames[0]).toBe('Button=base');
+            expect(variantNames[1]).toBe('Button=Secondary');
+            expect(variantNames[2]).toBe('Button=Danger');
+        });
+
+        it('should handle complex story paths', () => {
+            const complexName = 'Components/Forms/Button/Primary';
+            const componentName = complexName.split('/')[0];
+            const variantName = complexName.split('/').pop();
+
+            expect(componentName).toBe('Components');
+            expect(variantName).toBe('Primary');
+        });
     });
 
-    it('should handle multiple stories for ComponentSet', () => {
-      const data = {
-        stories: [
-          {
-            storyId: 'Button/Primary',
-            name: 'Primary',
-            figmaJson: { type: 'FRAME', name: 'Primary Button' }
-          },
-          {
-            storyId: 'Button/Secondary',
-            name: 'Secondary',
-            figmaJson: { type: 'FRAME', name: 'Secondary Button' }
-          },
-          {
-            storyId: 'Button/Large',
-            name: 'Large',
-            figmaJson: { type: 'FRAME', name: 'Large Button' }
-          }
-        ]
-      };
+    describe('Error handling', () => {
+        it('should detect empty stories array', () => {
+            const data = { stories: [] };
+            const hasStories = data.stories && data.stories.length > 0;
 
-      expect(data.stories.length).toBe(3);
-      data.stories.forEach((story) => {
-        expect(story.figmaJson.type).toBe('FRAME');
-        expect(story.name).toBeDefined();
-      });
+            expect(hasStories).toBe(false);
+        });
+
+        it('should detect missing figmaJson', () => {
+            const story = {
+                storyId: 'Button/Primary',
+                name: 'Primary'
+            };
+
+            const isValid = 'figmaJson' in story;
+            expect(isValid).toBe(false);
+        });
+
+        it('should validate JSON structure before processing', () => {
+            const story = {
+                storyId: 'Button/Primary',
+                name: 'Primary',
+                figmaJson: { type: 'FRAME' }
+            };
+
+            const isValid = story.figmaJson && story.figmaJson.type === 'FRAME';
+            expect(isValid).toBe(true);
+        });
+
+        it('should handle null variant properties gracefully', () => {
+            const story = {
+                storyId: 'Button/Primary',
+                name: 'Primary',
+                figmaJson: { type: 'FRAME' },
+                variantProperties: null
+            };
+
+            const props = story.variantProperties || {};
+            expect(props).toEqual({});
+        });
     });
-
-    it('should extract component name from first story', () => {
-      const storyName = 'Button/Primary';
-      const componentName = storyName.split('/')[0];
-      
-      expect(componentName).toBe('Button');
-    });
-
-    it('should extract variant name from story name', () => {
-      const storyName = 'Button/Primary';
-      const variantName = storyName.split('/').pop();
-      
-      expect(variantName).toBe('Primary');
-    });
-
-    it('should generate variant naming convention', () => {
-      const componentName = 'Button';
-      const stories = [
-        { name: 'Button/Primary' },
-        { name: 'Button/Secondary' },
-        { name: 'Button/Large' }
-      ];
-
-      const variantNames = stories.map((story, index) => {
-        if (index === 0) {
-          return `${componentName}=base`;
-        }
-        const variantName = story.name.split('/').pop() || `variant-${index}`;
-        return `${componentName}=${variantName}`;
-      });
-
-      expect(variantNames).toEqual([
-        'Button=base',
-        'Button=Secondary',
-        'Button=Large'
-      ]);
-    });
-
-    it('should handle stories without variant properties', () => {
-      const data = {
-        stories: [
-          {
-            storyId: 'Button/Primary',
-            name: 'Primary',
-            figmaJson: { type: 'FRAME' }
-          }
-        ]
-      };
-
-      const story = data.stories[0];
-      const variantProps = story.variantProperties || {};
-      
-      expect(variantProps).toEqual({});
-      expect(Object.keys(variantProps).length).toBe(0);
-    });
-
-    it('should validate story data structure', () => {
-      const validStory = {
-        storyId: 'Button/Primary',
-        name: 'Primary',
-        figmaJson: { type: 'FRAME' },
-        variantProperties: { variant: 'primary' }
-      };
-
-      expect(validStory).toHaveProperty('storyId');
-      expect(validStory).toHaveProperty('name');
-      expect(validStory).toHaveProperty('figmaJson');
-      expect(validStory.figmaJson).toHaveProperty('type');
-    });
-
-    it('should handle empty stories array', () => {
-      const data = {
-        stories: []
-      };
-
-      expect(data.stories.length).toBe(0);
-      expect(data.stories).toEqual([]);
-    });
-
-    it('should support stories with different node types', () => {
-      const stories = [
-        { figmaJson: { type: 'FRAME' } },
-        { figmaJson: { type: 'RECTANGLE' } },
-        { figmaJson: { type: 'TEXT' } }
-      ];
-
-      const types = stories.map(s => s.figmaJson.type);
-      expect(types).toContain('FRAME');
-      expect(types).toContain('RECTANGLE');
-      expect(types).toContain('TEXT');
-    });
-
-    it('should calculate layout positions for multiple stories', () => {
-      const stories = [
-        { figmaJson: { width: 100 } },
-        { figmaJson: { width: 100 } },
-        { figmaJson: { width: 100 } }
-      ];
-
-      let xOffset = 0;
-      const positions = stories.map((story) => {
-        const x = xOffset;
-        const width = story.figmaJson.width || 100;
-        xOffset += width + 40;
-        return { x, width };
-      });
-
-      expect(positions[0].x).toBe(0);
-      expect(positions[1].x).toBe(140);
-      expect(positions[2].x).toBe(280);
-    });
-  });
-
-  describe('ComponentSet naming conventions', () => {
-    it('should name single variant as base', () => {
-      const name = 'Button/Primary';
-      const componentName = name.split('/')[0];
-      const baseVariantName = `${componentName}=base`;
-
-      expect(baseVariantName).toBe('Button=base');
-    });
-
-    it('should name additional variants with property values', () => {
-      const stories = [
-        { name: 'Button/Primary' },
-        { name: 'Button/Secondary' },
-        { name: 'Button/Danger' }
-      ];
-
-      const variantNames = stories.map((s, i) => {
-        const baseName = s.name.split('/')[0];
-        if (i === 0) return `${baseName}=base`;
-        const variant = s.name.split('/').pop();
-        return `${baseName}=${variant}`;
-      });
-
-      expect(variantNames[0]).toBe('Button=base');
-      expect(variantNames[1]).toBe('Button=Secondary');
-      expect(variantNames[2]).toBe('Button=Danger');
-    });
-
-    it('should handle complex story paths', () => {
-      const complexName = 'Components/Forms/Button/Primary';
-      const componentName = complexName.split('/')[0];
-      const variantName = complexName.split('/').pop();
-
-      expect(componentName).toBe('Components');
-      expect(variantName).toBe('Primary');
-    });
-  });
-
-  describe('Error handling', () => {
-    it('should detect empty stories array', () => {
-      const data = { stories: [] };
-      const hasStories = data.stories && data.stories.length > 0;
-
-      expect(hasStories).toBe(false);
-    });
-
-    it('should detect missing figmaJson', () => {
-      const story = {
-        storyId: 'Button/Primary',
-        name: 'Primary'
-      };
-
-      const isValid = 'figmaJson' in story;
-      expect(isValid).toBe(false);
-    });
-
-    it('should validate JSON structure before processing', () => {
-      const story = {
-        storyId: 'Button/Primary',
-        name: 'Primary',
-        figmaJson: { type: 'FRAME' }
-      };
-
-      const isValid = story.figmaJson && story.figmaJson.type === 'FRAME';
-      expect(isValid).toBe(true);
-    });
-
-    it('should handle null variant properties gracefully', () => {
-      const story = {
-        storyId: 'Button/Primary',
-        name: 'Primary',
-        figmaJson: { type: 'FRAME' },
-        variantProperties: null
-      };
-
-      const props = story.variantProperties || {};
-      expect(props).toEqual({});
-    });
-  });
 });
