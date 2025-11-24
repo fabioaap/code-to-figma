@@ -1,8 +1,8 @@
 # Backlog do Projeto – figma-sync-engine
 
-> Última atualização: 23/11/2025 (17:15 UTC-3)
+> Última atualização: 23/11/2025 (21:30 UTC-3)
 > Objetivo macro: Reduzir em até 80% o tempo de documentação de componentes no Figma via fluxo Storybook → Figma.
-> **✅ Status Recente**: Phase 2 ✅ COMPLETA. MVP-6, MVP-9, MVP-10 e AL-2 implementados e merged. Iniciando Sprint 3 (Fidelidade Visual).
+> **✅ Status Recente**: Phase 2 ✅ COMPLETA. Repositório limpo (11 PRs obsoletos fechados). Plano de Execução Mestre criado. Pronto para iniciar Sprint 3 (Fidelidade Visual).
 
 ## Estrutura do Backlog
 - Epics
@@ -253,10 +253,10 @@ Status 23/11/2025: DOC-1 entregue. DOC-4 planejado para Sprint 5.
 - RICE será preenchido após coleta de Reach & Effort.
 
 ---
-## Kanban Atualizado (23/11/2025 - 18:15 UTC-3)
-| Backlog | Em Progresso | Em Review | Concluído |
-|---------|--------------|-----------|-----------|
-| VAR-4, VAR-5, PERF-2, PERF-3, PERF-4, OBS-2, OBS-3, OBS-4, TOK-3, TOK-4, SEC-3, DOC-2, DOC-3, DOC-5 | **Sprint 3** (#27, #28, #29, #30) | – | **MVP-1 a MVP-12**, **AL-1**, **AL-2**, **DOC-1**, **SEC-2** |
+## Kanban Atualizado (23/11/2025 - 21:30 UTC-3)
+| Backlog | Sprint 3 (Ready) | Em Review | Concluído |
+|---------|------------------|-----------|-----------|
+| Sprint 4 (#31-#33), Sprint 5 (#34-#36) + Discovery Items | **#27, #28, #29, #30** | – | **MVP-1 a MVP-12**, **AL-1**, **AL-2**, **DOC-1**, **SEC-2** |
 
 ---
 ## Anotações Finais
