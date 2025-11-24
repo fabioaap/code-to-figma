@@ -1,0 +1,39 @@
+{
+  "timestamp": "2025-11-24T19:15:19.937Z",
+  "browser": "chromium",
+  "status": "success",
+  "totalTime": 6329,
+  "steps": [
+    {
+      "step": 1,
+      "name": "Abrir Storybook",
+      "status": "pass",
+      "duration": 3853
+    },
+    {
+      "step": 2,
+      "name": "Navegar até Button",
+      "status": "pass",
+      "duration": 5323
+    },
+    {
+      "step": 3,
+      "name": "Abrir painel Export",
+      "status": "pass",
+      "duration": 6023
+    },
+    {
+      "step": 4,
+      "name": "Capturar estado",
+      "status": "pass",
+      "duration": 6133
+    }
+  ],
+  "errors": [],
+  "screenshots": [
+    "step-1-01-storybook-opened.png",
+    "step-2-02-button-selected.png",
+    "step-3-03-export-panel-opened.png",
+    "step-4-04-final-state.png"
+  ]
+}
