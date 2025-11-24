@@ -180,7 +180,7 @@ export function validateFigmaJson(json: any): boolean {
     if (!json || typeof json !== 'object') return false;
     if (!json.type) return false;
     // Tipos válidos de nós Figma
-    const validTypes = ['FRAME', 'GROUP', 'TEXT', 'COMPONENT', 'SHAPE', 'LINE'];
+    const validTypes = ['FRAME', 'GROUP', 'TEXT', 'COMPONENT', 'COMPONENT_SET', 'SHAPE', 'LINE'];
     return validTypes.includes(json.type);
 }
 
@@ -196,6 +196,42 @@ export function addExportMetadata(json: any, metadata?: Record<string, any>) {
             version: '0.1.0',
             engine: 'figma-sync-engine',
             ...metadata
+        }
+    };
+}
+
+/**
+ * Cria estrutura JSON para múltiplas variantes (ComponentSet)
+ * VAR-2: Suporte a exportação de múltiplas stories como variants
+ * 
+ * @param variants - Array de JSONs individuais de cada story
+ * @param componentName - Nome do ComponentSet
+ * @returns JSON estruturado para ComponentSet
+ * 
+ * @example
+ * const variants = [
+ *   { type: 'FRAME', name: 'Primary', __html: '...' },
+ *   { type: 'FRAME', name: 'Secondary', __html: '...' }
+ * ];
+ * const result = createComponentSetJson(variants, 'Button');
+ */
+export function createComponentSetJson(
+    variants: any[],
+    componentName: string = 'Component'
+): any {
+    return {
+        type: 'COMPONENT_SET',
+        name: componentName,
+        variants: variants.map((variant, index) => ({
+            ...variant,
+            variantIndex: index
+        })),
+        __export: {
+            timestamp: new Date().toISOString(),
+            version: '0.1.0',
+            engine: 'figma-sync-engine',
+            type: 'multi-variant',
+            variantCount: variants.length
         }
     };
 }

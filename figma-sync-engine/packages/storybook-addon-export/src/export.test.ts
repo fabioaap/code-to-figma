@@ -4,7 +4,8 @@ import {
     exportToFile,
     exportWithFallback,
     validateFigmaJson,
-    addExportMetadata
+    addExportMetadata,
+    createComponentSetJson
 } from './export';
 
 describe('export - MVP-5', () => {
@@ -354,6 +355,102 @@ describe('export - MVP-5', () => {
             const result = await exportToClipboard(json);
 
             expect(result.success).toBe(true);
+        });
+    });
+
+    // VAR-2: Testes para exportação múltipla de stories
+    describe('createComponentSetJson', () => {
+        it('should create COMPONENT_SET with multiple variants', () => {
+            const variants = [
+                { type: 'FRAME', name: 'Primary', __html: '<button>Primary</button>' },
+                { type: 'FRAME', name: 'Secondary', __html: '<button>Secondary</button>' }
+            ];
+
+            const result = createComponentSetJson(variants, 'Button');
+
+            expect(result.type).toBe('COMPONENT_SET');
+            expect(result.name).toBe('Button');
+            expect(result.variants).toHaveLength(2);
+            expect(result.variants[0].variantIndex).toBe(0);
+            expect(result.variants[1].variantIndex).toBe(1);
+        });
+
+        it('should add export metadata to ComponentSet', () => {
+            const variants = [
+                { type: 'FRAME', name: 'Small' },
+                { type: 'FRAME', name: 'Large' }
+            ];
+
+            const result = createComponentSetJson(variants, 'Icon');
+
+            expect(result.__export).toBeDefined();
+            expect(result.__export.type).toBe('multi-variant');
+            expect(result.__export.variantCount).toBe(2);
+            expect(result.__export.engine).toBe('figma-sync-engine');
+            expect(result.__export.timestamp).toBeDefined();
+        });
+
+        it('should work with single variant', () => {
+            const variants = [
+                { type: 'FRAME', name: 'Default' }
+            ];
+
+            const result = createComponentSetJson(variants);
+
+            expect(result.type).toBe('COMPONENT_SET');
+            expect(result.variants).toHaveLength(1);
+            expect(result.__export.variantCount).toBe(1);
+        });
+
+        it('should use default name if not provided', () => {
+            const variants = [
+                { type: 'FRAME', name: 'Variant1' }
+            ];
+
+            const result = createComponentSetJson(variants);
+
+            expect(result.name).toBe('Component');
+        });
+
+        it('should preserve variant properties', () => {
+            const variants = [
+                { 
+                    type: 'FRAME', 
+                    name: 'Primary',
+                    __html: '<div>test</div>',
+                    __capture: { nodeCount: 5 }
+                },
+                { 
+                    type: 'FRAME', 
+                    name: 'Secondary',
+                    customProp: 'value'
+                }
+            ];
+
+            const result = createComponentSetJson(variants, 'Button');
+
+            expect(result.variants[0].__html).toBe('<div>test</div>');
+            expect(result.variants[0].__capture.nodeCount).toBe(5);
+            expect(result.variants[1].customProp).toBe('value');
+        });
+
+        it('should validate as valid Figma JSON', () => {
+            const variants = [
+                { type: 'FRAME', name: 'V1' },
+                { type: 'FRAME', name: 'V2' }
+            ];
+
+            const result = createComponentSetJson(variants);
+
+            expect(validateFigmaJson(result)).toBe(true);
+        });
+
+        it('should handle empty variants array', () => {
+            const result = createComponentSetJson([]);
+
+            expect(result.type).toBe('COMPONENT_SET');
+            expect(result.variants).toHaveLength(0);
+            expect(result.__export.variantCount).toBe(0);
         });
     });
 });

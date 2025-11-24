@@ -4,15 +4,13 @@
 
 [1m@storybook/core v8.6.14
 [22m
-[32minfo[0m[35m[0m => Cleaning outputDir: [36mstorybook-static[39m
-[0m[32minfo[0m[35m[0m => Loading presets
-[0m[30;43mWARN[0m[35m[0m Could not resolve addon "@figma-sync-engine/storybook-addon-export", skipping. Is it installed?
-[0m[30;43mWARN[0m[35m[0m Could not resolve addon "@figma-sync-engine/storybook-addon-export", skipping. Is it installed?
-[0m[32minfo[0m[35m[0m => Building manager..
-[0m[32minfo[0m[35m[0m => Manager built ([38;2;181;126;229m447 ms[39m)
-[0m[32minfo[0m[35m[0m => Building preview..
-[0m[32minfo[0m[35m[0m Using tsconfig paths for react-docgen
-[0m[36mvite v5.4.21 [32mbuilding for production...[36m[39m
+info => Cleaning outputDir: [36mstorybook-static[39m
+info => Loading presets
+info => Building manager..
+info => Manager built ([38;2;181;126;229m428 ms[39m)
+info => Building preview..
+info Using tsconfig paths for react-docgen
+[36mvite v5.4.21 [32mbuilding for production...[36m[39m
 transforming...
 [32m✓[39m 102 modules transformed.
 ../../node_modules/.pnpm/@storybook+core@8.6.14_prettier@3.6.2_storybook@8.6.14_prettier@3.6.2_/node_modules/@storybook/core/dist/preview/runtime.js (3683:15): Use of eval in "../../node_modules/.pnpm/@storybook+core@8.6.14_prettier@3.6.2_storybook@8.6.14_prettier@3.6.2_/node_modules/@storybook/core/dist/preview/runtime.js" is strongly discouraged as it poses security risks and may cause issues with minification.
@@ -48,12 +46,6 @@ computing gzip size...
 - Using dynamic import() to code-split the application
 - Use build.rollupOptions.output.manualChunks to improve chunking: https://rollupjs.org/configuration-options/#output-manualchunks
 - Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.[39m
-[32m✓ built in 8.38s[39m
-[32minfo[0m[35m[0m => Preview built ([38;2;181;126;229m9.5 s[39m)
-[0m[32minfo[0m[35m[0m => Output directory: /home/runner/work/code-to-figma/code-to-figma/figma-sync-engine/examples/react-button/storybook-static
-[0m
-[35m[1mattention[22m[39m => Storybook now collects completely anonymous telemetry regarding usage.
-This information is used to shape Storybook's roadmap and prioritize features.
-You can learn more, including how to opt-out if you'd not like to participate in this anonymous program, by visiting the following URL:
-[36mhttps://storybook.js.org/telemetry[39m
-
+[32m✓ built in 6.96s[39m
+info => Preview built ([38;2;181;126;229m7.96 s[39m)
+info => Output directory: /home/runner/work/code-to-figma/code-to-figma/figma-sync-engine/examples/react-button/storybook-static

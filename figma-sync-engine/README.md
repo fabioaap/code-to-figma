@@ -32,6 +32,52 @@ Placeholder inicial – será detalhado em `docs/figma-json-format.md`.
 ## Auto Layout
 O interpretador lê propriedades CSS (display:flex, flex-direction, gap, padding, align-items, justify-content) e traduz para campos Figma equivalentes. Detalhes em `docs/autolayout-engine.md`.
 
+## Variantes e Exportação Múltipla (VAR-2)
+
+O addon agora suporta exportação de múltiplas stories simultaneamente para criar um ComponentSet no Figma.
+
+### Como Usar
+
+1. **Modo Single (padrão)**: Exporta apenas a story atualmente selecionada
+2. **Modo Multi-Seleção**: Ative o botão "Modo Multi-Seleção" para selecionar múltiplas stories via checkboxes
+
+### Formato de Saída
+
+- **Single story**: Gera um JSON com `type: 'FRAME'`
+- **Múltiplas stories**: Gera um JSON com `type: 'COMPONENT_SET'` contendo array `variants[]`
+
+```json
+{
+  "type": "COMPONENT_SET",
+  "name": "Button",
+  "variants": [
+    {
+      "type": "FRAME",
+      "name": "Primary",
+      "storyId": "example-button--primary",
+      "__html": "...",
+      "variantIndex": 0
+    },
+    {
+      "type": "FRAME",
+      "name": "Secondary",
+      "storyId": "example-button--secondary",
+      "__html": "...",
+      "variantIndex": 1
+    }
+  ],
+  "__export": {
+    "type": "multi-variant",
+    "variantCount": 2,
+    "timestamp": "2025-11-24T04:00:00.000Z"
+  }
+}
+```
+
+### Convenção de Mapeamento (VAR-1)
+
+O mapeamento de args do Storybook para propriedades de variante do Figma será documentado em versões futuras. Por enquanto, o nome da story é usado como identificador da variante.
+
 ## Roadmap MVP
 1. Capturar HTML da história atual
 2. Converter via html-to-figma-core

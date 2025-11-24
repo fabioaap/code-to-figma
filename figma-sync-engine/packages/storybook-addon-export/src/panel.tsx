@@ -6,9 +6,9 @@
  */
 
 import React, { useState } from 'react';
-import { useStorybookState } from '@storybook/manager-api';
+import { useStorybookState, useStorybookApi } from '@storybook/manager-api';
 import { captureStoryHTML } from './captureHtml';
-import { exportToClipboard, addExportMetadata, exportToFile, validateFigmaJson } from './export';
+import { exportToClipboard, addExportMetadata, exportToFile, validateFigmaJson, createComponentSetJson } from './export';
 import { logger } from './logger';
 import { CSSProperties } from 'react';
 
@@ -37,10 +37,51 @@ const statusMessages: Record<Status, string> = {
 
 export const ExportPanel: React.FC = () => {
     const state = useStorybookState();
+    const api = useStorybookApi();
     const [status, setStatus] = useState<Status>('idle');
     const [error, setError] = useState<string>('');
     const [exportMethod, setExportMethod] = useState<'clipboard' | 'download'>('clipboard');
     const [duration, setDuration] = useState<number | null>(null);
+    const [selectedStories, setSelectedStories] = useState<Set<string>>(new Set([state.storyId || '']));
+    const [showMultiSelect, setShowMultiSelect] = useState(false);
+
+    // Extrai todas as stories disponíveis do state
+    const availableStories = React.useMemo(() => {
+        const stories: Array<{ id: string; name: string; kind: string }> = [];
+        const index = (state as any).index || (state as any).storiesHash || {};
+        
+        Object.entries(index).forEach(([id, entry]: [string, any]) => {
+            // Apenas incluir stories (não grupos ou componentes)
+            if (entry.type === 'story') {
+                stories.push({
+                    id,
+                    name: entry.name || id,
+                    kind: entry.title || ''
+                });
+            }
+        });
+        
+        return stories;
+    }, [state]);
+
+    // Atualiza seleção quando a story ativa muda
+    React.useEffect(() => {
+        if (state.storyId && !showMultiSelect) {
+            setSelectedStories(new Set([state.storyId]));
+        }
+    }, [state.storyId, showMultiSelect]);
+
+    const toggleStorySelection = (storyId: string) => {
+        setSelectedStories(prev => {
+            const next = new Set(prev);
+            if (next.has(storyId)) {
+                next.delete(storyId);
+            } else {
+                next.add(storyId);
+            }
+            return next;
+        });
+    };
 
     const handleExport = async () => {
         if (!isExportEnabled) {
@@ -55,40 +96,83 @@ export const ExportPanel: React.FC = () => {
             setStatus('capturing');
             const startTime = performance.now();
             
+            const storyIds = Array.from(selectedStories);
+            const isMultiExport = storyIds.length > 1;
+            
             logger.info('export.panel.started', { 
-                storyId: state.storyId,
-                method: exportMethod 
+                storyIds,
+                count: storyIds.length,
+                method: exportMethod,
+                isMultiExport
             });
 
-            // Passo 1: Capturar HTML
-            const capture = await captureStoryHTML();
-            if (!capture.html) {
-                throw new Error('Nenhum HTML capturado');
+            const variants: any[] = [];
+            const originalStoryId = state.storyId;
+
+            // Passo 1: Capturar HTML de cada story selecionada
+            for (const storyId of storyIds) {
+                // Navega para a story se necessário
+                if (isMultiExport && storyId !== state.storyId) {
+                    api.selectStory(storyId);
+                    // Aguarda renderização
+                    await new Promise(resolve => setTimeout(resolve, 300));
+                }
+
+                const capture = await captureStoryHTML();
+                if (!capture.html) {
+                    logger.warn('export.capture.failed', { storyId });
+                    continue;
+                }
+
+                // Extrai nome da story
+                const storyEntry = availableStories.find(s => s.id === storyId);
+                const storyName = storyEntry?.name || storyId;
+
+                variants.push({
+                    type: 'FRAME',
+                    name: storyName,
+                    storyId,
+                    children: [],
+                    __html: capture.html,
+                    __capture: {
+                        nodeCount: capture.nodeCount,
+                        hasInteractiveElements: capture.hasInteractiveElements
+                    }
+                });
             }
 
-            // Passo 2: Criar JSON Figma simples
-            let figmaJson: any = {
-                type: 'FRAME',
-                name: state.storyId || 'Exported Component',
-                children: [],
-                __html: capture.html
-            };
+            // Restaura story original se necessário
+            if (isMultiExport && originalStoryId && originalStoryId !== storyIds[storyIds.length - 1]) {
+                api.selectStory(originalStoryId);
+            }
+
+            if (variants.length === 0) {
+                throw new Error('Nenhuma story foi capturada com sucesso');
+            }
+
+            // Passo 2: Criar JSON Figma (simples ou ComponentSet)
+            let figmaJson: any;
+            if (isMultiExport) {
+                // Extrai o nome do componente base (comum entre as stories)
+                const firstKind = availableStories.find(s => s.id === storyIds[0])?.kind || 'Component';
+                figmaJson = createComponentSetJson(variants, firstKind);
+            } else {
+                figmaJson = variants[0];
+                figmaJson = addExportMetadata(figmaJson, {
+                    storyId: storyIds[0],
+                    nodeCount: figmaJson.__capture?.nodeCount,
+                    hasInteractiveElements: figmaJson.__capture?.hasInteractiveElements,
+                    timestamp: new Date().toISOString()
+                });
+            }
 
             // Passo 3: Validar JSON antes de exportar
             if (!validateFigmaJson(figmaJson)) {
                 throw new Error('JSON Figma inválido - estrutura não reconhecida');
             }
 
-            // Passo 4: Adicionar metadados
-            figmaJson = addExportMetadata(figmaJson, {
-                storyId: state.storyId || 'unknown',
-                nodeCount: capture.nodeCount,
-                hasInteractiveElements: capture.hasInteractiveElements,
-                timestamp: new Date().toISOString()
-            });
-
             setStatus('exporting');
-            // Passo 5: Exportar
+            // Passo 4: Exportar
             let result;
             if (exportMethod === 'clipboard') {
                 result = await exportToClipboard(figmaJson);
@@ -107,10 +191,12 @@ export const ExportPanel: React.FC = () => {
             setStatus('success');
             
             logger.info('export.panel.completed', { 
-                storyId: state.storyId,
+                storyIds,
+                count: storyIds.length,
                 method: exportMethod,
                 duration: elapsed,
-                size: result.size
+                size: result.size,
+                isMultiExport
             });
             
             setTimeout(() => {
@@ -123,7 +209,7 @@ export const ExportPanel: React.FC = () => {
             setStatus('error');
             
             logger.error('export.panel.failed', { 
-                storyId: state.storyId,
+                storyIds: Array.from(selectedStories),
                 method: exportMethod,
                 error: message
             });
@@ -234,8 +320,84 @@ export const ExportPanel: React.FC = () => {
             <div style={styles.header}>📤 Exportar para Figma</div>
 
             <div style={styles.storyInfo}>
-                <strong>Story:</strong> {state.storyId || 'nenhuma selecionada'}
+                <strong>Story Atual:</strong> {state.storyId || 'nenhuma selecionada'}
             </div>
+
+            {/* VAR-2: Toggle para seleção múltipla */}
+            <div style={{ marginBottom: '12px' }}>
+                <button
+                    onClick={() => setShowMultiSelect(!showMultiSelect)}
+                    style={{
+                        ...styles.selectButton,
+                        backgroundColor: showMultiSelect ? '#0066cc' : '#e0e0e0',
+                        color: showMultiSelect ? 'white' : '#333',
+                        padding: '6px 12px',
+                        fontSize: '12px'
+                    }}
+                    title="Exportar múltiplas stories como ComponentSet"
+                >
+                    {showMultiSelect ? '✅ Modo Multi-Seleção' : '🔘 Modo Single'}
+                </button>
+                {showMultiSelect && (
+                    <span style={{ marginLeft: '8px', fontSize: '11px', color: '#666' }}>
+                        {selectedStories.size} story(ies) selecionada(s)
+                    </span>
+                )}
+            </div>
+
+            {/* VAR-2: Lista de stories para seleção múltipla */}
+            {showMultiSelect && (
+                <div style={{
+                    maxHeight: '200px',
+                    overflowY: 'auto',
+                    border: '1px solid #e0e0e0',
+                    borderRadius: '4px',
+                    padding: '8px',
+                    marginBottom: '12px',
+                    backgroundColor: '#fff'
+                }}>
+                    {availableStories.length === 0 ? (
+                        <div style={{ fontSize: '12px', color: '#999', padding: '8px' }}>
+                            Nenhuma story disponível
+                        </div>
+                    ) : (
+                        availableStories.map(story => (
+                            <label
+                                key={story.id}
+                                style={{
+                                    display: 'block',
+                                    padding: '4px 8px',
+                                    fontSize: '12px',
+                                    cursor: 'pointer',
+                                    borderRadius: '3px',
+                                    transition: 'background 0.15s',
+                                    backgroundColor: selectedStories.has(story.id) ? '#e7f3ff' : 'transparent'
+                                }}
+                                onMouseEnter={(e) => {
+                                    if (!selectedStories.has(story.id)) {
+                                        e.currentTarget.style.backgroundColor = '#f5f5f5';
+                                    }
+                                }}
+                                onMouseLeave={(e) => {
+                                    if (!selectedStories.has(story.id)) {
+                                        e.currentTarget.style.backgroundColor = 'transparent';
+                                    }
+                                }}
+                            >
+                                <input
+                                    type="checkbox"
+                                    checked={selectedStories.has(story.id)}
+                                    onChange={() => toggleStorySelection(story.id)}
+                                    style={{ marginRight: '8px' }}
+                                />
+                                <span style={{ fontWeight: selectedStories.has(story.id) ? 600 : 400 }}>
+                                    {story.kind} / {story.name}
+                                </span>
+                            </label>
+                        ))
+                    )}
+                </div>
+            )}
 
             <div style={styles.statusBar}>
                 {statusMessages[status]}
@@ -249,14 +411,14 @@ export const ExportPanel: React.FC = () => {
             <div style={styles.controls}>
                 <button
                     onClick={handleExport}
-                    disabled={isWorking}
+                    disabled={isWorking || selectedStories.size === 0}
                     style={{
                         ...styles.button,
-                        opacity: isWorking ? 0.6 : 1,
-                        cursor: isWorking ? 'not-allowed' : 'pointer'
+                        opacity: (isWorking || selectedStories.size === 0) ? 0.6 : 1,
+                        cursor: (isWorking || selectedStories.size === 0) ? 'not-allowed' : 'pointer'
                     }}
                 >
-                    {isWorking ? `${statusMessages[status]}` : '📥 Exportar'}
+                    {isWorking ? `${statusMessages[status]}` : `📥 Exportar ${selectedStories.size > 1 ? `(${selectedStories.size})` : ''}`}
                 </button>
 
                 <button
