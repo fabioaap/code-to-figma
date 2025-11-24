@@ -1,8 +1,8 @@
 # Backlog do Projeto – figma-sync-engine
 
-> Última atualização: 23/11/2025 (21:30 UTC-3)
+> Última atualização: 23/11/2025 (21:35 UTC-3)
 > Objetivo macro: Reduzir em até 80% o tempo de documentação de componentes no Figma via fluxo Storybook → Figma.
-> **✅ Status Recente**: Phase 2 ✅ COMPLETA. Repositório limpo (11 PRs obsoletos fechados). Plano de Execução Mestre criado. Pronto para iniciar Sprint 3 (Fidelidade Visual).
+> **✅ Status Atual**: Phase 2 ✅ COMPLETA. Repositório limpo (0 PRs em aberto). 10 issues aguardando execução: Sprint 3 (#27-#30), Sprint 4 (#31-#33), Sprint 5 (#34-#36). Algoritmo de dependência implementado. Pronto para iniciar Sprint 3.
 
 ## Estrutura do Backlog
 - Epics
@@ -253,10 +253,17 @@ Status 23/11/2025: DOC-1 entregue. DOC-4 planejado para Sprint 5.
 - RICE será preenchido após coleta de Reach & Effort.
 
 ---
-## Kanban Atualizado (23/11/2025 - 21:30 UTC-3)
-| Backlog | Sprint 3 (Ready) | Em Review | Concluído |
-|---------|------------------|-----------|-----------|
-| Sprint 4 (#31-#33), Sprint 5 (#34-#36) + Discovery Items | **#27, #28, #29, #30** | – | **MVP-1 a MVP-12**, **AL-1**, **AL-2**, **DOC-1**, **SEC-2** |
+## Kanban Atualizado (23/11/2025 - 21:35 UTC-3)
+| Status | Issues | Quantidade |
+|--------|--------|------------|
+| **Backlog/Bloqueado** | VAR-4, VAR-5, PERF-2, PERF-3, PERF-4, OBS-1 a OBS-4, TOK-3, TOK-4, SEC-3, DOC-2, DOC-3, DOC-5 | 12 |
+| **Ready (Sprint 3)** | #27 (AL-3), #28 (AL-7), #29 (TOK-1), #30 (TOK-2) | 4 - Pronto para iniciar |
+| **Ready (Sprint 4)** | #31 (VAR-1), #32 (VAR-2), #33 (VAR-3) | 3 - Aguardando Sprint 3 |
+| **Ready (Sprint 5)** | #34 (PERF-1), #35 (SEC-1), #36 (DOC-4) | 3 - Aguardando Sprint 4 |
+| **Concluído** | MVP-1 a MVP-12, AL-1, AL-2, DOC-1, SEC-2 | 14 features |
+
+**Total de PRs em aberto**: 0 ✅  
+**Total de issues em aberto**: 10 (0% iniciadas, 100% ready)
 
 ---
 ## Anotações Finais
