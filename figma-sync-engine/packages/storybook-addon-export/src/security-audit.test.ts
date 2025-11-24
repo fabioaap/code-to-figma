@@ -128,10 +128,10 @@ describe('[SEC-1] Auditoria automatizada de dependências', () => {
     });
 
     it('should fail if critical > 0', () => {
-      const critical = 1;
-      const high = 0;
-      const passed = critical === 0 && high === 0;
-      expect(passed).toBe(false);
+      const critical: number = 1;
+      const high: number = 0;
+      const passed: boolean = critical === 0 && high === 0;
+      expect(passed).toBe(false as boolean);
     });
 
     it('should fail if high > 0 and critical > 0', () => {
@@ -208,12 +208,12 @@ describe('[SEC-1] Auditoria automatizada de dependências', () => {
     });
 
     it('should handle optional description', () => {
-      const vulnWithDesc = {
+      const vulnWithDesc: { name: string; severity: string; description?: string } = {
         name: 'package-name',
         severity: 'critical',
         description: 'Privilege escalation vulnerability'
       };
-      const vulnWithoutDesc = {
+      const vulnWithoutDesc: { name: string; severity: string; description?: string } = {
         name: 'package-name',
         severity: 'critical'
       };

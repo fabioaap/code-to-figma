@@ -440,21 +440,20 @@ describe('[VAR-3] Plugin cria ComponentSet a partir de múltiplas stories', () =
             ]);
         });
 
-        it('should handle stories without variant properties', () => {
-            const data = {
-                stories: [
-                    {
-                        storyId: 'Button/Primary',
-                        name: 'Primary',
-                        figmaJson: { type: 'FRAME' }
-                    }
-                ]
-            };
+    it('should handle stories without variant properties', () => {
+      const data = {
+        stories: [
+          {
+            storyId: 'Button/Primary',
+            name: 'Primary',
+            figmaJson: { type: 'FRAME' },
+            variantProperties: undefined
+          }
+        ]
+      };
 
-            const story = data.stories[0];
-            const variantProps = story.variantProperties || {};
-
-            expect(variantProps).toEqual({});
+      const story = data.stories[0];
+      const variantProps = story.variantProperties || {};            expect(variantProps).toEqual({});
             expect(Object.keys(variantProps).length).toBe(0);
         });
 
