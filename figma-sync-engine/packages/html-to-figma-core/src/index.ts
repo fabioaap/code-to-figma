@@ -98,6 +98,99 @@ async function processImages(node: ConversionResult): Promise<void> {
 }
 
 /**
+ * AL-7: Estrutura de estilos de tipografia
+ */
+export interface TextStyles {
+    fontFamily: string;
+    fontSize: number;
+    fontWeight: number | string;
+    lineHeight: number | string;
+    letterSpacing: number;
+    textAlign: 'LEFT' | 'CENTER' | 'RIGHT' | 'JUSTIFIED';
+    textDecoration?: string;
+}
+
+/**
+ * AL-7: Extrai estilos de tipografia de um elemento HTML
+ */
+export function extractTextStyles(computedStyle: CSSStyleDeclaration): TextStyles {
+    return {
+        fontFamily: computedStyle.fontFamily.replace(/["']/g, '').split(',')[0].trim(),
+        fontSize: parseFloat(computedStyle.fontSize),
+        fontWeight: parseFontWeight(computedStyle.fontWeight),
+        lineHeight: parseLineHeight(computedStyle.lineHeight, computedStyle.fontSize),
+        letterSpacing: parseFloat(computedStyle.letterSpacing) || 0,
+        textAlign: mapTextAlign(computedStyle.textAlign),
+        textDecoration: computedStyle.textDecoration
+    };
+}
+
+/**
+ * AL-7: Parse font-weight para número
+ */
+export function parseFontWeight(weight: string): number {
+    const weightMap: Record<string, number> = {
+        'normal': 400,
+        'bold': 700,
+        'lighter': 300,
+        'bolder': 600,
+        '100': 100,
+        '200': 200,
+        '300': 300,
+        '400': 400,
+        '500': 500,
+        '600': 600,
+        '700': 700,
+        '800': 800,
+        '900': 900
+    };
+
+    return weightMap[weight] || parseInt(weight) || 400;
+}
+
+/**
+ * AL-7: Parse line-height (pode ser número, px, %, ou 'normal')
+ */
+export function parseLineHeight(lineHeight: string, fontSize: string): number | string {
+    if (lineHeight === 'normal') {
+        return 'AUTO';
+    }
+
+    if (lineHeight.includes('px')) {
+        return parseFloat(lineHeight);
+    }
+
+    if (lineHeight.includes('%')) {
+        const percent = parseFloat(lineHeight) / 100;
+        return parseFloat(fontSize) * percent;
+    }
+
+    // Unitless (multiplier)
+    const multiplier = parseFloat(lineHeight);
+    if (!isNaN(multiplier)) {
+        return parseFloat(fontSize) * multiplier;
+    }
+
+    return 'AUTO';
+}
+
+/**
+ * AL-7: Mapeia textAlign CSS para Figma
+ */
+export function mapTextAlign(align: string): 'LEFT' | 'CENTER' | 'RIGHT' | 'JUSTIFIED' {
+    switch (align) {
+        case 'center':
+            return 'CENTER';
+        case 'right':
+            return 'RIGHT';
+        case 'justify':
+            return 'JUSTIFIED';
+        default:
+            return 'LEFT';
+    }
+}
+
+/**
  * Extrai metadados do HTML convertido
  */
 export function getConversionMetadata(result: ConversionResult) {
