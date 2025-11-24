@@ -7,3 +7,7 @@ coverage/
 .turbo/
 *.log
 storybook-static/
+__pycache__/
+*.pyc
+*.pyo
+.env
