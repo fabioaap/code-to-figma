@@ -1,5 +1,7 @@
 # figma-sync-engine
 
+[![CI](https://github.com/fabioaap/code-to-figma/actions/workflows/ci.yml/badge.svg)](https://github.com/fabioaap/code-to-figma/actions/workflows/ci.yml)
+
 Ferramenta open source para exportar componentes renderizados no Storybook como JSON compatível com Figma, com suporte inicial a Auto Layout e variantes. Inspira-se e estende capacidades de `@builder.io/html-to-figma`, html.to.design e story.to.design.
 
 ## Objetivo

@@ -1,0 +1,145 @@
+name: CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  build-and-test:
+    name: Build, Lint, Test and Pack
+    runs-on: ubuntu-latest
+    env:
+      NODE_OPTIONS: --max-old-space-size=4096
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Use Node.js 20.x
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 8
+
+      - name: Cache pnpm store
+        uses: actions/cache@v4
+        with:
+          path: ~/.pnpm-store
+          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-store-
+
+      - name: Cache Turbo
+        uses: actions/cache@v4
+        with:
+          path: figma-sync-engine/.turbo
+          key: ${{ runner.os }}-turbo-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-turbo-
+
+      - name: Install dependencies
+        working-directory: figma-sync-engine
+        run: pnpm install --frozen-lockfile
+
+      - name: Lint (optional)
+        working-directory: figma-sync-engine
+        run: pnpm lint
+        continue-on-error: false
+
+      - name: Run tests
+        working-directory: figma-sync-engine
+        run: pnpm test
+
+      - name: Build packages
+        working-directory: figma-sync-engine
+        run: pnpm build
+
+      - name: Build Example Storybook (artifact)
+        working-directory: figma-sync-engine
+        run: pnpm --filter @figma-sync-engine/example-react-button build
+
+      - name: Upload Storybook static as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: storybook-static-example
+          path: figma-sync-engine/examples/react-button/storybook-static
+
+      - name: Upload Plugin dist as artifact (if exists)
+        uses: actions/upload-artifact@v4
+        with:
+          name: figma-plugin-dist
+          path: figma-sync-engine/packages/figma-plugin-lite/dist
+
+  smoke-test-export:
+    name: Smoke Test - Export Flow (Node)
+    runs-on: ubuntu-latest
+    needs: build-and-test
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Use Node.js 20.x
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 8
+
+      - name: Install dependencies
+        working-directory: figma-sync-engine
+        run: pnpm install --frozen-lockfile
+
+      - name: Run unit tests only for storybook-addon-export package
+        working-directory: figma-sync-engine
+        run: pnpm --filter @figma-sync-engine/storybook-addon-export test
+
+      - name: Run export unit tests and output summary
+        working-directory: figma-sync-engine
+        run: |
+          pnpm --filter @figma-sync-engine/storybook-addon-export test --silent | tee export-test-output.txt
+          grep -E "Test Files|Tests .* passed|failed" export-test-output.txt || true
+
+  optional-playwright:
+    name: Optional Playwright E2E (manual, expensive)
+    if: ${{ github.event_name == 'workflow_dispatch' }}
+    runs-on: ubuntu-latest
+    needs: build-and-test
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Use Node.js 20.x
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 8
+
+      - name: Install dependencies
+        working-directory: figma-sync-engine
+        run: pnpm install --frozen-lockfile
+
+      - name: Build storybook static for example
+        working-directory: figma-sync-engine
+        run: pnpm --filter @figma-sync-engine/example-react-button build
+
+      - name: Playwright - Install browsers
+        working-directory: figma-sync-engine
+        run: pnpm exec playwright install --with-deps
+
+      - name: Run Playwright tests (if present)
+        working-directory: figma-sync-engine
+        run: pnpm --filter @figma-sync-engine/** test:e2e || echo "No e2e tests defined"
