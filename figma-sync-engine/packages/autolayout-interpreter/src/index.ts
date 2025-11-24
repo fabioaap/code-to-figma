@@ -110,10 +110,30 @@ export function inferDirection(css: CssSnapshot): boolean {
 
 /**
  * Analisa propriedades CSS
+ * AL-3: Detecção robusta de direção com fallback para HORIZONTAL
  */
 export function analyzeCss(css: CssSnapshot): CssAnalysis {
+<<<<<<< HEAD
+    const isFlex = css.display === 'flex';
+    
+    // AL-3: Inferir direção com fallback seguro
+    let isRow = true; // Default: HORIZONTAL
+    
+    if (css.flexDirection) {
+        // Se flex-direction está definido, validar valor
+        const direction = css.flexDirection.toLowerCase();
+        if (direction === 'column' || direction === 'column-reverse') {
+            isRow = false; // VERTICAL
+        } else if (direction === 'row' || direction === 'row-reverse') {
+            isRow = true; // HORIZONTAL
+        }
+        // Valores inválidos mantêm o fallback (isRow = true)
+    }
+    // Se flex-direction não está definido, mantém fallback HORIZONTAL (isRow = true)
+=======
     const isFlex = css.display === 'flex' || css.display === 'inline-flex';
     const isRow = inferDirection(css);
+>>>>>>> origin/main
 
     const padding = normalizePadding(
         css.padding,
