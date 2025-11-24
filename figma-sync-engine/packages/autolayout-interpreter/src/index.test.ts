@@ -7,6 +7,7 @@ import {
     mapJustifyContent,
     applyAutoLayout,
     applyAutoLayoutRecursive,
+    inferDirection,
     CssSnapshot
 } from './index';
 
@@ -311,6 +312,40 @@ describe('autolayout-interpreter - MVP-4, AL-1, AL-2', () => {
             expect(result.top).toBe(12);
             expect(result.right).toBe(0); // invalid
             expect(result.bottom).toBe(8);
+        });
+    });
+
+    describe('inferDirection - AL-3: Fallback de direção', () => {
+        it('should return true (HORIZONTAL) for row', () => {
+            expect(inferDirection({ display: 'flex', flexDirection: 'row' })).toBe(true);
+        });
+
+        it('should return true (HORIZONTAL) for row-reverse', () => {
+            expect(inferDirection({ display: 'flex', flexDirection: 'row-reverse' })).toBe(true);
+        });
+
+        it('should return false (VERTICAL) for column', () => {
+            expect(inferDirection({ display: 'flex', flexDirection: 'column' })).toBe(false);
+        });
+
+        it('should return false (VERTICAL) for column-reverse', () => {
+            expect(inferDirection({ display: 'flex', flexDirection: 'column-reverse' })).toBe(false);
+        });
+
+        it('should default to HORIZONTAL when display is flex without flexDirection', () => {
+            expect(inferDirection({ display: 'flex' })).toBe(true);
+        });
+
+        it('should default to HORIZONTAL when display is inline-flex without flexDirection', () => {
+            expect(inferDirection({ display: 'inline-flex' })).toBe(true);
+        });
+
+        it('should default to HORIZONTAL when display is block (global fallback)', () => {
+            expect(inferDirection({ display: 'block' })).toBe(true);
+        });
+
+        it('should default to HORIZONTAL for empty CSS', () => {
+            expect(inferDirection({})).toBe(true);
         });
     });
 });

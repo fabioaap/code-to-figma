@@ -90,10 +90,30 @@ export function normalizePadding(
 }
 
 /**
+ * Infere direção do layout com fallback robusto
+ * AL-3: Detecção de direção com fallback para HORIZONTAL
+ */
+export function inferDirection(css: CssSnapshot): boolean {
+    // Se flex-direction está explicitamente definido, usar ele
+    if (css.flexDirection) {
+        return css.flexDirection.includes('row');
+    }
+    
+    // Se display é flex mas sem direção, default do flexbox é row (HORIZONTAL)
+    if (css.display === 'flex' || css.display === 'inline-flex') {
+        return true; // HORIZONTAL
+    }
+    
+    // Fallback global: HORIZONTAL
+    return true;
+}
+
+/**
  * Analisa propriedades CSS
  * AL-3: Detecção robusta de direção com fallback para HORIZONTAL
  */
 export function analyzeCss(css: CssSnapshot): CssAnalysis {
+<<<<<<< HEAD
     const isFlex = css.display === 'flex';
     
     // AL-3: Inferir direção com fallback seguro
@@ -110,6 +130,10 @@ export function analyzeCss(css: CssSnapshot): CssAnalysis {
         // Valores inválidos mantêm o fallback (isRow = true)
     }
     // Se flex-direction não está definido, mantém fallback HORIZONTAL (isRow = true)
+=======
+    const isFlex = css.display === 'flex' || css.display === 'inline-flex';
+    const isRow = inferDirection(css);
+>>>>>>> origin/main
 
     const padding = normalizePadding(
         css.padding,
