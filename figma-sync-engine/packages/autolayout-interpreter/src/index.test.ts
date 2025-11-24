@@ -2,6 +2,7 @@ import { describe, it, expect } from 'vitest';
 import {
     parseSpacing,
     normalizePadding,
+    detectLayoutDirection,
     analyzeCss,
     mapAlignItems,
     mapJustifyContent,
@@ -140,6 +141,43 @@ describe('autolayout-interpreter - MVP-4, AL-1, AL-2', () => {
         it('should return undefined for unknown values', () => {
             expect(mapJustifyContent('invalid')).toBeUndefined();
             expect(mapJustifyContent(undefined)).toBeUndefined();
+        });
+    });
+
+    describe('detectLayoutDirection - AL-3: Detecção de Direção', () => {
+        it('should return true (HORIZONTAL) for row', () => {
+            const css: CssSnapshot = { display: 'flex', flexDirection: 'row' };
+            expect(detectLayoutDirection(css)).toBe(true);
+        });
+
+        it('should return true (HORIZONTAL) for row-reverse', () => {
+            const css: CssSnapshot = { display: 'flex', flexDirection: 'row-reverse' };
+            expect(detectLayoutDirection(css)).toBe(true);
+        });
+
+        it('should return false (VERTICAL) for column', () => {
+            const css: CssSnapshot = { display: 'flex', flexDirection: 'column' };
+            expect(detectLayoutDirection(css)).toBe(false);
+        });
+
+        it('should return false (VERTICAL) for column-reverse', () => {
+            const css: CssSnapshot = { display: 'flex', flexDirection: 'column-reverse' };
+            expect(detectLayoutDirection(css)).toBe(false);
+        });
+
+        it('should default to true (HORIZONTAL) when flexDirection is not set', () => {
+            const css: CssSnapshot = { display: 'flex' };
+            expect(detectLayoutDirection(css)).toBe(true);
+        });
+
+        it('should default to true (HORIZONTAL) when display is not flex', () => {
+            const css: CssSnapshot = { display: 'block' };
+            expect(detectLayoutDirection(css)).toBe(true);
+        });
+
+        it('should default to true (HORIZONTAL) for empty css', () => {
+            const css: CssSnapshot = {};
+            expect(detectLayoutDirection(css)).toBe(true);
         });
     });
 
