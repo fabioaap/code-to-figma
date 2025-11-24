@@ -121,7 +121,7 @@ function incrementTypographyUsage(
     styles: Partial<TypographyToken>
 ): void {
     const key = getTypographyKey(styles);
-    
+
     if (typoMap.has(key)) {
         typoMap.get(key)!.usageCount++;
     } else {
@@ -142,7 +142,7 @@ function incrementTypographyUsage(
  */
 export function extractTypographyTokens(jsonTree: FigmaNode): TypographyToken[] {
     const typoMap = new Map<string, TypographyToken>();
-    
+
     function traverse(node: FigmaNode): void {
         // Processar apenas nós de texto
         if (node.type === 'TEXT') {
@@ -153,18 +153,18 @@ export function extractTypographyTokens(jsonTree: FigmaNode): TypographyToken[] 
                 lineHeight: node.lineHeight,
                 letterSpacing: node.letterSpacing
             };
-            
+
             incrementTypographyUsage(typoMap, styles);
         }
-        
+
         // Recursão em filhos
         if (node.children && Array.isArray(node.children)) {
             node.children.forEach(traverse);
         }
     }
-    
+
     traverse(jsonTree);
-    
+
     // Retorna ordenado por frequência (mais usado primeiro)
     return Array.from(typoMap.values())
         .sort((a, b) => b.usageCount - a.usageCount);
