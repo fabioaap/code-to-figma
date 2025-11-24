@@ -356,4 +356,94 @@ describe('export - MVP-5', () => {
             expect(result.success).toBe(true);
         });
     });
+
+    describe('VAR-1 Integration', () => {
+        it('should include variantProperties in metadata', () => {
+            const json = {
+                type: 'COMPONENT',
+                name: 'Button/Primary',
+                variantProperties: {
+                    variant: 'primary',
+                    size: 'medium'
+                }
+            };
+
+            const result = addExportMetadata(json, {
+                storyId: 'button--primary',
+                args: { variant: 'primary', size: 'medium', label: 'Click' }
+            });
+
+            expect(result.__export.args).toEqual({
+                variant: 'primary',
+                size: 'medium',
+                label: 'Click'
+            });
+        });
+
+        it('should validate COMPONENT type with variantProperties', () => {
+            const json = {
+                type: 'COMPONENT',
+                name: 'Button/Primary',
+                variantProperties: {
+                    variant: 'primary'
+                }
+            };
+
+            expect(validateFigmaJson(json)).toBe(true);
+        });
+
+        it('should export component with variants to clipboard', async () => {
+            const json = {
+                type: 'COMPONENT',
+                name: 'Button/Primary/Large',
+                variantProperties: {
+                    variant: 'primary',
+                    size: 'large'
+                },
+                children: []
+            };
+
+            const result = await exportToClipboard(json);
+
+            expect(result.success).toBe(true);
+            const exported = mockClipboard.writeText.mock.calls[0][0];
+            const parsed = JSON.parse(exported);
+            
+            expect(parsed.type).toBe('COMPONENT');
+            expect(parsed.variantProperties).toEqual({
+                variant: 'primary',
+                size: 'large'
+            });
+        });
+
+        it('should include original args in __export metadata', async () => {
+            const originalArgs = {
+                variant: 'secondary',
+                disabled: true,
+                onClick: () => { }
+            };
+
+            const json = addExportMetadata(
+                {
+                    type: 'COMPONENT',
+                    name: 'Button/Secondary',
+                    variantProperties: { variant: 'secondary', state: 'disabled' }
+                },
+                {
+                    storyId: 'button--disabled',
+                    args: originalArgs
+                }
+            );
+
+            const result = await exportToClipboard(json);
+            expect(result.success).toBe(true);
+
+            const exported = mockClipboard.writeText.mock.calls[0][0];
+            const parsed = JSON.parse(exported);
+
+            expect(parsed.__export.args).toBeDefined();
+            expect(parsed.__export.args.variant).toBe('secondary');
+            expect(parsed.__export.args.disabled).toBe(true);
+        });
+    });
 });
