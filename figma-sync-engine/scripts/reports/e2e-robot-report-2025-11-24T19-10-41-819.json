@@ -1,0 +1,66 @@
+{
+  "timestamp": "2025-11-24T19:10:37.818Z",
+  "browser": "chromium",
+  "status": "failure",
+  "totalTime": 4000,
+  "steps": [
+    {
+      "step": 1,
+      "name": "Abrir Storybook",
+      "status": "pass",
+      "duration": 3411
+    },
+    {
+      "step": 2,
+      "name": "Navegar até Button",
+      "status": "fail",
+      "duration": 3679,
+      "message": "locator.waitFor: Target page, context or browser has been closed"
+    },
+    {
+      "step": 3,
+      "name": "Abrir painel Export",
+      "status": "fail",
+      "duration": 3741,
+      "message": "page.screenshot: Target page, context or browser has been closed"
+    },
+    {
+      "step": 4,
+      "name": "Selecionar histórias",
+      "status": "fail",
+      "duration": 3823,
+      "message": "page.screenshot: Target page, context or browser has been closed"
+    },
+    {
+      "step": 5,
+      "name": "Clicar Export",
+      "status": "fail",
+      "duration": 3875,
+      "message": "locator.waitFor: Target page, context or browser has been closed"
+    },
+    {
+      "step": 6,
+      "name": "Capturar JSON exportado",
+      "status": "fail",
+      "duration": 3923,
+      "message": "page.screenshot: Target page, context or browser has been closed"
+    },
+    {
+      "step": 7,
+      "name": "Validar JSON",
+      "status": "skip",
+      "duration": 3960,
+      "message": "Nenhum JSON exportado"
+    }
+  ],
+  "errors": [
+    "Erro ao navegar: locator.waitFor: Target page, context or browser has been closed",
+    "Erro ao abrir painel: page.screenshot: Target page, context or browser has been closed",
+    "Erro ao selecionar: page.screenshot: Target page, context or browser has been closed",
+    "Erro ao clicar export: locator.waitFor: Target page, context or browser has been closed",
+    "Erro ao capturar JSON: page.screenshot: Target page, context or browser has been closed"
+  ],
+  "screenshots": [
+    "step-1-01-storybook-opened.png"
+  ]
+}
