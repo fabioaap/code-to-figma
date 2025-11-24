@@ -29,6 +29,7 @@ class Issue:
     body: str
     labels: List[str]
     state: str
+    kanban_card_id: Optional[int] = None
     kanban_column_id: Optional[int] = None
     dependencies: List[int] = field(default_factory=list)
     dependents: List[int] = field(default_factory=list)
@@ -36,9 +37,18 @@ class Issue:
 
 class GitHubClient:
     def __init__(self):
-        token = os.environ["GITHUB_TOKEN"]
-        self.owner = os.environ["GITHUB_OWNER"]
-        self.repo = os.environ["GITHUB_REPO"]
+        token = os.environ.get("GITHUB_TOKEN")
+        if not token:
+            raise ValueError("GITHUB_TOKEN environment variable is required. Please set it in .env or export it.")
+        
+        self.owner = os.environ.get("GITHUB_OWNER")
+        if not self.owner:
+            raise ValueError("GITHUB_OWNER environment variable is required. Please set it in .env or export it.")
+        
+        self.repo = os.environ.get("GITHUB_REPO")
+        if not self.repo:
+            raise ValueError("GITHUB_REPO environment variable is required. Please set it in .env or export it.")
+        
         self.headers = {
             "Authorization": f"Bearer {token}",
             "Accept": "application/vnd.github+json",
@@ -60,7 +70,6 @@ class GitHubClient:
                 if attempt == MAX_RETRIES:
                     raise
                 time.sleep(RETRY_BACKOFF * attempt)
-        raise RuntimeError("Unreachable code")
 
     def list_open_issues(self) -> List[Issue]:
         url = f"{API_ROOT}/repos/{self.owner}/{self.repo}/issues?state=open&per_page=100"
@@ -81,9 +90,9 @@ class GitHubClient:
             )
         return issues
 
-    def find_project_items(self, project_id: int) -> Dict[int, int]:
+    def find_project_items(self, project_id: int) -> Dict[int, Dict[str, int]]:
         """
-        Returns map issue_number -> kanban_column_id using project (classic) columns.
+        Returns map issue_number -> {"card_id": X, "column_id": Y} using project (classic) columns.
         """
         columns = self._request("GET", f"{API_ROOT}/projects/{project_id}/columns")
         mapping = {}
@@ -92,7 +101,7 @@ class GitHubClient:
             for card in cards:
                 if card.get("content_url") and "/issues/" in card["content_url"]:
                     issue_number = int(card["content_url"].split("/issues/")[-1])
-                    mapping[issue_number] = column["id"]
+                    mapping[issue_number] = {"card_id": card["id"], "column_id": column["id"]}
         return mapping
 
     def move_card(self, card_id: int, column_id: int):
@@ -193,7 +202,9 @@ class IssueAutomation:
         if self.project_id and self.done_column_id:
             column_map = self.client.find_project_items(self.project_id)
             for issue in issues:
-                issue.kanban_column_id = column_map.get(issue.number)
+                if issue.number in column_map:
+                    issue.kanban_card_id = column_map[issue.number]["card_id"]
+                    issue.kanban_column_id = column_map[issue.number]["column_id"]
 
         resolver = DependencyResolver(issues)
         resolver.detect()
@@ -207,8 +218,8 @@ class IssueAutomation:
                 self.client.merge_pr(pr_number)
                 self.client.close_issue(issue.number, comment=f"Resolved automatically via PR #{pr_number} ✅")
 
-                if self.project_id and self.done_column_id and issue.kanban_column_id:
-                    self.client.move_card(issue.kanban_column_id, self.done_column_id)
+                if self.project_id and self.done_column_id and issue.kanban_card_id:
+                    self.client.move_card(issue.kanban_card_id, self.done_column_id)
 
                 self.timeline.append(
                     {
@@ -263,9 +274,34 @@ class IssueAutomation:
 
 
 if __name__ == "__main__":
+    # Load environment variables from .env if available
+    try:
+        from dotenv import load_dotenv
+        load_dotenv()
+    except ImportError:
+        pass  # python-dotenv not installed, use environment variables directly
+    
+    # Parse optional project IDs
+    project_id = None
+    done_column_id = None
+    
+    project_id_str = os.environ.get("GITHUB_PROJECT_ID", "").strip()
+    if project_id_str and project_id_str != "0":
+        try:
+            project_id = int(project_id_str)
+        except ValueError:
+            print(f"Warning: GITHUB_PROJECT_ID '{project_id_str}' is not a valid integer. Skipping GitHub Projects integration.")
+    
+    done_column_id_str = os.environ.get("GITHUB_DONE_COLUMN_ID", "").strip()
+    if done_column_id_str and done_column_id_str != "0":
+        try:
+            done_column_id = int(done_column_id_str)
+        except ValueError:
+            print(f"Warning: GITHUB_DONE_COLUMN_ID '{done_column_id_str}' is not a valid integer. Skipping GitHub Projects integration.")
+    
     automation = IssueAutomation(
-        project_id=int(os.environ.get("GITHUB_PROJECT_ID", "0")) or None,
-        done_column_id=int(os.environ.get("GITHUB_DONE_COLUMN_ID", "0")) or None,
+        project_id=project_id,
+        done_column_id=done_column_id,
     )
     automation.run()
     print(automation.generate_report())
