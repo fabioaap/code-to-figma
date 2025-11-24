@@ -2,7 +2,12 @@ import {
     mapArgsToVariantProperties,
     isValidVariantProperty,
     DEFAULT_ARG_MAPPING,
-    ArgToPropertyMapping
+    ArgToPropertyMapping,
+    StorySelection,
+    MultiStoryExportJSON,
+    combineStoriesToExportJSON,
+    getSelectedStories,
+    hasSelectedStories
 } from './shared';
 import { describe, it, expect } from 'vitest';
 
@@ -169,4 +174,164 @@ describe('[VAR-1] Convention for mapping Storybook args to Figma variantProperti
             expect(DEFAULT_ARG_MAPPING.length).toBeGreaterThanOrEqual(4);
         });
     });
+});
+
+describe('[VAR-2] Export múltiplo de stories com seleção e consolidação', () => {
+  describe('combineStoriesToExportJSON', () => {
+    it('should combine single story into export JSON', () => {
+      const stories = [
+        {
+          storyId: 'Button/Primary',
+          name: 'Primary Button',
+          figmaJson: { type: 'FRAME', name: 'Button' }
+        }
+      ];
+      const result = combineStoriesToExportJSON(stories);
+      expect(result.count).toBe(1);
+      expect(result.stories).toHaveLength(1);
+      expect(result.stories[0].storyId).toBe('Button/Primary');
+    });
+
+    it('should combine multiple stories into export JSON', () => {
+      const stories = [
+        {
+          storyId: 'Button/Primary',
+          name: 'Primary Button',
+          figmaJson: { type: 'FRAME', name: 'Button' }
+        },
+        {
+          storyId: 'Button/Secondary',
+          name: 'Secondary Button',
+          figmaJson: { type: 'FRAME', name: 'Button' }
+        },
+        {
+          storyId: 'Button/Large',
+          name: 'Large Button',
+          figmaJson: { type: 'FRAME', name: 'Button' }
+        }
+      ];
+      const result = combineStoriesToExportJSON(stories);
+      expect(result.count).toBe(3);
+      expect(result.stories).toHaveLength(3);
+    });
+
+    it('should include variant properties in combined JSON', () => {
+      const stories = [
+        {
+          storyId: 'Button/Primary',
+          name: 'Primary',
+          figmaJson: { type: 'FRAME' },
+          variantProperties: { variant: 'primary', size: 'medium' }
+        }
+      ];
+      const result = combineStoriesToExportJSON(stories);
+      expect(result.stories[0].variantProperties).toEqual({
+        variant: 'primary',
+        size: 'medium'
+      });
+    });
+
+    it('should add exportedAt timestamp', () => {
+      const stories = [
+        {
+          storyId: 'Button/Primary',
+          name: 'Primary',
+          figmaJson: { type: 'FRAME' }
+        }
+      ];
+      const result = combineStoriesToExportJSON(stories);
+      expect(result.exportedAt).toBeDefined();
+      expect(new Date(result.exportedAt).getTime()).toBeGreaterThan(0);
+    });
+
+    it('should throw error if stories array is empty', () => {
+      expect(() => combineStoriesToExportJSON([])).toThrow(
+        'At least one story is required for export'
+      );
+    });
+
+    it('should throw error if stories is null', () => {
+      expect(() => combineStoriesToExportJSON(null as any)).toThrow(
+        'At least one story is required for export'
+      );
+    });
+
+    it('should handle stories without variant properties', () => {
+      const stories = [
+        {
+          storyId: 'Button/Primary',
+          name: 'Primary',
+          figmaJson: { type: 'FRAME' }
+        }
+      ];
+      const result = combineStoriesToExportJSON(stories);
+      expect(result.stories[0].variantProperties).toEqual({});
+    });
+  });
+
+  describe('getSelectedStories', () => {
+    it('should filter selected stories', () => {
+      const selections: StorySelection[] = [
+        { storyId: 'Button/Primary', selected: true, name: 'Primary' },
+        { storyId: 'Button/Secondary', selected: false, name: 'Secondary' },
+        { storyId: 'Button/Large', selected: true, name: 'Large' }
+      ];
+      const result = getSelectedStories(selections);
+      expect(result).toHaveLength(2);
+      expect(result[0].storyId).toBe('Button/Primary');
+      expect(result[1].storyId).toBe('Button/Large');
+    });
+
+    it('should return empty array if no stories selected', () => {
+      const selections: StorySelection[] = [
+        { storyId: 'Button/Primary', selected: false },
+        { storyId: 'Button/Secondary', selected: false }
+      ];
+      const result = getSelectedStories(selections);
+      expect(result).toHaveLength(0);
+    });
+
+    it('should return all if all stories selected', () => {
+      const selections: StorySelection[] = [
+        { storyId: 'Button/Primary', selected: true },
+        { storyId: 'Button/Secondary', selected: true }
+      ];
+      const result = getSelectedStories(selections);
+      expect(result).toHaveLength(2);
+    });
+  });
+
+  describe('hasSelectedStories', () => {
+    it('should return true if at least one story selected', () => {
+      const selections: StorySelection[] = [
+        { storyId: 'Button/Primary', selected: true },
+        { storyId: 'Button/Secondary', selected: false }
+      ];
+      const result = hasSelectedStories(selections);
+      expect(result).toBe(true);
+    });
+
+    it('should return false if no stories selected', () => {
+      const selections: StorySelection[] = [
+        { storyId: 'Button/Primary', selected: false },
+        { storyId: 'Button/Secondary', selected: false }
+      ];
+      const result = hasSelectedStories(selections);
+      expect(result).toBe(false);
+    });
+
+    it('should return false for empty selection array', () => {
+      const selections: StorySelection[] = [];
+      const result = hasSelectedStories(selections);
+      expect(result).toBe(false);
+    });
+
+    it('should return true for single selected story', () => {
+      const selections: StorySelection[] = [
+        { storyId: 'Button/Primary', selected: true }
+      ];
+      const result = hasSelectedStories(selections);
+      expect(result).toBe(true);
+    });
+  });
 });

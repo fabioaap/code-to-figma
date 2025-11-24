@@ -79,3 +79,73 @@ export function isValidVariantProperty(
 ): boolean {
     return mapping.some((m) => m.storybookArgName === argName);
 }
+
+/**
+ * Interface para representar uma story selecionada para exportação
+ */
+export interface StorySelection {
+    storyId: string;
+    selected: boolean;
+    name?: string;
+}
+
+/**
+ * Interface para JSON de múltiplas stories
+ */
+export interface MultiStoryExportJSON {
+    stories: Array<{
+        storyId: string;
+        name: string;
+        figmaJson: any;
+        variantProperties?: Record<string, string>;
+    }>;
+    exportedAt: string;
+    count: number;
+}
+
+/**
+ * Converte múltiplas stories para um JSON consolidado para exportação
+ * @param stories Array de stories com seus JSONs Figma
+ * @returns JSON combinado pronto para exportação
+ */
+export function combineStoriesToExportJSON(
+    stories: Array<{
+        storyId: string;
+        name: string;
+        figmaJson: any;
+        variantProperties?: Record<string, string>;
+    }>
+): MultiStoryExportJSON {
+    if (!stories || stories.length === 0) {
+        throw new Error('At least one story is required for export');
+    }
+
+    return {
+        stories: stories.map((story) => ({
+            storyId: story.storyId,
+            name: story.name,
+            figmaJson: story.figmaJson,
+            variantProperties: story.variantProperties || {}
+        })),
+        exportedAt: new Date().toISOString(),
+        count: stories.length
+    };
+}
+
+/**
+ * Filtra stories que estão selecionadas
+ * @param selections Array de seleções
+ * @returns Apenas as stories selecionadas
+ */
+export function getSelectedStories(selections: StorySelection[]): StorySelection[] {
+    return selections.filter((s) => s.selected);
+}
+
+/**
+ * Valida se há pelo menos uma story selecionada
+ * @param selections Array de seleções
+ * @returns true se há pelo menos uma seleção
+ */
+export function hasSelectedStories(selections: StorySelection[]): boolean {
+    return selections.some((s) => s.selected);
+}
