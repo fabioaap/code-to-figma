@@ -3,13 +3,15 @@
  * Interface visual para exportar componentes para Figma
  * MVP-9: Integrado com logger estruturado
  * MVP-10: Kill-switch de segurança
+ * VAR-1: Suporte a variantProperties
  */
 
 import React, { useState } from 'react';
-import { useStorybookState } from '@storybook/manager-api';
+import { useStorybookState, useArgs } from '@storybook/manager-api';
 import { captureStoryHTML } from './captureHtml';
 import { exportToClipboard, addExportMetadata, exportToFile, validateFigmaJson } from './export';
 import { logger } from './logger';
+import { argsToVariantProperties, generateComponentName } from './variantMapper';
 import { CSSProperties } from 'react';
 
 // MVP-10: Kill-switch de segurança via variável de ambiente
@@ -37,6 +39,7 @@ const statusMessages: Record<Status, string> = {
 
 export const ExportPanel: React.FC = () => {
     const state = useStorybookState();
+    const [args] = useArgs();
     const [status, setStatus] = useState<Status>('idle');
     const [error, setError] = useState<string>('');
     const [exportMethod, setExportMethod] = useState<'clipboard' | 'download'>('clipboard');
@@ -57,7 +60,8 @@ export const ExportPanel: React.FC = () => {
             
             logger.info('export.panel.started', { 
                 storyId: state.storyId,
-                method: exportMethod 
+                method: exportMethod,
+                args: args || {}
             });
 
             // Passo 1: Capturar HTML
@@ -66,29 +70,45 @@ export const ExportPanel: React.FC = () => {
                 throw new Error('Nenhum HTML capturado');
             }
 
-            // Passo 2: Criar JSON Figma simples
+            // Passo 2: Converter args para variantProperties (VAR-1)
+            const variantProperties = argsToVariantProperties(args || {});
+            const hasVariants = Object.keys(variantProperties).length > 0;
+
+            // Passo 3: Gerar nome do componente baseado em variants
+            const baseName = state.storyId?.split('--')[0] || 'Exported Component';
+            const componentName = hasVariants
+                ? generateComponentName(baseName, variantProperties)
+                : (state.storyId || baseName);
+
+            // Passo 4: Criar JSON Figma com variantProperties
             let figmaJson: any = {
-                type: 'FRAME',
-                name: state.storyId || 'Exported Component',
+                type: hasVariants ? 'COMPONENT' : 'FRAME',
+                name: componentName,
                 children: [],
                 __html: capture.html
             };
 
-            // Passo 3: Validar JSON antes de exportar
+            // Adiciona variantProperties se houver variants
+            if (hasVariants) {
+                figmaJson.variantProperties = variantProperties;
+            }
+
+            // Passo 5: Validar JSON antes de exportar
             if (!validateFigmaJson(figmaJson)) {
                 throw new Error('JSON Figma inválido - estrutura não reconhecida');
             }
 
-            // Passo 4: Adicionar metadados
+            // Passo 6: Adicionar metadados incluindo args originais
             figmaJson = addExportMetadata(figmaJson, {
                 storyId: state.storyId || 'unknown',
                 nodeCount: capture.nodeCount,
                 hasInteractiveElements: capture.hasInteractiveElements,
-                timestamp: new Date().toISOString()
+                timestamp: new Date().toISOString(),
+                args: args || {}
             });
 
             setStatus('exporting');
-            // Passo 5: Exportar
+            // Passo 7: Exportar
             let result;
             if (exportMethod === 'clipboard') {
                 result = await exportToClipboard(figmaJson);

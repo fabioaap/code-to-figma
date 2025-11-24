@@ -39,6 +39,34 @@ O interpretador lê propriedades CSS (display:flex, flex-direction, gap, padding
 4. Exportar `.figma.json` (clipboard / download)
 5. Importar plugin Figma e gerar nodes
 
+## Variantes (VAR-1)
+
+O sistema mapeia automaticamente `args` do Storybook para `variantProperties` do Figma:
+
+```typescript
+// No Storybook
+export const Primary: Story = { 
+  args: { variant: 'primary', size: 'medium' } 
+};
+
+// JSON Figma exportado
+{
+  "type": "COMPONENT",
+  "variantProperties": {
+    "variant": "primary",
+    "size": "medium"
+  },
+  ...
+}
+```
+
+**Convenção de mapeamento:**
+- String/Number → convertidos diretamente
+- Boolean `true` → mapeado para nome da prop (ex: `disabled={true}` → `{state: "disabled"}`)
+- Boolean `false` → ignorado (estado padrão)
+
+Ver `docs/figma-json-format.md` para detalhes completos.
+
 ## Segurança & Guardrails
 - **Kill-switch** (MVP-10): Variável de ambiente `VITE_FIGMA_EXPORT_ENABLED` permite desabilitar exportação temporariamente para manutenção
 - **Logs estruturados** (MVP-9): Logger com níveis (debug, info, warn, error) sem PII, configurável via `VITE_LOG_LEVEL`
