@@ -72,22 +72,39 @@ class GitHubClient:
                 time.sleep(RETRY_BACKOFF * attempt)
 
     def list_open_issues(self) -> List[Issue]:
-        url = f"{API_ROOT}/repos/{self.owner}/{self.repo}/issues?state=open&per_page=100"
-        items = self._request("GET", url)
+        """
+        List all open issues in the repository with pagination support.
+        Fetches all pages until no more issues are returned.
+        """
         issues = []
-        for item in items:
-            if "pull_request" in item:
-                continue  # ignore PRs in this step
-            labels = [lbl["name"] for lbl in item["labels"]]
-            issues.append(
-                Issue(
-                    number=item["number"],
-                    title=item["title"],
-                    body=item.get("body") or "",
-                    labels=labels,
-                    state=item["state"],
+        page = 1
+        per_page = 100
+        
+        while True:
+            url = f"{API_ROOT}/repos/{self.owner}/{self.repo}/issues?state=open&per_page={per_page}&page={page}"
+            items = self._request("GET", url)
+            
+            if not items:
+                break  # No more issues
+            
+            for item in items:
+                if "pull_request" in item:
+                    continue  # ignore PRs in this step
+                labels = [lbl["name"] for lbl in item["labels"]]
+                issues.append(
+                    Issue(
+                        number=item["number"],
+                        title=item["title"],
+                        body=item.get("body") or "",
+                        labels=labels,
+                        state=item["state"],
+                    )
                 )
-            )
+            
+            if len(items) < per_page:
+                break  # Last page
+            page += 1
+        
         return issues
 
     def find_project_items(self, project_id: int) -> Dict[int, Dict[str, int]]:
@@ -100,8 +117,13 @@ class GitHubClient:
             cards = self._request("GET", column["cards_url"])
             for card in cards:
                 if card.get("content_url") and "/issues/" in card["content_url"]:
-                    issue_number = int(card["content_url"].split("/issues/")[-1])
-                    mapping[issue_number] = {"card_id": card["id"], "column_id": column["id"]}
+                    # Extract issue number using URL parsing for robustness
+                    try:
+                        issue_number = int(card["content_url"].rstrip('/').split("/issues/")[-1].split('?')[0])
+                        mapping[issue_number] = {"card_id": card["id"], "column_id": column["id"]}
+                    except (ValueError, IndexError):
+                        # Skip cards with malformed URLs
+                        continue
         return mapping
 
     def move_card(self, card_id: int, column_id: int):
@@ -114,13 +136,20 @@ class GitHubClient:
 
     def create_branch_and_pr(self, issue: Issue) -> int:
         """
-        Placeholder for real implementation:
-        - git clone
-        - create branch
-        - apply changes
-        - push and create PR
-        Returns PR number.
-        """
+        Placeholder stub for real implementation.
+        
+        This method is intentionally not implemented and will raise NotImplementedError.
+        
+        A real implementation would need to:
+        1. Clone the repository locally
+        2. Create a new branch: f"auto/issue-{issue.number}"
+        3. Apply code changes (e.g., via LLM, automation tools, or manual scripts)
+        4. Commit changes: git commit -m "Fix #{issue.number}: {issue.title}"
+        5. Push branch to remote: git push origin auto/issue-{issue.number}
+        6. Create PR via GitHub API (code below)
+        
+        Example GitHub API call for PR creation (only works if branch exists):
+        
         payload = {
             "title": f"Automated fix for issue #{issue.number}",
             "head": f"auto/issue-{issue.number}",
@@ -129,6 +158,14 @@ class GitHubClient:
         }
         pr = self._request("POST", f"{API_ROOT}/repos/{self.owner}/{self.repo}/pulls", json=payload)
         return pr["number"]
+        
+        NOTE: Attempting to create a PR without the branch will result in HTTP 422 error.
+        """
+        raise NotImplementedError(
+            "create_branch_and_pr is a stub method that must be implemented. "
+            "See method docstring for implementation guidance. "
+            "This method requires: git clone, branch creation, code changes, commit, push, and PR creation."
+        )
 
     def merge_pr(self, pr_number: int):
         self._request("PUT", f"{API_ROOT}/repos/{self.owner}/{self.repo}/pulls/{pr_number}/merge", json={"merge_method": "squash"})
@@ -214,8 +251,19 @@ class IssueAutomation:
             issue = resolver.issues[issue_number]
             try:
                 print(f"Processing issue #{issue.number} - {issue.title}")
+                
+                # NOTE: create_branch_and_pr is a stub that raises NotImplementedError
+                # In a real implementation, this would create a branch, apply changes, and create PR
                 pr_number = self.client.create_branch_and_pr(issue)
+                
+                # NOTE: In production, you should validate PR creation and check CI status
+                # before merging. This immediate merge assumes:
+                # - PR was created successfully
+                # - No merge conflicts exist
+                # - All CI checks pass (or are not required)
+                # Consider adding: wait for CI, check mergeable state, etc.
                 self.client.merge_pr(pr_number)
+                
                 self.client.close_issue(issue.number, comment=f"Resolved automatically via PR #{pr_number} ✅")
 
                 if self.project_id and self.done_column_id and issue.kanban_card_id:

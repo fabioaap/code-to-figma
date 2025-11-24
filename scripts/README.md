@@ -1,5 +1,11 @@
 # GitHub Issue Automation Script
 
+## ⚠️ Important: Framework Status
+
+This is an **automation framework** that provides the infrastructure for GitHub issue automation with dependency detection. The actual code generation logic (`create_branch_and_pr` method) is intentionally left as a stub and **must be implemented** before use.
+
+The script will raise `NotImplementedError` if run without implementing the code generation logic.
+
 ## Visão Geral
 
 Script de automação Python para resolver issues do GitHub com suporte a detecção e resolução inteligente de dependências. O script detecta dependências entre issues através de:
@@ -183,10 +189,10 @@ Dataclass que representa uma issue do GitHub com:
 
 #### `GitHubClient`
 Cliente HTTP resiliente para a API do GitHub:
-- `list_open_issues()`: Lista todas as issues abertas
-- `find_project_items()`: Mapeia issues para colunas do Project
-- `create_branch_and_pr()`: Cria branch e PR (stub para implementação real)
-- `merge_pr()`: Faz merge do PR
+- `list_open_issues()`: Lista todas as issues abertas (com paginação automática)
+- `find_project_items()`: Mapeia issues para colunas do Project (com parsing robusto de URLs)
+- `create_branch_and_pr()`: **STUB** - Deve ser implementado antes do uso (raises NotImplementedError)
+- `merge_pr()`: Faz merge do PR (nota: considere validar CI antes de usar em produção)
 - `close_issue()`: Fecha issue com comentário
 - `move_card()`: Move card no quadro Kanban
 
@@ -225,13 +231,22 @@ Combina três estratégias:
 - Detecta ciclos em O(V + E)
 - Falha rapidamente em caso de dependências circulares
 
-### 5. Placeholder para Implementação Real
-`create_branch_and_pr()` é um stub que pode ser substituído por:
-- Integração com agentes LLM para geração de código
-- Scripts de transformação de código
-- Ferramentas de migração automatizada
+### 5. Stub Intencional para Implementação Real
+`create_branch_and_pr()` é intencionalmente um stub que **raises NotImplementedError**.
 
-### 6. Idempotência
+Deve ser substituído por implementação real que inclui:
+- Clone do repositório via git
+- Criação de branch
+- Aplicação de mudanças (via LLM, scripts, ferramentas de migração, etc.)
+- Commit e push
+- Criação de PR via GitHub API
+
+Ver docstring do método para exemplo detalhado de implementação.
+
+### 6. Paginação Automática
+`list_open_issues()` itera automaticamente por todas as páginas da API, garantindo que repositories com mais de 100 issues sejam processados corretamente.
+
+### 7. Idempotência
 O script pode ser reexecutado com segurança:
 - Lista apenas issues abertas
 - Não duplica PRs
@@ -296,10 +311,10 @@ def create_branch_and_pr(self, issue: Issue) -> int:
 
 ## Limitações Conhecidas
 
-1. **Stub de Criação de PR**: A função `create_branch_and_pr()` é um placeholder
-2. **Limite de 100 issues**: A API retorna max 100 issues por página (pode ser paginado)
-3. **Apenas GitHub Projects Classic**: Não suporta Projects V2
-4. **Heurística simples**: A detecção semântica é básica e pode ser melhorada
+1. **Stub de Criação de PR**: A função `create_branch_and_pr()` raises NotImplementedError - deve ser implementada
+2. **GitHub Projects Classic apenas**: Não suporta Projects V2 (beta)
+3. **Heurística semântica básica**: A detecção pode ser melhorada com NLP mais avançado
+4. **Merge imediato**: Não valida CI ou merge conflicts antes de fazer merge (considere adicionar em produção)
 
 ## Troubleshooting
 

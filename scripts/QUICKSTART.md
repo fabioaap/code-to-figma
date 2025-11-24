@@ -44,7 +44,7 @@ GITHUB_DONE_COLUMN_ID=
 
 ## Usage
 
-### Basic Usage (Dry Run - See What Would Happen)
+### Testing Dependency Detection
 
 Run the example to see how dependency detection works:
 
@@ -57,9 +57,20 @@ This will show:
 - The execution order that would be used
 - No actual changes to GitHub
 
-### Full Automation (WARNING: Makes Real Changes!)
+### Full Automation (Requires Implementation!)
 
-⚠️ **IMPORTANT**: This will create PRs, merge them, and close issues!
+⚠️ **IMPORTANT**: The script is a FRAMEWORK that requires implementation of the code generation logic.
+
+The `create_branch_and_pr()` method is intentionally left as a stub. Running the script as-is will raise `NotImplementedError`.
+
+To use this script, you must implement the code generation logic:
+1. Clone the repository
+2. Create a branch
+3. Apply automated fixes (LLM, scripts, etc.)
+4. Commit and push changes
+5. Create a PR via GitHub API
+
+See the method docstring in `github_issue_automation.py` for detailed implementation guidance.
 
 ```bash
 python3 github_issue_automation.py
@@ -148,9 +159,10 @@ The current implementation is a placeholder that would need to:
 - Make sure there are no circular references (A→B→A)
 
 ### PRs are not actually created
-- The `create_branch_and_pr` method is a placeholder
-- You need to implement the actual code generation logic
-- See "Implementing Real Code Generation" above
+- The `create_branch_and_pr` method is intentionally a stub
+- It raises `NotImplementedError` to prevent accidental execution
+- You must implement the actual code generation logic
+- See "Implementing Real Code Generation" section and method docstring for guidance
 
 ## Learn More
 
