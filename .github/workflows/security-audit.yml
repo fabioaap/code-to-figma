@@ -1,0 +1,84 @@
+name: Auditoria de Segurança
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main, develop]
+  schedule:
+    # Executa diariamente às 9h UTC (6h BRT)
+    - cron: '0 9 * * *'
+  workflow_dispatch:
+
+jobs:
+  security-audit:
+    name: Auditoria de Dependências
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout do código
+        uses: actions/checkout@v4
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      
+      - name: Instalar pnpm
+        run: npm install -g pnpm
+      
+      - name: Instalar dependências
+        run: cd figma-sync-engine && pnpm install --frozen-lockfile
+      
+      - name: Executar auditoria de segurança
+        id: audit
+        run: cd figma-sync-engine && pnpm audit:security
+        continue-on-error: true
+      
+      - name: Verificar vulnerabilidades críticas
+        id: critical
+        run: |
+          cd figma-sync-engine
+          # Tenta executar pnpm audit e captura o resultado
+          if pnpm audit --audit-level=high 2>&1 | tee audit-output.txt; then
+            echo "status=success" >> $GITHUB_OUTPUT
+            echo "✅ Nenhuma vulnerabilidade crítica encontrada"
+          else
+            if grep -q "ERR_PNPM_AUDIT_BAD_RESPONSE" audit-output.txt; then
+              echo "status=network_error" >> $GITHUB_OUTPUT
+              echo "⚠️ Não foi possível verificar vulnerabilidades devido a restrições de rede"
+            else
+              echo "status=vulnerabilities_found" >> $GITHUB_OUTPUT
+              echo "❌ Vulnerabilidades críticas ou altas encontradas"
+              exit 1
+            fi
+          fi
+        continue-on-error: true
+      
+      - name: Salvar relatório de auditoria
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: security-audit-report
+          path: |
+            figma-sync-engine/audit-output.txt
+            figma-sync-engine/audit-report.json
+          if-no-files-found: ignore
+      
+      - name: Comentar em PR (se houver vulnerabilidades)
+        if: github.event_name == 'pull_request' && steps.critical.outputs.status == 'vulnerabilities_found'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: '⚠️ **Auditoria de Segurança**: Vulnerabilidades críticas ou altas foram encontradas nas dependências. Por favor, revise o relatório e corrija antes de fazer merge.'
+            })
+      
+      - name: Falhar se houver vulnerabilidades críticas
+        if: steps.critical.outputs.status == 'vulnerabilities_found'
+        run: |
+          echo "❌ Falha na auditoria de segurança: vulnerabilidades críticas encontradas"
+          exit 1

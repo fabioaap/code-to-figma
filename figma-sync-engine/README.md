@@ -42,6 +42,10 @@ O interpretador lê propriedades CSS (display:flex, flex-direction, gap, padding
 ## Segurança & Guardrails
 - **Kill-switch** (MVP-10): Variável de ambiente `VITE_FIGMA_EXPORT_ENABLED` permite desabilitar exportação temporariamente para manutenção
 - **Logs estruturados** (MVP-9): Logger com níveis (debug, info, warn, error) sem PII, configurável via `VITE_LOG_LEVEL`
+- **Auditoria de Segurança** (SEC-1): Scripts automatizados para verificação de vulnerabilidades em dependências
+  - `pnpm audit:security` - Executa auditoria completa de segurança
+  - `pnpm audit:security:fix` - Aplica correções automáticas
+  - Ver `docs/SECURITY_AUDIT.md` para detalhes completos
 - Testes de regressão e snapshot nos exemplos
 
 ## Variáveis de Ambiente

@@ -6,7 +6,12 @@
         "dev": "turbo run dev",
         "build": "turbo run build",
         "lint": "turbo run lint",
-        "test": "turbo run test"
+        "test": "turbo run test",
+        "audit": "pnpm audit",
+        "audit:fix": "pnpm audit --fix",
+        "audit:security": "bash scripts/security-audit.sh",
+        "audit:security:fix": "bash scripts/security-audit.sh --fix",
+        "audit:security:json": "bash scripts/security-audit.sh --json"
     },
     "devDependencies": {
         "@typescript-eslint/eslint-plugin": "^7.18.0",
