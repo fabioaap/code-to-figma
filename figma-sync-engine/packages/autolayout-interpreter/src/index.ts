@@ -92,13 +92,17 @@ export function normalizePadding(
 /**
  * Infere direção do layout com fallback robusto
  * AL-3: Detecção de direção com fallback para HORIZONTAL
+ * @returns true para HORIZONTAL (row), false para VERTICAL (column)
  */
 export function inferDirection(css: CssSnapshot): boolean {
+    // Valores válidos que indicam direção vertical
+    const VERTICAL_DIRECTIONS = ['column', 'column-reverse'];
+    
     // Se flex-direction está explicitamente definido, usar ele
     if (css.flexDirection) {
         const direction = css.flexDirection.toLowerCase();
         // Only return false (VERTICAL) for valid column values
-        if (direction === 'column' || direction === 'column-reverse') {
+        if (VERTICAL_DIRECTIONS.includes(direction)) {
             return false;
         }
         // For row, row-reverse, or any invalid value, default to HORIZONTAL
