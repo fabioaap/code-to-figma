@@ -1,0 +1,45 @@
+{
+  "type": "FRAME",
+  "name": "Single Button",
+  "layoutMode": "HORIZONTAL",
+  "itemSpacing": 8,
+  "paddingTop": 12,
+  "paddingRight": 16,
+  "paddingBottom": 12,
+  "paddingLeft": 16,
+  "fills": [
+    {
+      "type": "SOLID",
+      "color": {
+        "r": 0.145,
+        "g": 0.388,
+        "b": 0.922
+      }
+    }
+  ],
+  "cornerRadius": 6,
+  "width": 120,
+  "height": 40,
+  "children": [
+    {
+      "type": "TEXT",
+      "name": "Label",
+      "characters": "Click Me",
+      "fontSize": 14,
+      "fontName": {
+        "family": "Inter",
+        "style": "Medium"
+      },
+      "fills": [
+        {
+          "type": "SOLID",
+          "color": {
+            "r": 1,
+            "g": 1,
+            "b": 1
+          }
+        }
+      ]
+    }
+  ]
+}

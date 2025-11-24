@@ -77,6 +77,20 @@ O plugin preserva propriedades de Auto Layout ao importar:
 3. Clique em "Importar"
 4. O plugin detecta automaticamente se deve criar um nó único ou ComponentSet
 
+## Exemplos de Teste
+
+O diretório `examples/` contém arquivos JSON de teste:
+
+- **single-button.json**: Exemplo de importação de nó único (compatibilidade legado)
+- **button-variants.json**: ComponentSet simples com 2 variantes de botão (primary/secondary)
+- **card-variants-multiple-props.json**: ComponentSet com múltiplas propriedades (size × state)
+
+Para testar:
+1. Copie o conteúdo de um dos arquivos JSON
+2. Abra o plugin no Figma
+3. Cole o JSON na interface
+4. Clique em "Importar"
+
 ## Desenvolvimento
 
 ```bash

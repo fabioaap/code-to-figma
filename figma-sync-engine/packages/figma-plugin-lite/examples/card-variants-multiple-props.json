@@ -1,0 +1,212 @@
+{
+  "name": "Card Component",
+  "variants": [
+    {
+      "type": "FRAME",
+      "name": "size=small, state=default",
+      "variantProperties": {
+        "size": "small",
+        "state": "default"
+      },
+      "layoutMode": "VERTICAL",
+      "itemSpacing": 8,
+      "paddingTop": 12,
+      "paddingRight": 12,
+      "paddingBottom": 12,
+      "paddingLeft": 12,
+      "fills": [
+        {
+          "type": "SOLID",
+          "color": {
+            "r": 1,
+            "g": 1,
+            "b": 1
+          }
+        }
+      ],
+      "cornerRadius": 8,
+      "width": 200,
+      "height": 120,
+      "children": [
+        {
+          "type": "TEXT",
+          "name": "Title",
+          "characters": "Small Card",
+          "fontSize": 14,
+          "fontName": {
+            "family": "Inter",
+            "style": "Semi Bold"
+          },
+          "fills": [
+            {
+              "type": "SOLID",
+              "color": {
+                "r": 0.1,
+                "g": 0.1,
+                "b": 0.1
+              }
+            }
+          ]
+        },
+        {
+          "type": "TEXT",
+          "name": "Description",
+          "characters": "Small size card",
+          "fontSize": 12,
+          "fontName": {
+            "family": "Inter",
+            "style": "Regular"
+          },
+          "fills": [
+            {
+              "type": "SOLID",
+              "color": {
+                "r": 0.4,
+                "g": 0.4,
+                "b": 0.4
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "FRAME",
+      "name": "size=large, state=default",
+      "variantProperties": {
+        "size": "large",
+        "state": "default"
+      },
+      "layoutMode": "VERTICAL",
+      "itemSpacing": 12,
+      "paddingTop": 20,
+      "paddingRight": 20,
+      "paddingBottom": 20,
+      "paddingLeft": 20,
+      "fills": [
+        {
+          "type": "SOLID",
+          "color": {
+            "r": 1,
+            "g": 1,
+            "b": 1
+          }
+        }
+      ],
+      "cornerRadius": 12,
+      "width": 320,
+      "height": 200,
+      "children": [
+        {
+          "type": "TEXT",
+          "name": "Title",
+          "characters": "Large Card",
+          "fontSize": 18,
+          "fontName": {
+            "family": "Inter",
+            "style": "Bold"
+          },
+          "fills": [
+            {
+              "type": "SOLID",
+              "color": {
+                "r": 0.1,
+                "g": 0.1,
+                "b": 0.1
+              }
+            }
+          ]
+        },
+        {
+          "type": "TEXT",
+          "name": "Description",
+          "characters": "Large size card with more space",
+          "fontSize": 14,
+          "fontName": {
+            "family": "Inter",
+            "style": "Regular"
+          },
+          "fills": [
+            {
+              "type": "SOLID",
+              "color": {
+                "r": 0.4,
+                "g": 0.4,
+                "b": 0.4
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "FRAME",
+      "name": "size=small, state=hover",
+      "variantProperties": {
+        "size": "small",
+        "state": "hover"
+      },
+      "layoutMode": "VERTICAL",
+      "itemSpacing": 8,
+      "paddingTop": 12,
+      "paddingRight": 12,
+      "paddingBottom": 12,
+      "paddingLeft": 12,
+      "fills": [
+        {
+          "type": "SOLID",
+          "color": {
+            "r": 0.95,
+            "g": 0.97,
+            "b": 1
+          }
+        }
+      ],
+      "cornerRadius": 8,
+      "width": 200,
+      "height": 120,
+      "children": [
+        {
+          "type": "TEXT",
+          "name": "Title",
+          "characters": "Small Card",
+          "fontSize": 14,
+          "fontName": {
+            "family": "Inter",
+            "style": "Semi Bold"
+          },
+          "fills": [
+            {
+              "type": "SOLID",
+              "color": {
+                "r": 0.145,
+                "g": 0.388,
+                "b": 0.922
+              }
+            }
+          ]
+        },
+        {
+          "type": "TEXT",
+          "name": "Description",
+          "characters": "Hover state",
+          "fontSize": 12,
+          "fontName": {
+            "family": "Inter",
+            "style": "Regular"
+          },
+          "fills": [
+            {
+              "type": "SOLID",
+              "color": {
+                "r": 0.4,
+                "g": 0.4,
+                "b": 0.4
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
