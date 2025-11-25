@@ -62,6 +62,38 @@ Antes de mexer no codigo, use as ferramentas:
 * edit para propor mudancas em arquivos
 * shell apenas quando realmente necessario para comandos seguros como testes, formatacao ou lint
 
+### MCP Playwright para debug visual e validacao
+
+Sempre que precisar validar visualmente uma tela, debugar problemas de interface, inspecionar o console do navegador ou testar fluxos de usuario, utilize o MCP do Playwright como ferramenta principal:
+
+* **Quando usar**:
+  * Validar se uma tela foi renderizada corretamente apos implementacao
+  * Debugar problemas visuais ou de layout que nao ficam claros apenas lendo codigo
+  * Verificar erros no console do navegador (JavaScript errors, warnings, network failures, API errors)
+  * Capturar screenshots para comparacao com Figma, mockups ou documentacao
+  * Testar responsividade em diferentes viewports e dispositivos
+  * Validar estados de loading, erro e sucesso em tempo real
+  * Testar fluxos completos de usuario (login, cadastro, checkout, etc.)
+  * Verificar requisicoes de rede e respostas de API
+
+* **Como usar**:
+  * Navegue ate a URL da pagina, componente ou fluxo que precisa validar
+  * Capture screenshots para evidenciar o estado atual
+  * Inspecione o console para identificar erros, warnings ou logs relevantes
+  * Interaja com elementos (cliques, formularios, navegacao) para testar fluxos
+  * Verifique requisicoes de rede para debugar problemas de API
+  * Compare o resultado visual com o layout esperado (Figma, mockup, especificacao)
+
+* **Fluxo recomendado**:
+  1. Implemente a mudanca no codigo (frontend ou backend)
+  2. Use MCP Playwright para abrir a pagina no navegador
+  3. Capture screenshot e verifique console e network
+  4. Se houver problemas, ajuste o codigo e repita
+  5. Documente o resultado final com screenshot de validacao
+  6. Para testes de integracao, valide o fluxo completo de ponta a ponta
+
+* **Nunca** tente adivinhar se a tela ou o fluxo esta correto apenas pelo codigo — sempre valide visualmente e funcionalmente com Playwright quando houver duvida, quando a tarefa envolver UI, ou quando precisar debugar problemas que nao ficam claros nos logs.
+
 ---
 
 ## 3 Objetivo geral e modo de operacao
