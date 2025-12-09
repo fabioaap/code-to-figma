@@ -89,7 +89,7 @@ export class FigmaClient {
 
   async getNodes(fileId: string, nodeIds: string[]): Promise<Record<string, unknown>> {
     const ids = nodeIds.join(',');
-    
+
     return this.retryWithBackoff(async () => {
       const response = await request(
         `${FIGMA_API_BASE}/files/${fileId}/nodes?ids=${encodeURIComponent(ids)}`,

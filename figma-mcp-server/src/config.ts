@@ -30,7 +30,8 @@ export function loadConfig(): Config {
 
   try {
     cachedConfig = configSchema.parse({
-      FIGMA_PERSONAL_TOKEN: process.env.FIGMA_PERSONAL_TOKEN,
+      // Accept FIGMA_PERSONAL_TOKEN or fallback to FIGMA_ACCESS_TOKEN for backward compatibility
+      FIGMA_PERSONAL_TOKEN: process.env.FIGMA_PERSONAL_TOKEN || process.env.FIGMA_ACCESS_TOKEN,
       FIGMA_FILE_ID: process.env.FIGMA_FILE_ID,
       FIGMA_FRAME_ID: process.env.FIGMA_FRAME_ID,
       MCP_SERVER_PORT: process.env.MCP_SERVER_PORT,
@@ -40,7 +41,7 @@ export function loadConfig(): Config {
     return cachedConfig;
   } catch (error) {
     if (error instanceof z.ZodError) {
-      const missingFields = error.errors.map((e) => e.path.join('.')).join(', ');
+      const missingFields = error.errors.map((e: z.ZodIssue) => e.path.join('.')).join(', ');
       throw new Error(
         `Configuration validation failed: ${missingFields}\n` +
         `Please check your .env.local file. See .env.local.example for required values.`
@@ -51,8 +52,9 @@ export function loadConfig(): Config {
 }
 
 export function getConfig(): Config {
+  // Lazy-load configuration if not yet loaded
   if (!cachedConfig) {
-    throw new Error('Configuration not loaded. Call loadConfig() first.');
+    cachedConfig = loadConfig();
   }
   return cachedConfig;
 }

@@ -11,7 +11,7 @@
  * - get_selection_snapshot: Capture selection metadata and previews
  */
 
-import { Server } from '@modelcontextprotocol/sdk/server/index.js';
+import { Server } from '@modelcontextprotocol/sdk/server';
 import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js';
 import {
   CallToolRequestSchema,
@@ -104,7 +104,7 @@ async function main() {
     });
 
     // Register tool execution handler
-    server.setRequestHandler(CallToolRequestSchema, async (request) => {
+    server.setRequestHandler(CallToolRequestSchema, async (request: { params: { name: string; arguments?: Record<string, unknown> } }) => {
       const { name, arguments: args } = request.params;
 
       logger.info({ tool: name, args }, 'Tool called');
@@ -113,7 +113,7 @@ async function main() {
         // T014: get_design_tokens tool implementation
         if (name === 'get_design_tokens') {
           const result = await invokeGetDesignTokens(args);
-          
+
           return {
             content: [
               {
@@ -127,7 +127,7 @@ async function main() {
         // US2: get_frame_snapshot tool implementation
         if (name === 'get_frame_snapshot') {
           const result = await invokeGetFrameSnapshot(args);
-          
+
           return {
             content: [
               {
@@ -142,7 +142,7 @@ async function main() {
       } catch (error) {
         const err = error as Error;
         logger.error({ error: err.message, tool: name }, 'Tool execution failed');
-        
+
         return {
           content: [
             {
